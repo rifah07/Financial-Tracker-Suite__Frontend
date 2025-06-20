@@ -1,3 +1,5 @@
+import Footer from "./components/Footer";
+
 function App() {
   return (
     <div
@@ -19,16 +21,7 @@ function App() {
           Track your expenses, manage your budget, and gain financial insights.
         </p>
       </main>
-      <footer
-        style={{
-          padding: "1rem 0",
-          background: "#222",
-          color: "#fff",
-          textAlign: "center",
-        }}
-      >
-        &copy; {new Date().getFullYear()} Rifah Sajida Deya
-      </footer>
+      <Footer />
     </div>
   );
 }
