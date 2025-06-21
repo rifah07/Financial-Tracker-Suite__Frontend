@@ -1,6 +1,7 @@
 import HeroSection from "./sections/HeroSection";
 import DashboardSection from "./sections/DashboardSection";
 import Footer from "./components/Footer";
+import RegisterSection from "./sections/RegisterSection";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         }}
       >
         <DashboardSection />
+        <RegisterSection />
       </main>
       <Footer />
     </div>

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-const REGISTER_URL = import.meta.env.VITE_API_REGISTER_URL;
+const BASE_URL = import.meta.env.VITE_API_USER_URL;
+const REGISTER_URL = `${BASE_URL}/register`;
 
 function RegisterSection() {
   const [form, setForm] = useState({
@@ -67,10 +68,20 @@ function RegisterSection() {
         margin: "2rem auto",
       }}
     >
-      <h2 style={{ fontSize: "1.7rem", fontWeight: 600, marginBottom: "1.2rem", color: "#1976d2" }}>
+      <h2
+        style={{
+          fontSize: "1.7rem",
+          fontWeight: 600,
+          marginBottom: "1.2rem",
+          color: "#1976d2",
+        }}
+      >
         Register
       </h2>
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}
+      >
         <input
           type="text"
           name="name"
@@ -136,10 +147,18 @@ function RegisterSection() {
           {loading ? "Registering..." : "Register"}
         </button>
         {successMsg && (
-          <div style={{ color: "#388e3c", marginTop: "0.5rem", fontWeight: 500 }}>{successMsg}</div>
+          <div
+            style={{ color: "#388e3c", marginTop: "0.5rem", fontWeight: 500 }}
+          >
+            {successMsg}
+          </div>
         )}
         {errorMsg && (
-          <div style={{ color: "#d32f2f", marginTop: "0.5rem", fontWeight: 500 }}>{errorMsg}</div>
+          <div
+            style={{ color: "#d32f2f", marginTop: "0.5rem", fontWeight: 500 }}
+          >
+            {errorMsg}
+          </div>
         )}
       </form>
     </section>
