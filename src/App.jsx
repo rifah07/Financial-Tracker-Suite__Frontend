@@ -1,9 +1,16 @@
+import { useState } from "react";
+import Navbar from "./components/Navbar";
+import Modal from "./components/Modal";
 import HeroSection from "./sections/HeroSection";
 import DashboardSection from "./sections/DashboardSection";
-import Footer from "./components/Footer";
 import RegisterSection from "./sections/RegisterSection";
+import LoginSection from "./sections/LoginSection";
+import Footer from "./components/Footer";
 
 function App() {
+  const [showRegister, setShowRegister] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+
   return (
     <div
       style={{
@@ -13,6 +20,10 @@ function App() {
         background: "#f7fafc",
       }}
     >
+      <Navbar
+        onRegisterClick={() => setShowRegister(true)}
+        onLoginClick={() => setShowLogin(true)}
+      />
       <HeroSection />
       <main
         style={{
@@ -23,9 +34,17 @@ function App() {
         }}
       >
         <DashboardSection />
-        <RegisterSection />
       </main>
       <Footer />
+
+      {/* Register Modal */}
+      <Modal open={showRegister} onClose={() => setShowRegister(false)}>
+        <RegisterSection />
+      </Modal>
+      {/* Login Modal */}
+      <Modal open={showLogin} onClose={() => setShowLogin(false)}>
+        <LoginSection />
+      </Modal>
     </div>
   );
 }
