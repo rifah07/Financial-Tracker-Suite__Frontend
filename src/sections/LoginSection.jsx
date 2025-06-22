@@ -5,7 +5,7 @@ import Link from "@mui/material/Link";
 const BASE_URL = import.meta.env.VITE_API_USER_URL;
 const LOGIN_URL = `${BASE_URL}/login`;
 
-function LoginSection({ onLoginSuccess }) {
+function LoginSection({ onLoginSuccess, onForgotPassword }) {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
@@ -89,7 +89,10 @@ function LoginSection({ onLoginSuccess }) {
         <Link
           component="button"
           variant="body2"
-          onClick={() => navigate("/forgot-password")}
+          onClick={() => {
+            if (onForgotPassword) onForgotPassword();
+            navigate("/forgot-password");
+          }}
           sx={{ alignSelf: "flex-end", mb: 1 }}
         >
           Forgot password?

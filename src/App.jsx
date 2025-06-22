@@ -62,7 +62,10 @@ function App() {
             <Route path="/" element={<HeroSection />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordSection />} />
+            <Route
+              path="/forgot-password"
+              element={<ForgotPasswordSection />}
+            />
           </Routes>
         </Container>
         <Footer />
@@ -75,6 +78,7 @@ function App() {
               setShowLogin(false);
               setIsLoggedIn(true);
             }}
+            onForgotPassword={() => setShowLogin(false)}
           />
         </Modal>
       </Box>
