@@ -1,21 +1,29 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
-import EmailIcon from "@mui/icons-material/Email";
+import LockResetIcon from "@mui/icons-material/LockReset";
 
-const FORGOT_PW_URL = `${import.meta.env.VITE_API_USER_URL}/forgotpw`;
+const RESET_PW_URL = `${import.meta.env.VITE_API_USER_URL}/resetpw`;
 
-function ForgotPasswordSection() {
-  const [email, setEmail] = useState("");
+function ResetPasswordSection() {
+  const [form, setForm] = useState({
+    email: "",
+    reset_code: "",
+    new_password: "",
+  });
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setSuccessMsg("");
+    setErrorMsg("");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,19 +31,17 @@ function ForgotPasswordSection() {
     setSuccessMsg("");
     setErrorMsg("");
     try {
-      const res = await fetch(FORGOT_PW_URL, {
+      const res = await fetch(RESET_PW_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify(form),
       });
       const data = await res.json();
       if (res.ok) {
-        setSuccessMsg(data.status || "Reset code sent to email successfully.");
-        setTimeout(() => {
-          navigate("/reset-password");
-        }, 1200); // short delay for UX
+        setSuccessMsg(data.message || "Password updated successfully!");
+        setForm({ email: "", reset_code: "", new_password: "" });
       } else {
-        setErrorMsg(data.error || "Failed to send reset code.");
+        setErrorMsg(data.error || "Failed to reset password.");
       }
     } catch {
       setErrorMsg("Internal server error");
@@ -57,19 +63,40 @@ function ForgotPasswordSection() {
         textAlign: "center",
       }}
     >
-      <EmailIcon color="primary" sx={{ fontSize: 48, mb: 1 }} />
+      <LockResetIcon color="primary" sx={{ fontSize: 48, mb: 1 }} />
       <Typography variant="h5" fontWeight={700} color="primary" mb={2}>
-        Forgot Password
+        Reset Password
       </Typography>
       <Typography color="text.secondary" mb={3}>
-        Enter your email address and we'll send you a 5-digit reset code.
+        Enter your email, the reset code sent to your email, and your new
+        password.
       </Typography>
       <form onSubmit={handleSubmit}>
         <TextField
           label="Email Address"
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+          required
+          fullWidth
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="Reset Code"
+          name="reset_code"
+          value={form.reset_code}
+          onChange={handleChange}
+          required
+          fullWidth
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="New Password"
+          type="password"
+          name="new_password"
+          value={form.new_password}
+          onChange={handleChange}
           required
           fullWidth
           sx={{ mb: 2 }}
@@ -85,7 +112,7 @@ function ForgotPasswordSection() {
           {loading ? (
             <CircularProgress size={24} color="inherit" />
           ) : (
-            "Send Reset Code"
+            "Reset Password"
           )}
         </Button>
       </form>
@@ -103,4 +130,4 @@ function ForgotPasswordSection() {
   );
 }
 
-export default ForgotPasswordSection;
+export default ResetPasswordSection;

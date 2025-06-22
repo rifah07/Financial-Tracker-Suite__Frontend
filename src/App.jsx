@@ -12,6 +12,7 @@ import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import ForgotPasswordSection from "./sections/ForgotPasswordSection";
+import ResetPasswordSection from "./sections/ResetPasswordSection";
 
 function App() {
   const [showRegister, setShowRegister] = useState(false);
@@ -66,6 +67,7 @@ function App() {
               path="/forgot-password"
               element={<ForgotPasswordSection />}
             />
+            <Route path="/reset-password" element={<ResetPasswordSection />} />
           </Routes>
         </Container>
         <Footer />
