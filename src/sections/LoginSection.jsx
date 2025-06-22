@@ -1,13 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_API_USER_URL;
 const LOGIN_URL = `${BASE_URL}/login`;
 
-function LoginSection() {
+function LoginSection({ onLoginSuccess }) {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -30,6 +32,10 @@ function LoginSection() {
       if (res.status === 200) {
         setSuccessMsg(data.message || "Login successful!");
         setForm({ email: "", password: "" });
+        if (onLoginSuccess) onLoginSuccess();
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 800); // short delay for UX
       } else {
         setErrorMsg(data.error || "Login failed.");
       }
