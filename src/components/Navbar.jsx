@@ -1,158 +1,88 @@
-import { useNavigate } from "react-router-dom";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn }) {
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
-  const [mobileMenu, setMobileMenu] = useState(false);
+
+  const navLinks = !isLoggedIn
+    ? [
+        { label: "Register", action: onRegisterClick },
+        { label: "Login", action: onLoginClick, color: "primary" },
+      ]
+    : [
+        { label: "Dashboard", action: () => navigate("/dashboard") },
+        { label: "Profile", action: () => navigate("/profile") },
+        { label: "Logout", action: onLogout, color: "error" },
+      ];
 
   return (
-    <nav
-      style={{
-        background: "#fff",
-        boxShadow: "0 2px 8px rgba(25, 118, 210, 0.07)",
-        padding: "0.7rem 0",
-        position: "sticky",
-        top: 0,
-        zIndex: 100,
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 1100,
-          margin: "0 auto",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 1.5rem",
-        }}
-      >
-        <div
-          style={{
-            fontWeight: 700,
-            fontSize: "1.4rem",
-            color: "#1976d2",
-            letterSpacing: "-1px",
-          }}
+    <AppBar position="sticky" color="inherit" elevation={2}>
+      <Toolbar sx={{ justifyContent: "space-between" }}>
+        <Typography
+          variant="h6"
+          color="primary"
+          sx={{ fontWeight: 700, letterSpacing: "-1px", cursor: "pointer" }}
+          onClick={() => navigate("/")}
         >
           Financial Tracker
-        </div>
-        <div
-          className="nav-links"
-          style={{ display: "flex", alignItems: "center", gap: "1.2rem" }}
+        </Typography>
+        <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
+          {navLinks.map((link) => (
+            <Button
+              key={link.label}
+              variant={link.color === "primary" ? "contained" : "outlined"}
+              color={link.color || "primary"}
+              onClick={link.action}
+              sx={{
+                borderRadius: 8,
+                fontWeight: 600,
+                px: 3,
+                boxShadow: link.color === "primary" ? 2 : 0,
+              }}
+            >
+              {link.label}
+            </Button>
+          ))}
+        </Box>
+        <IconButton
+          edge="end"
+          color="primary"
+          sx={{ display: { md: "none" } }}
+          onClick={() => setDrawerOpen(true)}
         >
-          {!isLoggedIn ? (
-            <>
-              <button onClick={onRegisterClick} style={navBtnStyle}>
-                Register
-              </button>
-              <button
-                onClick={onLoginClick}
-                style={{ ...navBtnStyle, background: "#1976d2", color: "#fff" }}
+          <MenuIcon />
+        </IconButton>
+        <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+          <List sx={{ width: 220 }}>
+            {navLinks.map((link) => (
+              <ListItem
+                button
+                key={link.label}
+                onClick={() => {
+                  setDrawerOpen(false);
+                  link.action();
+                }}
               >
-                Login
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                onClick={() => navigate("/profile")}
-                style={navBtnStyle}
-              >
-                Profile
-              </button>
-              <button
-                onClick={onLogout}
-                style={{ ...navBtnStyle, background: "#d32f2f", color: "#fff" }}
-              >
-                Logout
-              </button>
-            </>
-          )}
-        </div>
-        {/* Mobile menu button */}
-        <button
-          className="mobile-menu-btn"
-          style={{
-            display: "none",
-            background: "none",
-            border: "none",
-            fontSize: "1.7rem",
-            color: "#1976d2",
-            cursor: "pointer",
-          }}
-          onClick={() => setMobileMenu((prev) => !prev)}
-        >
-          ☰
-        </button>
-      </div>
-      {/* Responsive mobile menu */}
-      {mobileMenu && (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "1rem",
-            padding: "1rem",
-            background: "#fff",
-            boxShadow: "0 2px 8px rgba(25, 118, 210, 0.07)",
-          }}
-        >
-          {!isLoggedIn ? (
-            <>
-              <button onClick={onRegisterClick} style={navBtnStyle}>
-                Register
-              </button>
-              <button
-                onClick={onLoginClick}
-                style={{ ...navBtnStyle, background: "#1976d2", color: "#fff" }}
-              >
-                Login
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                onClick={() => navigate("/profile")}
-                style={navBtnStyle}
-              >
-                Profile
-              </button>
-              <button
-                onClick={onLogout}
-                style={{ ...navBtnStyle, background: "#d32f2f", color: "#fff" }}
-              >
-                Logout
-              </button>
-            </>
-          )}
-        </div>
-      )}
-      <style>
-        {`
-          @media (max-width: 600px) {
-            .nav-links {
-              display: none !important;
-            }
-            .mobile-menu-btn {
-              display: block !important;
-            }
-          }
-        `}
-      </style>
-    </nav>
+                <ListItemText primary={link.label} />
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+      </Toolbar>
+    </AppBar>
   );
 }
 
-const navBtnStyle = {
-  background: "#e3f2fd",
-  color: "#1976d2",
-  border: "none",
-  borderRadius: "2rem",
-  padding: "0.5rem 1.3rem",
-  fontWeight: 600,
-  fontSize: "1rem",
-  cursor: "pointer",
-  marginLeft: "0.7rem",
-};
-
+import Box from "@mui/material/Box";
 export default Navbar;

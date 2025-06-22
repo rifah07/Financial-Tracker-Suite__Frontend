@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import ProfileCard from "../components/ProfileCard";
 import TransactionList from "../components/TransactionList";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import CircularProgress from "@mui/material/CircularProgress";
+import Paper from "@mui/material/Paper";
 
 function DashboardSection() {
   const [user, setUser] = useState(null);
@@ -42,104 +47,43 @@ function DashboardSection() {
 
   if (loading) {
     return (
-      <section style={sectionStyle}>
-        <div style={{ textAlign: "center", padding: "2rem" }}>
-          <span className="loader" />
-          <div style={{ marginTop: "1rem", color: "#1976d2" }}>
-            Loading dashboard...
-          </div>
-        </div>
-        <style>
-          {`
-            .loader {
-              display: inline-block;
-              width: 36px;
-              height: 36px;
-              border: 4px solid #e3f2fd;
-              border-top: 4px solid #1976d2;
-              border-radius: 50%;
-              animation: spin 1s linear infinite;
-            }
-            @keyframes spin {
-              0% { transform: rotate(0deg);}
-              100% { transform: rotate(360deg);}
-            }
-          `}
-        </style>
-      </section>
+      <Box sx={{ textAlign: "center", py: 6 }}>
+        <CircularProgress color="primary" />
+        <Typography sx={{ mt: 2 }}>Loading dashboard...</Typography>
+      </Box>
     );
   }
 
   if (error) {
     return (
-      <section style={sectionStyle}>
-        <div
-          style={{
-            color: "#d32f2f",
-            textAlign: "center",
-            fontWeight: 500,
-          }}
-        >
-          {error}
-        </div>
-      </section>
+      <Box sx={{ textAlign: "center", py: 6 }}>
+        <Typography color="error">{error}</Typography>
+      </Box>
     );
   }
 
   return (
-    <section style={sectionStyle}>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "2rem",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-        }}
-      >
-        <div style={{ flex: "1 1 220px", minWidth: 220, maxWidth: 270 }}>
+    <Box sx={{ maxWidth: 1100, mx: "auto", mt: 4, px: 2 }}>
+      <Grid container spacing={4} justifyContent="center">
+        <Grid item xs={12} md={4}>
           <ProfileCard user={user} />
-        </div>
-        <div style={{ flex: "1 1 320px", minWidth: 260 }}>
-          <h3
-            style={{
-              color: "#1976d2",
-              fontWeight: 600,
-              fontSize: "1.15rem",
-              marginBottom: "1rem",
-            }}
-          >
-            Recent Transactions
-          </h3>
-          <TransactionList transactions={transactions} />
-        </div>
-      </div>
-      <style>
-        {`
-          @media (max-width: 900px) {
-            section {
-              padding: 1.2rem 0.5rem !important;
-            }
-          }
-          @media (max-width: 700px) {
-            section > div {
-              flex-direction: column !important;
-              gap: 1.5rem !important;
-            }
-          }
-        `}
-      </style>
-    </section>
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <Paper sx={{ p: 3, borderRadius: 4, boxShadow: 2 }}>
+            <Typography
+              variant="h6"
+              color="primary"
+              fontWeight={600}
+              sx={{ mb: 2 }}
+            >
+              Recent Transactions
+            </Typography>
+            <TransactionList transactions={transactions} />
+          </Paper>
+        </Grid>
+      </Grid>
+    </Box>
   );
 }
-
-const sectionStyle = {
-  background: "#fff",
-  borderRadius: "1.2rem",
-  boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-  padding: "2.5rem 2rem",
-  marginBottom: "2rem",
-  minHeight: 320,
-};
 
 export default DashboardSection;

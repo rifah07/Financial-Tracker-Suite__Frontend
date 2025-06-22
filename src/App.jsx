@@ -8,11 +8,16 @@ import RegisterSection from "./sections/RegisterSection";
 import LoginSection from "./sections/LoginSection";
 import ProfilePage from "./pages/ProfilePage";
 import Footer from "./components/Footer";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Box from "@mui/material/Box";
 
 function App() {
   const [showRegister, setShowRegister] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("accessToken"));
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    !!localStorage.getItem("accessToken")
+  );
 
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem("accessToken"));
@@ -36,26 +41,41 @@ function App() {
 
   return (
     <Router>
-      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "#f7fafc" }}>
+      <CssBaseline />
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          bgcolor: "#f7fafc",
+        }}
+      >
         <Navbar
           onRegisterClick={() => setShowRegister(true)}
           onLoginClick={() => setShowLogin(true)}
           onLogout={handleLogout}
           isLoggedIn={isLoggedIn}
         />
-        <Routes>
-          <Route path="/" element={<HeroSection />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Routes>
+        <Container maxWidth="lg" sx={{ flex: 1, py: { xs: 2, md: 4 } }}>
+          <Routes>
+            <Route path="/" element={<HeroSection />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+          </Routes>
+        </Container>
         <Footer />
         <Modal open={showRegister} onClose={() => setShowRegister(false)}>
           <RegisterSection />
         </Modal>
         <Modal open={showLogin} onClose={() => setShowLogin(false)}>
-          <LoginSection onLoginSuccess={() => { setShowLogin(false); setIsLoggedIn(true); }} />
+          <LoginSection
+            onLoginSuccess={() => {
+              setShowLogin(false);
+              setIsLoggedIn(true);
+            }}
+          />
         </Modal>
-      </div>
+      </Box>
     </Router>
   );
 }

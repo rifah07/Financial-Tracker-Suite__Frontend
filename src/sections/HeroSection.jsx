@@ -1,60 +1,78 @@
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import SavingsIcon from "@mui/icons-material/Savings";
+
 function HeroSection() {
   return (
-    <section
-      style={{
-        background: "linear-gradient(90deg, #4fc3f7 0%, #1976d2 100%)",
-        color: "#fff",
-        padding: "4rem 2rem 3rem 2rem",
-        textAlign: "center",
-        boxShadow: "0 4px 24px rgba(25, 118, 210, 0.08)",
+    <Box
+      sx={{
+        minHeight: { xs: 350, md: 420 },
+        display: "flex",
+        flexDirection: { xs: "column", md: "row" },
+        alignItems: "center",
+        justifyContent: "space-between",
+        bgcolor: "#e3f2fd",
+        borderRadius: 4,
+        px: { xs: 2, md: 6 },
+        py: { xs: 5, md: 8 },
+        mt: 4,
+        boxShadow: 3,
       }}
     >
-      <h1
-        style={{
-          fontSize: "2.8rem",
-          fontWeight: 700,
-          marginBottom: "1rem",
-          letterSpacing: "-1px",
+      <Box sx={{ flex: 1 }}>
+        <Typography variant="h3" color="primary" fontWeight={700} gutterBottom>
+          Take Control of Your Finances
+        </Typography>
+        <Typography variant="h6" color="text.secondary" sx={{ mb: 3 }}>
+          Track your income, expenses, and savings with ease. Secure, fast, and
+          beautifully simple.
+        </Typography>
+        <Stack direction="row" spacing={2}>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            sx={{
+              borderRadius: 8,
+              fontWeight: 600,
+              px: 4,
+              boxShadow: 2,
+            }}
+            href="#"
+          >
+            Get Started
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            size="large"
+            sx={{
+              borderRadius: 8,
+              fontWeight: 600,
+              px: 4,
+            }}
+            href="#"
+          >
+            Learn More
+          </Button>
+        </Stack>
+      </Box>
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          mt: { xs: 4, md: 0 },
         }}
       >
-        Financial Tracker Suite
-      </h1>
-      <p
-        style={{
-          fontSize: "1.3rem",
-          maxWidth: 600,
-          margin: "0 auto 2rem auto",
-        }}
-      >
-        Take control of your finances with ease. Track expenses, manage budgets,
-        and gain actionable insights—all in one place.
-      </p>
-      <a
-        href="#get-started"
-        style={{
-          display: "inline-block",
-          background: "#fff",
-          color: "#1976d2",
-          fontWeight: 600,
-          padding: "0.9rem 2.2rem",
-          borderRadius: "2rem",
-          fontSize: "1.1rem",
-          textDecoration: "none",
-          boxShadow: "0 2px 8px rgba(25, 118, 210, 0.10)",
-          transition: "background 0.2s, color 0.2s",
-        }}
-        onMouseOver={(e) => {
-          e.target.style.background = "#1976d2";
-          e.target.style.color = "#fff";
-        }}
-        onMouseOut={(e) => {
-          e.target.style.background = "#fff";
-          e.target.style.color = "#1976d2";
-        }}
-      >
-        Get Started
-      </a>
-    </section>
+        <SavingsIcon
+          sx={{ fontSize: 160, color: "#1976d2", opacity: 0.15 }}
+        />
+      </Box>
+    </Box>
   );
 }
 

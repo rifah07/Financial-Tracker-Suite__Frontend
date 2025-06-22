@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import ProfileCard from "../components/ProfileCard";
-import Modal from "../components/Modal";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -70,104 +77,80 @@ function ProfilePage() {
 
   if (loading)
     return (
-      <div style={{ padding: 32, textAlign: "center" }}>Loading profile...</div>
+      <Box sx={{ p: 4, textAlign: "center" }}>
+        <CircularProgress color="primary" />
+        <Typography sx={{ mt: 2 }}>Loading profile...</Typography>
+      </Box>
     );
   if (!user)
     return (
-      <div style={{ padding: 32, textAlign: "center" }}>No profile found.</div>
+      <Box sx={{ p: 4, textAlign: "center" }}>
+        <Typography>No profile found.</Typography>
+      </Box>
     );
 
   return (
     <>
       <ProfileCard user={user} />
-      <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
-        <button
+      <Box sx={{ textAlign: "center", mt: 3 }}>
+        <Button
+          variant="contained"
+          color="error"
           onClick={() => setShowConfirm(true)}
-          style={{
-            background: "#d32f2f",
-            color: "#fff",
-            border: "none",
-            borderRadius: "2rem",
-            padding: "0.7rem 2rem",
+          sx={{
+            borderRadius: 8,
+            px: 4,
+            py: 1.5,
             fontWeight: 600,
             fontSize: "1rem",
-            cursor: "pointer",
-            marginTop: "0.5rem",
-            transition: "background 0.2s",
+            boxShadow: 2,
           }}
         >
           Delete Account
-        </button>
-      </div>
-      <Modal open={showConfirm} onClose={() => setShowConfirm(false)}>
-        <div style={{ textAlign: "center", padding: "1rem" }}>
-          <h3
-            style={{
-              color: "#d32f2f",
-              marginBottom: 16,
-            }}
-          >
-            Confirm Account Deletion
-          </h3>
-          <p style={{ marginBottom: 24 }}>
-            Are you sure you want to{" "}
-            <b>permanently delete</b> your account? This action cannot be undone.
-          </p>
+        </Button>
+      </Box>
+      <Dialog open={showConfirm} onClose={() => setShowConfirm(false)}>
+        <DialogTitle sx={{ color: "error.main" }}>
+          Confirm Account Deletion
+        </DialogTitle>
+        <DialogContent>
+          <Typography sx={{ mb: 2 }}>
+            Are you sure you want to <b>permanently delete</b> your account?
+            This action cannot be undone.
+          </Typography>
           {deleteError && (
-            <div
-              style={{
-                color: "#d32f2f",
-                marginBottom: 12,
-              }}
-            >
+            <Typography color="error" sx={{ mb: 1 }}>
               {deleteError}
-            </div>
+            </Typography>
           )}
           {deleteSuccess && (
-            <div
-              style={{
-                color: "#388e3c",
-                marginBottom: 12,
-              }}
-            >
+            <Typography color="success.main" sx={{ mb: 1 }}>
               {deleteSuccess}
-            </div>
+            </Typography>
           )}
-          <button
+        </DialogContent>
+        <DialogActions>
+          <Button
             onClick={handleDeleteAccount}
+            color="error"
+            variant="contained"
             disabled={deleteLoading}
-            style={{
-              background: "#d32f2f",
-              color: "#fff",
-              border: "none",
-              borderRadius: "2rem",
-              padding: "0.7rem 2rem",
-              fontWeight: 600,
-              fontSize: "1rem",
-              cursor: deleteLoading ? "not-allowed" : "pointer",
-              marginRight: 10,
-            }}
           >
-            {deleteLoading ? "Deleting..." : "Yes, Delete"}
-          </button>
-          <button
+            {deleteLoading ? (
+              <CircularProgress size={22} color="inherit" />
+            ) : (
+              "Yes, Delete"
+            )}
+          </Button>
+          <Button
             onClick={() => setShowConfirm(false)}
-            style={{
-              background: "#e3f2fd",
-              color: "#1976d2",
-              border: "none",
-              borderRadius: "2rem",
-              padding: "0.7rem 2rem",
-              fontWeight: 600,
-              fontSize: "1rem",
-              cursor: "pointer",
-              marginLeft: 10,
-            }}
+            variant="outlined"
+            color="primary"
           >
             Cancel
-          </button>
-        </div>
-      </Modal>
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
