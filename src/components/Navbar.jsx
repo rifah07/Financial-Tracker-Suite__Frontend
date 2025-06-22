@@ -1,6 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-function Navbar({ onRegisterClick, onLoginClick }) {
+function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn }) {
+  const navigate = useNavigate();
   const [mobileMenu, setMobileMenu] = useState(false);
 
   return (
@@ -38,15 +40,34 @@ function Navbar({ onRegisterClick, onLoginClick }) {
           className="nav-links"
           style={{ display: "flex", alignItems: "center", gap: "1.2rem" }}
         >
-          <button onClick={onRegisterClick} style={navBtnStyle}>
-            Register
-          </button>
-          <button
-            onClick={onLoginClick}
-            style={{ ...navBtnStyle, background: "#1976d2", color: "#fff" }}
-          >
-            Login
-          </button>
+          {!isLoggedIn ? (
+            <>
+              <button onClick={onRegisterClick} style={navBtnStyle}>
+                Register
+              </button>
+              <button
+                onClick={onLoginClick}
+                style={{ ...navBtnStyle, background: "#1976d2", color: "#fff" }}
+              >
+                Login
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => navigate("/profile")}
+                style={navBtnStyle}
+              >
+                Profile
+              </button>
+              <button
+                onClick={onLogout}
+                style={{ ...navBtnStyle, background: "#d32f2f", color: "#fff" }}
+              >
+                Logout
+              </button>
+            </>
+          )}
         </div>
         {/* Mobile menu button */}
         <button
@@ -76,15 +97,34 @@ function Navbar({ onRegisterClick, onLoginClick }) {
             boxShadow: "0 2px 8px rgba(25, 118, 210, 0.07)",
           }}
         >
-          <button onClick={onRegisterClick} style={navBtnStyle}>
-            Register
-          </button>
-          <button
-            onClick={onLoginClick}
-            style={{ ...navBtnStyle, background: "#1976d2", color: "#fff" }}
-          >
-            Login
-          </button>
+          {!isLoggedIn ? (
+            <>
+              <button onClick={onRegisterClick} style={navBtnStyle}>
+                Register
+              </button>
+              <button
+                onClick={onLoginClick}
+                style={{ ...navBtnStyle, background: "#1976d2", color: "#fff" }}
+              >
+                Login
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => navigate("/profile")}
+                style={navBtnStyle}
+              >
+                Profile
+              </button>
+              <button
+                onClick={onLogout}
+                style={{ ...navBtnStyle, background: "#d32f2f", color: "#fff" }}
+              >
+                Logout
+              </button>
+            </>
+          )}
         </div>
       )}
       <style>
@@ -112,7 +152,7 @@ const navBtnStyle = {
   fontWeight: 600,
   fontSize: "1rem",
   cursor: "pointer",
-  transition: "background 0.2s, color 0.2s",
+  marginLeft: "0.7rem",
 };
 
 export default Navbar;

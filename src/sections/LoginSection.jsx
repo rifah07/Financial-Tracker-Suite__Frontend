@@ -32,10 +32,14 @@ function LoginSection({ onLoginSuccess }) {
       if (res.status === 200) {
         setSuccessMsg(data.message || "Login successful!");
         setForm({ email: "", password: "" });
+        // Save accessToken here:
+        if (data.accessToken) {
+          localStorage.setItem("accessToken", data.accessToken);
+        }
         if (onLoginSuccess) onLoginSuccess();
         setTimeout(() => {
           navigate("/dashboard");
-        }, 800); // short delay for UX
+        }, 800);
       } else {
         setErrorMsg(data.error || "Login failed.");
       }
