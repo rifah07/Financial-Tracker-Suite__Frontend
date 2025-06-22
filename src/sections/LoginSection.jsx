@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Link from "@mui/material/Link";
 
 const BASE_URL = import.meta.env.VITE_API_USER_URL;
 const LOGIN_URL = `${BASE_URL}/login`;
@@ -85,6 +86,14 @@ function LoginSection({ onLoginSuccess }) {
           required
           style={inputStyle}
         />
+        <Link
+          component="button"
+          variant="body2"
+          onClick={() => navigate("/forgot-password")}
+          sx={{ alignSelf: "flex-end", mb: 1 }}
+        >
+          Forgot password?
+        </Link>
         <button
           type="submit"
           disabled={loading}

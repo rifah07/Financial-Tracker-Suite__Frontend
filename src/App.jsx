@@ -11,6 +11,7 @@ import Footer from "./components/Footer";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
+import ForgotPasswordSection from "./sections/ForgotPasswordSection";
 
 function App() {
   const [showRegister, setShowRegister] = useState(false);
@@ -61,6 +62,7 @@ function App() {
             <Route path="/" element={<HeroSection />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordSection />} />
           </Routes>
         </Container>
         <Footer />
