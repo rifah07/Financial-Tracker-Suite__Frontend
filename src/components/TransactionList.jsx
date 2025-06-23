@@ -4,61 +4,71 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
+import SectionCard from "./SectionCard";
+import Button from "@mui/material/Button";
 
-function TransactionList({ transactions }) {
+function TransactionList({ transactions, user }) {
   if (!transactions || transactions.length === 0) {
     return (
-      <Box
-        sx={{ color: "#888", fontSize: "1.05rem", textAlign: "center", py: 3 }}
-      >
-        <img
-          src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/money.svg"
-          alt="No transactions"
-          style={{ width: 48, opacity: 0.5, marginBottom: 12 }}
-        />
-        <Typography>
-          No recent transactions yet.
-          <br />
-          Start tracking your finances!
-        </Typography>
-      </Box>
+      <Typography color="text.secondary" align="center">
+        No transactions yet.
+      </Typography>
     );
   }
+
   return (
-    <List>
-      {transactions.map((tx, idx) => (
-        <div key={tx._id}>
-          <ListItem>
-            <ListItemText
-              primary={
-                <span
-                  style={{
-                    fontWeight: 600,
-                    color: tx.type === "debit" ? "#d32f2f" : "#388e3c",
-                  }}
-                >
-                  {tx.type === "debit" ? "−" : "+"}$
-                  {Math.abs(tx.amount).toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                  })}
-                </span>
-              }
-              secondary={
-                <>
-                  <Typography color="primary" fontSize={14}>
-                    {tx.description}
-                  </Typography>
-                  <Typography color="text.secondary" fontSize={13}>
-                    {new Date(tx.createdAt).toLocaleString()}
-                  </Typography>
-                </>
-              }
-            />
-          </ListItem>
-          {idx < transactions.length - 1 && <Divider />}
-        </div>
-      ))}
-    </List>
+    <SectionCard sx={{ maxWidth: 400, mx: "auto", mt: 4 }}>
+      <Typography
+        variant="h4"
+        fontWeight={700}
+        color="primary"
+        sx={{ mb: 3, textAlign: "center" }}
+      >
+        Welcome back, {user?.name?.split(" ")[0] || "User"}!
+      </Typography>
+      <List>
+        {transactions.map((tx, idx) => (
+          <Box key={tx._id || idx}>
+            <ListItem
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                px: 0,
+              }}
+            >
+              <ListItemText
+                primary={tx.remarks}
+                secondary={new Date(tx.createdAt).toLocaleDateString()}
+                sx={{ flex: 1 }}
+              />
+              <Typography
+                variant="subtitle1"
+                fontWeight={700}
+                color={
+                  tx.transaction_type === "income"
+                    ? "success.main"
+                    : "error.main"
+                }
+                sx={{ minWidth: 90, textAlign: "right" }}
+              >
+                {tx.transaction_type === "income"
+                  ? `+${Number(tx.amount).toLocaleString()}`
+                  : `-${Number(tx.amount).toLocaleString()}`}
+              </Typography>
+            </ListItem>
+            {idx < transactions.length - 1 && <Divider />}
+          </Box>
+        ))}
+      </List>
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{ borderRadius: 8, fontWeight: 600, px: 4, boxShadow: 2 }}
+      >
+        Get Started
+      </Button>
+    </SectionCard>
   );
 }
 
