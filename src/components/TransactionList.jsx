@@ -10,8 +10,9 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import { useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
-function TransactionList({ transactions, onFilter, onDelete }) {
+function TransactionList({ transactions, onFilter, onDelete, onEdit }) {
   const [selected, setSelected] = useState("all");
 
   const handleFilter = (type) => {
@@ -97,6 +98,15 @@ function TransactionList({ transactions, onFilter, onDelete }) {
                 sx={{ ml: 1 }}
               >
                 <DeleteIcon />
+              </IconButton>
+              <IconButton
+                edge="end"
+                aria-label="edit"
+                color="primary"
+                onClick={() => onEdit && onEdit(tx)}
+                sx={{ ml: 1 }}
+              >
+                <EditIcon />
               </IconButton>
             </ListItem>
             {idx < transactions.length - 1 && <Divider />}

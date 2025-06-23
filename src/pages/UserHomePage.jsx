@@ -5,9 +5,12 @@ import SectionCard from "../components/SectionCard";
 import ProfileCard from "../components/ProfileCard";
 import TransactionList from "../components/TransactionList";
 import { useState, useEffect } from "react";
+import EditTransactionSection from "../sections/EditTransactionSection";
+import Modal from "@mui/material/Modal";
 
 function UserHomePage({ user }) {
   const [transactions1, setTransactions1] = useState([]);
+  const [editTx, setEditTx] = useState(null);
 
   const fetchTransactions = async (type = "") => {
     const token = localStorage.getItem("accessToken");
@@ -73,12 +76,25 @@ function UserHomePage({ user }) {
             </Typography>
             <TransactionList
               transactions={transactions1}
+              onEdit={setEditTx}
               onFilter={fetchTransactions}
               onDelete={handleDeleteTransaction}
             />
           </SectionCard>
         </Grid>
       </Grid>
+      <Modal open={!!editTx} onClose={() => setEditTx(null)}>
+        {editTx && (
+          <EditTransactionSection
+            transaction={editTx}
+            onSuccess={() => {
+              setEditTx(null);
+              fetchTransactions();
+            }}
+            onClose={() => setEditTx(null)}
+          />
+        )}
+      </Modal>
     </Box>
   );
 }
