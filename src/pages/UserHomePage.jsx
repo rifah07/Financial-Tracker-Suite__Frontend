@@ -29,6 +29,24 @@ function UserHomePage({ user }) {
     fetchTransactions();
   }, []);
 
+  const handleDeleteTransaction = async (transactionId) => {
+    const token = localStorage.getItem("accessToken");
+    const url = `${import.meta.env.VITE_API_TRANSACTION_URL}/${transactionId}`;
+    const res = await fetch(url, {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token || ""}`,
+      },
+    });
+    if (res.ok) {
+      fetchTransactions();
+    } else {
+      alert("Failed to delete transaction.");
+    }
+  };
+
   return (
     <Box sx={{ mt: 4, mb: 4 }}>
       <Typography
@@ -55,8 +73,8 @@ function UserHomePage({ user }) {
             </Typography>
             <TransactionList
               transactions={transactions1}
-              user={user}
               onFilter={fetchTransactions}
+              onDelete={handleDeleteTransaction}
             />
           </SectionCard>
         </Grid>

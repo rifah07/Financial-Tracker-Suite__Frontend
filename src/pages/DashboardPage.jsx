@@ -24,6 +24,24 @@ function DashboardPage() {
     fetchTransactions();
   }, []);
 
+  const handleDeleteTransaction = async (transactionId) => {
+    const token = localStorage.getItem("accessToken");
+    const url = `${import.meta.env.VITE_API_TRANSACTION_URL}/${transactionId}`;
+    const res = await fetch(url, {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token || ""}`,
+      },
+    });
+    if (res.ok) {
+      fetchTransactions();
+    } else {
+      alert("Failed to delete transaction.");
+    }
+  };
+
   return (
     <main
       style={{
@@ -36,6 +54,7 @@ function DashboardPage() {
       <TransactionList
         transactions={transactions}
         onFilter={fetchTransactions}
+        onDelete={handleDeleteTransaction}
       />
     </main>
   );

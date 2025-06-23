@@ -8,8 +8,10 @@ import SectionCard from "./SectionCard";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { useState } from "react";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-function TransactionList({ transactions, user, onFilter }) {
+function TransactionList({ transactions, onFilter, onDelete }) {
   const [selected, setSelected] = useState("all");
 
   const handleFilter = (type) => {
@@ -87,6 +89,15 @@ function TransactionList({ transactions, user, onFilter }) {
                   ? `+${Number(tx.amount).toLocaleString()}`
                   : `-${Number(tx.amount).toLocaleString()}`}
               </Typography>
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                color="error"
+                onClick={() => onDelete && onDelete(tx._id)}
+                sx={{ ml: 1 }}
+              >
+                <DeleteIcon />
+              </IconButton>
             </ListItem>
             {idx < transactions.length - 1 && <Divider />}
           </Box>
