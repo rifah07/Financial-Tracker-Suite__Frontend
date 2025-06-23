@@ -21,6 +21,7 @@ import ForgotPasswordSection from "./sections/ForgotPasswordSection";
 import ResetPasswordSection from "./sections/ResetPasswordSection";
 import UserHomePage from "./pages/UserHomePage";
 import AddIncomeSection from "./sections/AddIncomeSection";
+import AddExpenseSection from "./sections/AddExpenseSection";
 
 function App() {
   const [showRegister, setShowRegister] = useState(false);
@@ -31,6 +32,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [showAddIncome, setShowAddIncome] = useState(false);
+  const [showAddExpense, setShowAddExpense] = useState(false);
 
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem("accessToken"));
@@ -150,6 +152,21 @@ function App() {
           <AddIncomeSection
             onSuccess={() => {
               setShowAddIncome(false);
+              refreshDashboard();
+            }}
+          />
+        </Modal>
+        <Button
+          onClick={() => setShowAddExpense(true)}
+          color="error"
+          sx={{ ml: 2 }}
+        >
+          Add Expense
+        </Button>
+        <Modal open={showAddExpense} onClose={() => setShowAddExpense(false)}>
+          <AddExpenseSection
+            onSuccess={() => {
+              setShowAddExpense(false);
               refreshDashboard();
             }}
           />
