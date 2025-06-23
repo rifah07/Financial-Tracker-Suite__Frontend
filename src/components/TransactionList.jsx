@@ -6,8 +6,17 @@ import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import SectionCard from "./SectionCard";
 import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import { useState } from "react";
 
-function TransactionList({ transactions, user }) {
+function TransactionList({ transactions, user, onFilter }) {
+  const [selected, setSelected] = useState("all");
+
+  const handleFilter = (type) => {
+    setSelected(type);
+    if (onFilter) onFilter(type === "all" ? "" : type);
+  };
+
   if (!transactions || transactions.length === 0) {
     return (
       <Typography color="text.secondary" align="center">
@@ -17,15 +26,37 @@ function TransactionList({ transactions, user }) {
   }
 
   return (
-    <SectionCard sx={{ maxWidth: 400, mx: "auto", mt: 4 }}>
+    <SectionCard sx={{ maxWidth: 500, mx: "auto", mt: 4 }}>
       <Typography
-        variant="h4"
+        variant="h5"
         fontWeight={700}
         color="primary"
-        sx={{ mb: 3, textAlign: "center" }}
+        sx={{ mb: 2, textAlign: "center" }}
       >
-        Welcome back, {user?.name?.split(" ")[0] || "User"}!
+        Transactions
       </Typography>
+      <ButtonGroup fullWidth sx={{ mb: 2 }}>
+        <Button
+          variant={selected === "all" ? "contained" : "outlined"}
+          onClick={() => handleFilter("all")}
+        >
+          All
+        </Button>
+        <Button
+          variant={selected === "income" ? "contained" : "outlined"}
+          color="success"
+          onClick={() => handleFilter("income")}
+        >
+          Income
+        </Button>
+        <Button
+          variant={selected === "expense" ? "contained" : "outlined"}
+          color="error"
+          onClick={() => handleFilter("expense")}
+        >
+          Expense
+        </Button>
+      </ButtonGroup>
       <List>
         {transactions.map((tx, idx) => (
           <Box key={tx._id || idx}>
@@ -61,13 +92,6 @@ function TransactionList({ transactions, user }) {
           </Box>
         ))}
       </List>
-      <Button
-        variant="contained"
-        color="primary"
-        sx={{ borderRadius: 8, fontWeight: 600, px: 4, boxShadow: 2 }}
-      >
-        Get Started
-      </Button>
     </SectionCard>
   );
 }

@@ -4,8 +4,31 @@ import Grid from "@mui/material/Grid";
 import SectionCard from "../components/SectionCard";
 import ProfileCard from "../components/ProfileCard";
 import TransactionList from "../components/TransactionList";
+import { useState, useEffect } from "react";
 
-function UserHomePage({ user, transactions }) {
+function UserHomePage({ user }) {
+  const [transactions1, setTransactions1] = useState([]);
+
+  const fetchTransactions = async (type = "") => {
+    const token = localStorage.getItem("accessToken");
+    let url = `${import.meta.env.VITE_API_TRANSACTION_URL}/`;
+    if (type) url += `?transaction_type=${type}`;
+    const res = await fetch(url, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token || ""}`,
+      },
+    });
+    const data = await res.json();
+    setTransactions1(data.data || []);
+  };
+
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
+
   return (
     <Box sx={{ mt: 4, mb: 4 }}>
       <Typography
@@ -30,7 +53,11 @@ function UserHomePage({ user, transactions }) {
             >
               Recent Transactions
             </Typography>
-            <TransactionList transactions={transactions} />
+            <TransactionList
+              transactions={transactions1}
+              user={user}
+              onFilter={fetchTransactions}
+            />
           </SectionCard>
         </Grid>
       </Grid>
