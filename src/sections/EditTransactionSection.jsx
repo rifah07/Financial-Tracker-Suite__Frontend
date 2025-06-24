@@ -7,13 +7,13 @@ import Paper from "@mui/material/Paper";
 import CircularProgress from "@mui/material/CircularProgress";
 import MenuItem from "@mui/material/MenuItem";
 
-const EDIT_TRANSACTION_URL = `${import.meta.env.VITE_API_TRANSACTION_URL}/`;
+const EDIT_TRANSACTION_URL = `${import.meta.env.VITE_API_TRANSACTION_URL}`;
 
 function EditTransactionSection({ transaction, onSuccess, onClose }) {
   const [amount, setAmount] = useState(transaction.amount);
   const [remarks, setRemarks] = useState(transaction.remarks);
   const [transactionType, setTransactionType] = useState(
-    transaction.transaction_type
+    (transaction.transaction_type || "income").toLowerCase()
   );
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
@@ -26,7 +26,7 @@ function EditTransactionSection({ transaction, onSuccess, onClose }) {
     setErrorMsg("");
     try {
       const token = localStorage.getItem("accessToken");
-      const res = await fetch(EDIT_TRANSACTION_URL, {
+      const res = await fetch(`${EDIT_TRANSACTION_URL}/${transaction._id}`, {
         method: "PATCH",
         credentials: "include",
         headers: {
@@ -34,7 +34,6 @@ function EditTransactionSection({ transaction, onSuccess, onClose }) {
           Authorization: `Bearer ${token || ""}`,
         },
         body: JSON.stringify({
-          transaction_id: transaction._id,
           amount,
           remarks,
           transaction_type: transactionType,
@@ -56,6 +55,7 @@ function EditTransactionSection({ transaction, onSuccess, onClose }) {
       setLoading(false);
     }
   };
+
 
   return (
     <Box
@@ -97,7 +97,7 @@ function EditTransactionSection({ transaction, onSuccess, onClose }) {
           select
           label="Type"
           value={transactionType}
-          onChange={(e) => setTransactionType(e.target.value)}
+          onChange={(e) => setTransactionType(e.target.value.toLowerCase())}
           required
           fullWidth
           sx={{ mb: 2 }}

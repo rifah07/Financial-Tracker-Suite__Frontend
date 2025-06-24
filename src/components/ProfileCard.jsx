@@ -4,54 +4,110 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
+import Divider from "@mui/material/Divider";
+import Paper from "@mui/material/Paper";
+
 function ProfileCard({ user }) {
   if (!user) return null;
   return (
-    <Card
+    <Paper
+      elevation={3}
       sx={{
         maxWidth: 420,
         mx: "auto",
-        mt: 4,
         borderRadius: 4,
-        boxShadow: 4,
-        background: "#fff",
+        overflow: "hidden",
+        transition: "all 0.3s ease",
+        "&:hover": { boxShadow: "0 8px 24px rgba(25, 118, 210, 0.15)" },
       }}
     >
-      <CardContent>
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <Box 
+        sx={{ 
+          background: "linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)",
+          p: 3,
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <Box 
+          sx={{ 
+            position: "absolute", 
+            top: -20, 
+            right: -20, 
+            width: 120, 
+            height: 120, 
+            borderRadius: "50%", 
+            background: "rgba(255,255,255,0.1)",
+          }} 
+        />
+        <Box 
+          sx={{ 
+            position: "absolute", 
+            bottom: -30, 
+            left: -30, 
+            width: 160, 
+            height: 160, 
+            borderRadius: "50%", 
+            background: "rgba(255,255,255,0.08)",
+          }} 
+        />
+
+        <Box sx={{ position: "relative", display: "flex", alignItems: "center", gap: 2 }}>
           <Avatar
             sx={{
-              bgcolor: "#e3f2fd",
+              bgcolor: "#fff",
               color: "#1976d2",
-              width: 64,
-              height: 64,
+              width: 70,
+              height: 70,
               fontSize: 32,
-              mb: 2,
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              border: "3px solid rgba(255,255,255,0.8)",
             }}
           >
             {user?.name?.[0]?.toUpperCase() || "U"}
           </Avatar>
-          <Typography variant="h6" color="primary" fontWeight={700}>
-            {user?.name}
+          <Box>
+            <Typography variant="h5" fontWeight={700} color="white">
+              {user?.name}
+            </Typography>
+            <Typography color="rgba(255,255,255,0.8)" fontSize="0.9rem">
+              {user?.email}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+
+      <CardContent sx={{ p: 3 }}>
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+            CURRENT BALANCE
           </Typography>
-          <Typography color="text.secondary" sx={{ mb: 1 }}>
-            {user?.email}
-          </Typography>
-          <Typography fontWeight={600} sx={{ mt: 1 }}>
-            Balance:{" "}
-            <span style={{ color: "#388e3c", fontWeight: 700 }}>
-              ${user?.balance?.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-            </span>
-          </Typography>
-          <Typography color="text.secondary" fontSize={14} sx={{ mt: 1 }}>
-            Member since {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : ""}
-          </Typography>
-          <Typography color="text.secondary" fontStyle="italic" sx={{ mt: 2 }}>
-            {user?.bio ? user.bio : "This user has not added a bio yet."}
+          <Typography variant="h4" fontWeight={700} color="success.main">
+            ${user?.balance?.toLocaleString(undefined, { minimumFractionDigits: 2 })}
           </Typography>
         </Box>
+
+        <Divider sx={{ my: 2 }} />
+
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
+          <Typography variant="body2" color="text.secondary">
+            Member since
+          </Typography>
+          <Typography variant="body2" fontWeight={500}>
+            {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : ""}
+          </Typography>
+        </Box>
+
+        {user?.bio && (
+          <>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="body2" color="text.secondary" fontStyle="italic">
+              {user.bio}
+            </Typography>
+          </>
+        )}
       </CardContent>
-    </Card>
+    </Paper>
   );
 }
 

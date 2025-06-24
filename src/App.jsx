@@ -20,8 +20,6 @@ import Button from "@mui/material/Button";
 import ForgotPasswordSection from "./sections/ForgotPasswordSection";
 import ResetPasswordSection from "./sections/ResetPasswordSection";
 import UserHomePage from "./pages/UserHomePage";
-import AddIncomeSection from "./sections/AddIncomeSection";
-import AddExpenseSection from "./sections/AddExpenseSection";
 
 function App() {
   const [showRegister, setShowRegister] = useState(false);
@@ -31,8 +29,7 @@ function App() {
   );
   const [user, setUser] = useState(null);
   const [transactions, setTransactions] = useState([]);
-  const [showAddIncome, setShowAddIncome] = useState(false);
-  const [showAddExpense, setShowAddExpense] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem("accessToken"));
@@ -40,6 +37,7 @@ function App() {
 
   useEffect(() => {
     if (isLoggedIn) {
+      setIsLoading(true);
       const token = localStorage.getItem("accessToken");
       fetch(`${import.meta.env.VITE_API_USER_URL}/dashboard`, {
         method: "GET",
@@ -49,10 +47,20 @@ function App() {
           Authorization: `Bearer ${token || ""}`,
         },
       })
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Failed to fetch user data");
+          }
+          return res.json();
+        })
         .then((data) => {
           setUser(data.data);
           setTransactions(data.transactions || []);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          setIsLoading(false);
         });
     } else {
       setUser(null);
@@ -78,6 +86,7 @@ function App() {
 
   const refreshDashboard = () => {
     if (isLoggedIn) {
+      setIsLoading(true);
       const token = localStorage.getItem("accessToken");
       fetch(`${import.meta.env.VITE_API_USER_URL}/dashboard`, {
         method: "GET",
@@ -87,10 +96,20 @@ function App() {
           Authorization: `Bearer ${token || ""}`,
         },
       })
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Failed to fetch user data");
+          }
+          return res.json();
+        })
         .then((data) => {
           setUser(data.data);
           setTransactions(data.transactions || []);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          setIsLoading(false);
         });
     }
   };
@@ -118,7 +137,7 @@ function App() {
               path="/"
               element={
                 isLoggedIn ? (
-                  <UserHomePage user={user} transactions={transactions} />
+                  <UserHomePage user={user} transactions={transactions} isLoading={isLoading} />
                 ) : (
                   <HeroSection />
                 )
@@ -145,30 +164,6 @@ function App() {
               setIsLoggedIn(true);
             }}
             onForgotPassword={() => setShowLogin(false)}
-          />
-        </Modal>
-        <Button onClick={() => setShowAddIncome(true)}>Add Income</Button>
-        <Modal open={showAddIncome} onClose={() => setShowAddIncome(false)}>
-          <AddIncomeSection
-            onSuccess={() => {
-              setShowAddIncome(false);
-              refreshDashboard();
-            }}
-          />
-        </Modal>
-        <Button
-          onClick={() => setShowAddExpense(true)}
-          color="error"
-          sx={{ ml: 2 }}
-        >
-          Add Expense
-        </Button>
-        <Modal open={showAddExpense} onClose={() => setShowAddExpense(false)}>
-          <AddExpenseSection
-            onSuccess={() => {
-              setShowAddExpense(false);
-              refreshDashboard();
-            }}
           />
         </Modal>
       </Box>
