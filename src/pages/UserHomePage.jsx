@@ -15,25 +15,90 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Paper from "@mui/material/Paper";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Modal from "../components/Modal";
 import EditTransactionSection from "../sections/EditTransactionSection";
 import AddIncomeSection from "../sections/AddIncomeSection";
 import AddExpenseSection from "../sections/AddExpenseSection";
 
-// Icons (using text symbols for compatibility)
-const TrendingUpIcon = () => <span style={{ color: '#4caf50', fontSize: '22px' }}>↗</span>;
-const TrendingDownIcon = () => <span style={{ color: '#f44336', fontSize: '22px' }}>↘</span>;
-const AccountBalanceWalletIcon = () => <span style={{ color: '#2196f3', fontSize: '22px' }}>💳</span>;
-const AddIcon = () => <span style={{ fontSize: '18px' }}>+</span>;
-const RemoveIcon = () => <span style={{ fontSize: '18px' }}>-</span>;
-const MoreVertIcon = () => <span style={{ fontSize: '18px' }}>⋮</span>;
-const PersonIcon = () => <span style={{ fontSize: '24px' }}>👤</span>;
+// Elegant icons with professional styling
+const TrendingUpIcon = () => (
+  <Box
+    sx={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: 40,
+      height: 40,
+      borderRadius: "50%",
+      background: "linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%)",
+      color: "#2e7d32",
+      fontSize: "20px",
+      fontWeight: "bold",
+    }}
+  >
+    ↗
+  </Box>
+);
 
-function UserHomePage({ user, transactions: initialTransactions = [], isLoading = false }) {
+const TrendingDownIcon = () => (
+  <Box
+    sx={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: 40,
+      height: 40,
+      borderRadius: "50%",
+      background: "linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)",
+      color: "#c62828",
+      fontSize: "20px",
+      fontWeight: "bold",
+    }}
+  >
+    ↘
+  </Box>
+);
+
+const AccountBalanceWalletIcon = () => (
+  <Box
+    sx={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: 48,
+      height: 48,
+      borderRadius: "12px",
+      background: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
+      color: "#1565c0",
+      fontSize: "24px",
+    }}
+  >
+    💳
+  </Box>
+);
+
+const AddIcon = () => (
+  <span style={{ fontSize: "18px", fontWeight: "bold" }}>+</span>
+);
+const RemoveIcon = () => (
+  <span style={{ fontSize: "18px", fontWeight: "bold" }}>−</span>
+);
+const MoreVertIcon = () => (
+  <span style={{ fontSize: "16px", color: "#666" }}>⋮</span>
+);
+const PersonIcon = () => <span style={{ fontSize: "2.5rem" }}>👤</span>;
+
+function UserHomePage({
+  user,
+  transactions: initialTransactions = [],
+  isLoading = false,
+}) {
   const [transactions, setTransactions] = useState(initialTransactions);
   const [showAddIncome, setShowAddIncome] = useState(false);
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [editTx, setEditTx] = useState(null);
+  const navigate = useNavigate();
 
   const fetchTransactions = async (type = "") => {
     const token = localStorage.getItem("accessToken");
@@ -62,7 +127,6 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
     }
   }, [initialTransactions]);
 
-  // Delete handler
   const handleDeleteTransaction = async (transactionId) => {
     const token = localStorage.getItem("accessToken");
     const url = `${import.meta.env.VITE_API_TRANSACTION_URL}/${transactionId}`;
@@ -86,70 +150,103 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
     }
   };
 
-  // Helper: robust type detection
+  const handleViewAllTransactions = () => {
+    navigate("/dashboard");
+  };
+
+  // Helper functions
   const getTxType = (tx) => {
     if (tx.transaction_type) return tx.transaction_type.toLowerCase();
     if (tx.type) return tx.type.toLowerCase();
-    if (typeof tx.amount === "number") return tx.amount >= 0 ? "income" : "expense";
+    if (typeof tx.amount === "number")
+      return tx.amount >= 0 ? "income" : "expense";
     return "income";
   };
-  const getTxDescription = (tx) => tx.remarks || tx.description || "Transaction";
+  const getTxDescription = (tx) =>
+    tx.remarks || tx.description || "Transaction";
   const getTxAmount = (tx) => Math.abs(Number(tx.amount) || 0);
-  const getTransactionIcon = (tx) => getTxType(tx) === "income" ? <TrendingUpIcon /> : <TrendingDownIcon />;
-  const getTransactionColor = (tx) => getTxType(tx) === "income" ? "#4caf50" : "#f44336";
+  const getTransactionIcon = (tx) =>
+    getTxType(tx) === "income" ? <TrendingUpIcon /> : <TrendingDownIcon />;
+  const getTransactionColor = (tx) =>
+    getTxType(tx) === "income" ? "#2e7d32" : "#c62828";
 
   // Dashboard metrics
   const calculateMetrics = () => {
     const recentTransactions = transactions.slice(0, 5);
     const totalIncome = transactions
-      .filter(tx => getTxType(tx) === "income")
+      .filter((tx) => getTxType(tx) === "income")
       .reduce((sum, tx) => sum + getTxAmount(tx), 0);
     const totalExpenses = transactions
-      .filter(tx => getTxType(tx) === "expense")
+      .filter((tx) => getTxType(tx) === "expense")
       .reduce((sum, tx) => sum + getTxAmount(tx), 0);
     return {
       recentTransactions,
       totalIncome,
       totalExpenses,
-      transactionCount: transactions.length
+      transactionCount: transactions.length,
     };
   };
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
     }).format(amount);
   };
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     });
   };
 
   if (isLoading || !user) {
     return (
-      <Box sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '60vh',
-        textAlign: 'center'
-      }}>
-        <Box sx={{ width: '100%', maxWidth: 400, mb: 3 }}>
-          <LinearProgress sx={{ borderRadius: 1, height: 6 }} />
-        </Box>
-        <Typography variant="h5" color="primary" fontWeight={600}>
-          Loading your dashboard...
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-          Please wait while we fetch your data
-        </Typography>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          bgcolor: "#f8fafc",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Card
+          sx={{
+            p: 6,
+            textAlign: "center",
+            maxWidth: 450,
+            borderRadius: 3,
+            boxShadow: "0 10px 40px rgba(0,0,0,0.1)",
+          }}
+        >
+          <Box sx={{ mb: 4 }}>
+            <LinearProgress
+              sx={{
+                borderRadius: 2,
+                height: 8,
+                bgcolor: "#e3f2fd",
+                "& .MuiLinearProgress-bar": {
+                  bgcolor: "#1976d2",
+                  borderRadius: 2,
+                },
+              }}
+            />
+          </Box>
+          <Typography
+            variant="h5"
+            sx={{ mb: 2, fontWeight: 600, color: "#1565c0" }}
+          >
+            Loading your dashboard...
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            Please wait while we fetch your data
+          </Typography>
+        </Card>
       </Box>
     );
   }
@@ -157,312 +254,429 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
   const metrics = calculateMetrics();
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#f4f7fb', pb: 6 }}>
-      {/* Hero Section */}
-      <Paper
-        elevation={3}
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: "#f8fafc",
+        pb: 8,
+      }}
+    >
+      {/* Header Section */}
+      <Box
         sx={{
-          p: { xs: 3, md: 5 },
-          mb: 5,
-          borderRadius: 4,
-          background: 'linear-gradient(120deg, #667eea 0%, #764ba2 100%)',
-          color: 'white',
-          position: 'relative',
-          overflow: 'hidden',
+          bgcolor: "white",
+          borderBottom: "1px solid #e2e8f0",
+          mb: { xs: 4, md: 6 },
+          px: { xs: 0, md: 0 },
         }}
       >
-        <Grid container spacing={3} alignItems="center">
-          <Grid item xs={12} md={8}>
-            <Typography
-              variant="h3"
-              fontWeight={800}
-              sx={{
-                mb: 1,
-                fontSize: { xs: '2rem', md: '2.7rem' },
-                letterSpacing: '-1px'
-              }}
-            >
-              Welcome, {user?.name?.split(" ")[0] || "User"}!
-            </Typography>
-            <Typography variant="h6" sx={{ opacity: 0.93, mb: 2 }}>
-              Your personal finance dashboard
-            </Typography>
-            <Typography variant="body2" sx={{ opacity: 0.85 }}>
-              Member since {formatDate(user?.createdAt)}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={4} sx={{ textAlign: { xs: 'center', md: 'right' } }}>
-            <Avatar
-              sx={{
-                width: 90,
-                height: 90,
-                bgcolor: 'rgba(255,255,255,0.18)',
-                fontSize: '2.5rem',
-                mx: { xs: 'auto', md: 0 },
-                border: '3px solid #fff'
-              }}
-            >
-              <PersonIcon />
-            </Avatar>
-          </Grid>
-        </Grid>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: -60,
-            right: -60,
-            width: 220,
-            height: 220,
-            borderRadius: '50%',
-            background: 'rgba(255,255,255,0.12)',
-            zIndex: 1
-          }}
-        />
-      </Paper>
-
-      {/* Stats and Actions */}
-      <Grid container spacing={4} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={4}>
-          <Card sx={{
-            height: '100%',
-            background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-            color: 'white',
-            borderRadius: 4,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.08)'
-          }}>
-            <CardContent sx={{ p: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <AccountBalanceWalletIcon />
-                <Typography variant="h6" sx={{ ml: 1, fontWeight: 700 }}>
-                  Balance
-                </Typography>
-              </Box>
-              <Typography variant="h3" fontWeight={800} sx={{ mb: 1 }}>
-                {formatCurrency(user?.balance || 0)}
+        <Box sx={{ maxWidth: 1200, mx: "auto", p: { xs: 3, md: 5 } }}>
+          <Grid container spacing={4} alignItems="center">
+            <Grid item xs={12} md={8}>
+              <Typography
+                variant="h3"
+                sx={{
+                  mb: 1,
+                  fontSize: { xs: "2rem", md: "2.75rem" },
+                  fontWeight: 700,
+                  color: "#1e293b",
+                  letterSpacing: "-0.025em",
+                }}
+              >
+                Welcome back, {user?.name?.split(" ")[0] || "User"}
               </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                Available balance
+              <Typography
+                variant="h6"
+                sx={{ color: "#64748b", fontWeight: 400, mb: 2 }}
+              >
+                Here's what's happening with your finances today
               </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <Grid container spacing={2} sx={{ height: '100%' }}>
-            <Grid item xs={6}>
-              <Card sx={{
-                height: '100%',
-                borderRadius: 4,
-                background: 'linear-gradient(120deg, #43e97b 0%, #38f9d7 100%)',
-                color: '#222',
-                boxShadow: '0 4px 16px rgba(67,233,123,0.08)'
-              }}>
-                <CardContent sx={{ textAlign: 'center', p: 3 }}>
-                  <TrendingUpIcon />
-                  <Typography variant="h4" color="success.main" fontWeight={800} sx={{ mt: 1, mb: 1 }}>
-                    {formatCurrency(metrics.totalIncome)}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Total Income
-                  </Typography>
-                </CardContent>
-              </Card>
+              <Typography variant="body2" sx={{ color: "#94a3b8" }}>
+                Member since {formatDate(user?.createdAt)}
+              </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <Card sx={{
-                height: '100%',
-                borderRadius: 4,
-                background: 'linear-gradient(120deg, #fa709a 0%, #fee140 100%)',
-                color: '#222',
-                boxShadow: '0 4px 16px rgba(250,112,154,0.08)'
-              }}>
-                <CardContent sx={{ textAlign: 'center', p: 3 }}>
-                  <TrendingDownIcon />
-                  <Typography variant="h4" color="error.main" fontWeight={800} sx={{ mt: 1, mb: 1 }}>
-                    {formatCurrency(metrics.totalExpenses)}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Total Expenses
-                  </Typography>
-                </CardContent>
-              </Card>
+            <Grid
+              item
+              xs={12}
+              md={4}
+              sx={{ textAlign: { xs: "center", md: "right" } }}
+            >
+              <Avatar
+                sx={{
+                  width: 80,
+                  height: 80,
+                  bgcolor: "#f1f5f9",
+                  fontSize: "2rem",
+                  mx: { xs: "auto", md: 0 },
+                  border: "3px solid #e2e8f0",
+                  color: "#475569",
+                }}
+              >
+                <PersonIcon />
+              </Avatar>
             </Grid>
           </Grid>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
 
-      {/* Quick Actions */}
-      <Grid container spacing={4} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={4}>
-          <Card sx={{ borderRadius: 4, height: '100%' }}>
-            <CardContent sx={{ p: 3 }}>
-              <Typography variant="h6" fontWeight={700} sx={{ mb: 3 }}>
-                Quick Actions
-              </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Button
-                  variant="contained"
-                  color="success"
-                  size="large"
-                  onClick={() => setShowAddIncome(true)}
-                  startIcon={<AddIcon />}
+      <Box sx={{ maxWidth: 1200, mx: "auto", px: { xs: 2, md: 0 } }}>
+        {/* Stats Cards */}
+        <Grid container spacing={3} sx={{ mb: { xs: 4, md: 6 } }}>
+          {/* Balance Card */}
+          <Grid item xs={12} md={4}>
+            <Card
+              sx={{
+                height: "100%",
+                borderRadius: 3,
+                boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
+                border: "1px solid #e2e8f0",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+            >
+              <CardContent sx={{ p: 4 }}>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+                  <AccountBalanceWalletIcon />
+                  <Typography
+                    variant="h6"
+                    sx={{ ml: 2, fontWeight: 600, color: "#1e293b" }}
+                  >
+                    Current Balance
+                  </Typography>
+                </Box>
+                <Typography
+                  variant="h3"
                   sx={{
-                    py: 2,
-                    borderRadius: 2,
-                    textTransform: 'none',
-                    fontSize: '1rem',
+                    mb: 1,
                     fontWeight: 700,
-                    boxShadow: '0 4px 20px rgba(76, 175, 80, 0.13)',
-                    '&:hover': {
-                      boxShadow: '0 6px 24px rgba(76, 175, 80, 0.18)',
-                      transform: 'translateY(-2px)'
-                    }
+                    color: "#1565c0",
                   }}
                 >
-                  Add Income
-                </Button>
-                <Button
-                  variant="contained"
-                  color="error"
-                  size="large"
-                  onClick={() => setShowAddExpense(true)}
-                  startIcon={<RemoveIcon />}
-                  sx={{
-                    py: 2,
-                    borderRadius: 2,
-                    textTransform: 'none',
-                    fontSize: '1rem',
-                    fontWeight: 700,
-                    boxShadow: '0 4px 20px rgba(244, 67, 54, 0.13)',
-                    '&:hover': {
-                      boxShadow: '0 6px 24px rgba(244, 67, 54, 0.18)',
-                      transform: 'translateY(-2px)'
-                    }
-                  }}
-                >
-                  Add Expense
-                </Button>
-              </Box>
-              <Divider sx={{ my: 3 }} />
-              <Box sx={{ textAlign: 'center' }}>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                  Total Transactions
-                </Typography>
-                <Typography variant="h4" color="primary" fontWeight={800}>
-                  {metrics.transactionCount}
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Recent Transactions */}
-        <Grid item xs={12} md={8}>
-          <Card sx={{ borderRadius: 4, height: '100%' }}>
-            <CardContent sx={{ p: 0 }}>
-              <Box sx={{ p: 3, pb: 1 }}>
-                <Typography variant="h6" fontWeight={700} color="primary">
-                  Recent Transactions
+                  {formatCurrency(user?.balance || 0)}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Your latest financial activity
+                  Available funds
                 </Typography>
-              </Box>
-              {metrics.recentTransactions.length === 0 ? (
-                <Box sx={{ textAlign: 'center', py: 6 }}>
-                  <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-                    No transactions yet
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Start by adding your first income or expense
-                  </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          {/* Income Card */}
+          <Grid item xs={12} md={4}>
+            <Card
+              sx={{
+                height: "100%",
+                borderRadius: 3,
+                boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
+                border: "1px solid #e2e8f0",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+            >
+              <CardContent sx={{ textAlign: "center", p: 4 }}>
+                <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+                  <TrendingUpIcon />
                 </Box>
-              ) : (
-                <List sx={{ pt: 0 }}>
-                  {metrics.recentTransactions.map((transaction, index) => (
-                    <Box key={transaction._id}>
-                      <ListItem
-                        sx={{
-                          px: 3,
-                          py: 2,
-                          borderRadius: 2,
-                          mb: 1,
-                          bgcolor: 'rgba(0,0,0,0.01)',
-                          boxShadow: '0 1px 4px rgba(0,0,0,0.03)',
-                          '&:hover': {
-                            bgcolor: 'rgba(102,126,234,0.07)',
-                            cursor: 'pointer'
-                          }
-                        }}
-                        onClick={() => setEditTx(transaction)}
-                        secondaryAction={
-                          <IconButton size="small" onClick={e => { e.stopPropagation(); handleDeleteTransaction(transaction._id); }}>
-                            <MoreVertIcon />
-                          </IconButton>
-                        }
-                      >
-                        <ListItemIcon sx={{ minWidth: 40 }}>
-                          {getTransactionIcon(transaction)}
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={
-                            <Typography variant="body1" fontWeight={600}>
-                              {getTxDescription(transaction)}
-                            </Typography>
-                          }
-                          secondary={
-                            <Typography variant="body2" color="text.secondary">
-                              {formatDate(transaction.createdAt)}
-                            </Typography>
-                          }
-                        />
-                        <Box sx={{ textAlign: 'right', mr: 1 }}>
-                          <Typography
-                            variant="body1"
-                            fontWeight={700}
-                            sx={{ color: getTransactionColor(transaction) }}
-                          >
-                            {getTxType(transaction) === "income" ? "+" : "-"}
-                            {formatCurrency(getTxAmount(transaction))}
-                          </Typography>
-                          <Chip
-                            label={getTxType(transaction)}
-                            size="small"
-                            variant="outlined"
-                            sx={{
-                              textTransform: 'capitalize',
-                              fontSize: '0.75rem',
-                              height: 20,
-                              mt: 0.5
-                            }}
-                          />
-                        </Box>
-                      </ListItem>
-                      {index < metrics.recentTransactions.length - 1 && (
-                        <Divider sx={{ mx: 3 }} />
-                      )}
-                    </Box>
-                  ))}
-                </List>
-              )}
-              {metrics.recentTransactions.length > 0 && (
-                <Box sx={{ p: 3, pt: 1 }}>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    mb: 1,
+                    fontWeight: 700,
+                    color: "#2e7d32",
+                  }}
+                >
+                  {formatCurrency(metrics.totalIncome)}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Total Income
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          {/* Expenses Card */}
+          <Grid item xs={12} md={4}>
+            <Card
+              sx={{
+                height: "100%",
+                borderRadius: 3,
+                boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
+                border: "1px solid #e2e8f0",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+            >
+              <CardContent sx={{ textAlign: "center", p: 4 }}>
+                <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+                  <TrendingDownIcon />
+                </Box>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    mb: 1,
+                    fontWeight: 700,
+                    color: "#c62828",
+                  }}
+                >
+                  {formatCurrency(metrics.totalExpenses)}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Total Expenses
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+
+        {/* Quick Actions & Transactions */}
+        <Grid container spacing={3}>
+          {/* Quick Actions */}
+          <Grid item xs={12} md={4}>
+            <Card
+              sx={{
+                height: "100%",
+                borderRadius: 3,
+                boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
+                border: "1px solid #e2e8f0",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+            >
+              <CardContent sx={{ p: 4 }}>
+                <Typography
+                  variant="h6"
+                  sx={{ mb: 4, fontWeight: 600, color: "#1e293b" }}
+                >
+                  Quick Actions
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                   <Button
-                    variant="outlined"
-                    fullWidth
+                    variant="contained"
+                    size="large"
+                    onClick={() => setShowAddIncome(true)}
+                    startIcon={<AddIcon />}
                     sx={{
-                      textTransform: 'none',
-                      borderRadius: 2
+                      py: 2,
+                      borderRadius: 2,
+                      textTransform: "none",
+                      fontSize: "1rem",
+                      fontWeight: 600,
+                      bgcolor: "#2e7d32",
+                      boxShadow: "0 4px 14px rgba(46, 125, 50, 0.3)",
+                      "&:hover": {
+                        bgcolor: "#1b5e20",
+                        boxShadow: "0 6px 20px rgba(46, 125, 50, 0.4)",
+                        transform: "translateY(-2px)",
+                      },
                     }}
-                    onClick={() => fetchTransactions()}
                   >
-                    View All Transactions
+                    Add Income
+                  </Button>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    onClick={() => setShowAddExpense(true)}
+                    startIcon={<RemoveIcon />}
+                    sx={{
+                      py: 2,
+                      borderRadius: 2,
+                      textTransform: "none",
+                      fontSize: "1rem",
+                      fontWeight: 600,
+                      bgcolor: "#c62828",
+                      boxShadow: "0 4px 14px rgba(198, 40, 40, 0.3)",
+                      "&:hover": {
+                        bgcolor: "#b71c1c",
+                        boxShadow: "0 6px 20px rgba(198, 40, 40, 0.4)",
+                        transform: "translateY(-2px)",
+                      },
+                    }}
+                  >
+                    Add Expense
                   </Button>
                 </Box>
-              )}
-            </CardContent>
-          </Card>
+
+                <Divider sx={{ my: 4 }} />
+
+                <Box sx={{ textAlign: "center" }}>
+                  <Typography variant="body2" sx={{ mb: 2, color: "#64748b" }}>
+                    Total Transactions
+                  </Typography>
+                  <Typography
+                    variant="h3"
+                    sx={{
+                      fontWeight: 700,
+                      color: "#1565c0",
+                    }}
+                  >
+                    {metrics.transactionCount}
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          {/* Recent Transactions */}
+          <Grid item xs={12} md={8}>
+            <Card
+              sx={{
+                height: "100%",
+                borderRadius: 3,
+                boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
+                border: "1px solid #e2e8f0",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+            >
+              <CardContent sx={{ p: 0 }}>
+                <Box sx={{ p: 4, pb: 2 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ mb: 1, fontWeight: 600, color: "#1e293b" }}
+                  >
+                    Recent Transactions
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Your latest financial activity
+                  </Typography>
+                </Box>
+
+                {metrics.recentTransactions.length === 0 ? (
+                  <Box sx={{ textAlign: "center", py: 8 }}>
+                    <Typography variant="h6" sx={{ mb: 2, color: "#64748b" }}>
+                      No transactions yet
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Start by adding your first income or expense
+                    </Typography>
+                  </Box>
+                ) : (
+                  <List sx={{ pt: 0 }}>
+                    {metrics.recentTransactions.map((transaction, index) => (
+                      <Box key={transaction._id}>
+                        <ListItem
+                          sx={{
+                            px: 4,
+                            py: 3,
+                            transition: "all 0.2s ease",
+                            borderRadius: 2,
+                            mb: 1,
+                            bgcolor: "rgba(0,0,0,0.01)",
+                            boxShadow: "0 1px 4px rgba(0,0,0,0.03)",
+                            "&:hover": {
+                              bgcolor: "#f8fafc",
+                              cursor: "pointer",
+                            },
+                          }}
+                          onClick={() => setEditTx(transaction)}
+                          secondaryAction={
+                            <IconButton
+                              size="small"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteTransaction(transaction._id);
+                              }}
+                              sx={{
+                                color: "#94a3b8",
+                                "&:hover": { bgcolor: "#f1f5f9" },
+                              }}
+                            >
+                              <MoreVertIcon />
+                            </IconButton>
+                          }
+                        >
+                          <ListItemIcon sx={{ minWidth: 60 }}>
+                            {getTransactionIcon(transaction)}
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={
+                              <Typography
+                                variant="body1"
+                                sx={{ fontWeight: 600, color: "#1e293b" }}
+                              >
+                                {getTxDescription(transaction)}
+                              </Typography>
+                            }
+                            secondary={
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                {formatDate(transaction.createdAt)}
+                              </Typography>
+                            }
+                          />
+                          <Box sx={{ textAlign: "right", mr: 2 }}>
+                            <Typography
+                              variant="h6"
+                              sx={{
+                                fontWeight: 700,
+                                color: getTransactionColor(transaction),
+                              }}
+                            >
+                              {getTxType(transaction) === "income" ? "+" : "−"}
+                              {formatCurrency(getTxAmount(transaction))}
+                            </Typography>
+                            <Chip
+                              label={getTxType(transaction)}
+                              size="small"
+                              sx={{
+                                textTransform: "capitalize",
+                                fontSize: "0.75rem",
+                                height: 24,
+                                mt: 1,
+                                bgcolor:
+                                  getTxType(transaction) === "income"
+                                    ? "#e8f5e8"
+                                    : "#ffebee",
+                                color: getTransactionColor(transaction),
+                                fontWeight: 500,
+                              }}
+                            />
+                          </Box>
+                        </ListItem>
+                        {index < metrics.recentTransactions.length - 1 && (
+                          <Divider sx={{ mx: 4 }} />
+                        )}
+                      </Box>
+                    ))}
+                  </List>
+                )}
+
+                {metrics.recentTransactions.length > 0 && (
+                  <Box sx={{ p: 4, pt: 2 }}>
+                    <Button
+                      variant="outlined"
+                      fullWidth
+                      onClick={handleViewAllTransactions}
+                      sx={{
+                        py: 2,
+                        borderRadius: 2,
+                        textTransform: "none",
+                        fontWeight: 600,
+                        borderColor: "#d1d5db",
+                        color: "#374151",
+                        "&:hover": {
+                          borderColor: "#1565c0",
+                          color: "#1565c0",
+                          bgcolor: "#f8fafc",
+                        },
+                      }}
+                    >
+                      View All Transactions
+                    </Button>
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
 
       {/* Modals */}
       <Modal open={showAddIncome} onClose={() => setShowAddIncome(false)}>
