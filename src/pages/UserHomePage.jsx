@@ -93,16 +93,37 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
     }
   };
 
+  // Helper: robust type detection
+  const getTxType = (tx) => {
+    // Prefer explicit transaction_type, fallback to type, fallback to amount sign
+    if (tx.transaction_type) return tx.transaction_type.toLowerCase();
+    if (tx.type) return tx.type.toLowerCase();
+    if (typeof tx.amount === "number") return tx.amount >= 0 ? "income" : "expense";
+    return "income";
+  };
+
+  // Helper: robust description
+  const getTxDescription = (tx) => tx.remarks || tx.description || "Transaction";
+
+  // Helper: robust amount
+  const getTxAmount = (tx) => Math.abs(Number(tx.amount) || 0);
+
+  // Helper: robust icon
+  const getTransactionIcon = (tx) => getTxType(tx) === "income" ? <TrendingUpIcon /> : <TrendingDownIcon />;
+
+  // Helper: robust color
+  const getTransactionColor = (tx) => getTxType(tx) === "income" ? "#4caf50" : "#f44336";
+
   // Calculate dashboard metrics
   const calculateMetrics = () => {
     const recentTransactions = transactions.slice(0, 5);
     const totalIncome = transactions
-      .filter(tx => tx.type === 'credit' || tx.amount > 0)
-      .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
-    
+      .filter(tx => getTxType(tx) === "income")
+      .reduce((sum, tx) => sum + getTxAmount(tx), 0);
+
     const totalExpenses = transactions
-      .filter(tx => tx.type === 'debit' || tx.amount < 0)
-      .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
+      .filter(tx => getTxType(tx) === "expense")
+      .reduce((sum, tx) => sum + getTxAmount(tx), 0);
 
     return {
       recentTransactions,
@@ -120,6 +141,7 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return "";
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
@@ -127,23 +149,13 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
     });
   };
 
-  const getTransactionIcon = (transaction) => {
-    const isIncome = transaction.type === 'credit' || transaction.amount > 0;
-    return isIncome ? <TrendingUpIcon /> : <TrendingDownIcon />;
-  };
-
-  const getTransactionColor = (transaction) => {
-    const isIncome = transaction.type === 'credit' || transaction.amount > 0;
-    return isIncome ? '#4caf50' : '#f44336';
-  };
-
   // Loading state
   if (isLoading || !user) {
     return (
-      <Box sx={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'center', 
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
         justifyContent: 'center',
         minHeight: '60vh',
         textAlign: 'center'
@@ -166,11 +178,11 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: '#f8fafc' }}>
       {/* Hero Welcome Section */}
-      <Paper 
+      <Paper
         elevation={0}
-        sx={{ 
-          p: { xs: 3, md: 4 }, 
-          mb: 4, 
+        sx={{
+          p: { xs: 3, md: 4 },
+          mb: 4,
           borderRadius: 3,
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           color: 'white',
@@ -184,7 +196,7 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
               <Typography
                 variant="h3"
                 fontWeight={700}
-                sx={{ 
+                sx={{
                   mb: 1,
                   fontSize: { xs: '2rem', md: '2.5rem' }
                 }}
@@ -200,9 +212,9 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
             </Grid>
             <Grid item xs={12} md={4} sx={{ textAlign: { xs: 'center', md: 'right' } }}>
               <Avatar
-                sx={{ 
-                  width: 80, 
-                  height: 80, 
+                sx={{
+                  width: 80,
+                  height: 80,
                   bgcolor: 'rgba(255,255,255,0.2)',
                   fontSize: '2rem',
                   mx: { xs: 'auto', md: 0 }
@@ -213,7 +225,6 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
             </Grid>
           </Grid>
         </Box>
-        
         {/* Decorative background elements */}
         <Box
           sx={{
@@ -232,7 +243,7 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
       <Grid container spacing={3}>
         {/* Balance Card */}
         <Grid item xs={12} md={4}>
-          <Card sx={{ 
+          <Card sx={{
             height: '100%',
             background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
             color: 'white',
@@ -260,8 +271,8 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
         <Grid item xs={12} md={8}>
           <Grid container spacing={2} sx={{ height: '100%' }}>
             <Grid item xs={6} md={6}>
-              <Card sx={{ 
-                height: '100%', 
+              <Card sx={{
+                height: '100%',
                 borderRadius: 3,
                 transition: 'transform 0.2s',
                 '&:hover': { transform: 'translateY(-2px)' }
@@ -279,8 +290,8 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
             </Grid>
             
             <Grid item xs={6} md={6}>
-              <Card sx={{ 
-                height: '100%', 
+              <Card sx={{
+                height: '100%',
                 borderRadius: 3,
                 transition: 'transform 0.2s',
                 '&:hover': { transform: 'translateY(-2px)' }
@@ -314,14 +325,14 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
                   size="large"
                   onClick={() => setShowAddIncome(true)}
                   startIcon={<AddIcon />}
-                  sx={{ 
-                    py: 2, 
+                  sx={{
+                    py: 2,
                     borderRadius: 2,
                     textTransform: 'none',
                     fontSize: '1rem',
                     fontWeight: 600,
                     boxShadow: '0 4px 20px rgba(76, 175, 80, 0.3)',
-                    '&:hover': { 
+                    '&:hover': {
                       boxShadow: '0 6px 24px rgba(76, 175, 80, 0.4)',
                       transform: 'translateY(-2px)'
                     }
@@ -336,14 +347,14 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
                   size="large"
                   onClick={() => setShowAddExpense(true)}
                   startIcon={<RemoveIcon />}
-                  sx={{ 
-                    py: 2, 
+                  sx={{
+                    py: 2,
                     borderRadius: 2,
                     textTransform: 'none',
                     fontSize: '1rem',
                     fontWeight: 600,
                     boxShadow: '0 4px 20px rgba(244, 67, 54, 0.3)',
-                    '&:hover': { 
+                    '&:hover': {
                       boxShadow: '0 6px 24px rgba(244, 67, 54, 0.4)',
                       transform: 'translateY(-2px)'
                     }
@@ -411,7 +422,7 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
                         <ListItemText
                           primary={
                             <Typography variant="body1" fontWeight={500}>
-                              {transaction.description || 'Transaction'}
+                              {getTxDescription(transaction)}
                             </Typography>
                           }
                           secondary={
@@ -427,11 +438,11 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
                             fontWeight={600}
                             sx={{ color: getTransactionColor(transaction) }}
                           >
-                            {transaction.type === 'credit' || transaction.amount > 0 ? '+' : ''}
-                            {formatCurrency(Math.abs(transaction.amount))}
+                            {getTxType(transaction) === "income" ? "+" : "-"}
+                            {formatCurrency(getTxAmount(transaction))}
                           </Typography>
                           <Chip
-                            label={transaction.type || (transaction.amount > 0 ? 'credit' : 'debit')}
+                            label={getTxType(transaction)}
                             size="small"
                             variant="outlined"
                             sx={{ 
@@ -442,7 +453,7 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
                           />
                         </Box>
                         
-                        <IconButton size="small" onClick={(e) => e.stopPropagation()}>
+                        <IconButton size="small" onClick={e => e.stopPropagation()}>
                           <MoreVertIcon />
                         </IconButton>
                       </ListItem>
