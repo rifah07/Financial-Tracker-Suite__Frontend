@@ -21,13 +21,13 @@ import AddIncomeSection from "../sections/AddIncomeSection";
 import AddExpenseSection from "../sections/AddExpenseSection";
 
 // Icons (using text symbols for compatibility)
-const TrendingUpIcon = () => <span style={{ color: '#4caf50', fontSize: '18px' }}>↗</span>;
-const TrendingDownIcon = () => <span style={{ color: '#f44336', fontSize: '18px' }}>↘</span>;
-const AccountBalanceWalletIcon = () => <span style={{ color: '#2196f3', fontSize: '18px' }}>💳</span>;
-const AddIcon = () => <span style={{ fontSize: '16px' }}>+</span>;
-const RemoveIcon = () => <span style={{ fontSize: '16px' }}>-</span>;
-const MoreVertIcon = () => <span style={{ fontSize: '16px' }}>⋮</span>;
-const PersonIcon = () => <span style={{ fontSize: '20px' }}>👤</span>;
+const TrendingUpIcon = () => <span style={{ color: '#4caf50', fontSize: '22px' }}>↗</span>;
+const TrendingDownIcon = () => <span style={{ color: '#f44336', fontSize: '22px' }}>↘</span>;
+const AccountBalanceWalletIcon = () => <span style={{ color: '#2196f3', fontSize: '22px' }}>💳</span>;
+const AddIcon = () => <span style={{ fontSize: '18px' }}>+</span>;
+const RemoveIcon = () => <span style={{ fontSize: '18px' }}>-</span>;
+const MoreVertIcon = () => <span style={{ fontSize: '18px' }}>⋮</span>;
+const PersonIcon = () => <span style={{ fontSize: '24px' }}>👤</span>;
 
 function UserHomePage({ user, transactions: initialTransactions = [], isLoading = false }) {
   const [transactions, setTransactions] = useState(initialTransactions);
@@ -39,7 +39,6 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
     const token = localStorage.getItem("accessToken");
     let url = `${import.meta.env.VITE_API_TRANSACTION_URL}/`;
     if (type) url += `?transaction_type=${type}`;
-    
     try {
       const res = await fetch(url, {
         method: "GET",
@@ -49,11 +48,7 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
           Authorization: `Bearer ${token || ""}`,
         },
       });
-      
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
       setTransactions(data.data || []);
     } catch (error) {
@@ -71,7 +66,6 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
   const handleDeleteTransaction = async (transactionId) => {
     const token = localStorage.getItem("accessToken");
     const url = `${import.meta.env.VITE_API_TRANSACTION_URL}/${transactionId}`;
-    
     try {
       const res = await fetch(url, {
         method: "DELETE",
@@ -81,7 +75,6 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
           Authorization: `Bearer ${token || ""}`,
         },
       });
-      
       if (res.ok) {
         fetchTransactions();
       } else {
@@ -95,36 +88,25 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
 
   // Helper: robust type detection
   const getTxType = (tx) => {
-    // Prefer explicit transaction_type, fallback to type, fallback to amount sign
     if (tx.transaction_type) return tx.transaction_type.toLowerCase();
     if (tx.type) return tx.type.toLowerCase();
     if (typeof tx.amount === "number") return tx.amount >= 0 ? "income" : "expense";
     return "income";
   };
-
-  // Helper: robust description
   const getTxDescription = (tx) => tx.remarks || tx.description || "Transaction";
-
-  // Helper: robust amount
   const getTxAmount = (tx) => Math.abs(Number(tx.amount) || 0);
-
-  // Helper: robust icon
   const getTransactionIcon = (tx) => getTxType(tx) === "income" ? <TrendingUpIcon /> : <TrendingDownIcon />;
-
-  // Helper: robust color
   const getTransactionColor = (tx) => getTxType(tx) === "income" ? "#4caf50" : "#f44336";
 
-  // Calculate dashboard metrics
+  // Dashboard metrics
   const calculateMetrics = () => {
     const recentTransactions = transactions.slice(0, 5);
     const totalIncome = transactions
       .filter(tx => getTxType(tx) === "income")
       .reduce((sum, tx) => sum + getTxAmount(tx), 0);
-
     const totalExpenses = transactions
       .filter(tx => getTxType(tx) === "expense")
       .reduce((sum, tx) => sum + getTxAmount(tx), 0);
-
     return {
       recentTransactions,
       totalIncome,
@@ -149,7 +131,6 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
     });
   };
 
-  // Loading state
   if (isLoading || !user) {
     return (
       <Box sx={{
@@ -176,88 +157,87 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
   const metrics = calculateMetrics();
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#f8fafc' }}>
-      {/* Hero Welcome Section */}
+    <Box sx={{ minHeight: '100vh', bgcolor: '#f4f7fb', pb: 6 }}>
+      {/* Hero Section */}
       <Paper
-        elevation={0}
+        elevation={3}
         sx={{
-          p: { xs: 3, md: 4 },
-          mb: 4,
-          borderRadius: 3,
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          p: { xs: 3, md: 5 },
+          mb: 5,
+          borderRadius: 4,
+          background: 'linear-gradient(120deg, #667eea 0%, #764ba2 100%)',
           color: 'white',
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'hidden',
         }}
       >
-        <Box sx={{ position: 'relative', zIndex: 2 }}>
-          <Grid container spacing={3} alignItems="center">
-            <Grid item xs={12} md={8}>
-              <Typography
-                variant="h3"
-                fontWeight={700}
-                sx={{
-                  mb: 1,
-                  fontSize: { xs: '2rem', md: '2.5rem' }
-                }}
-              >
-                Welcome back, {user?.name?.split(" ")[0] || "User"}!
-              </Typography>
-              <Typography variant="h6" sx={{ opacity: 0.9, mb: 2 }}>
-                Here's your financial overview for today
-              </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                Member since {formatDate(user?.createdAt)}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={4} sx={{ textAlign: { xs: 'center', md: 'right' } }}>
-              <Avatar
-                sx={{
-                  width: 80,
-                  height: 80,
-                  bgcolor: 'rgba(255,255,255,0.2)',
-                  fontSize: '2rem',
-                  mx: { xs: 'auto', md: 0 }
-                }}
-              >
-                <PersonIcon />
-              </Avatar>
-            </Grid>
+        <Grid container spacing={3} alignItems="center">
+          <Grid item xs={12} md={8}>
+            <Typography
+              variant="h3"
+              fontWeight={800}
+              sx={{
+                mb: 1,
+                fontSize: { xs: '2rem', md: '2.7rem' },
+                letterSpacing: '-1px'
+              }}
+            >
+              Welcome, {user?.name?.split(" ")[0] || "User"}!
+            </Typography>
+            <Typography variant="h6" sx={{ opacity: 0.93, mb: 2 }}>
+              Your personal finance dashboard
+            </Typography>
+            <Typography variant="body2" sx={{ opacity: 0.85 }}>
+              Member since {formatDate(user?.createdAt)}
+            </Typography>
           </Grid>
-        </Box>
-        {/* Decorative background elements */}
+          <Grid item xs={12} md={4} sx={{ textAlign: { xs: 'center', md: 'right' } }}>
+            <Avatar
+              sx={{
+                width: 90,
+                height: 90,
+                bgcolor: 'rgba(255,255,255,0.18)',
+                fontSize: '2.5rem',
+                mx: { xs: 'auto', md: 0 },
+                border: '3px solid #fff'
+              }}
+            >
+              <PersonIcon />
+            </Avatar>
+          </Grid>
+        </Grid>
         <Box
           sx={{
             position: 'absolute',
-            top: -50,
-            right: -50,
-            width: 200,
-            height: 200,
+            top: -60,
+            right: -60,
+            width: 220,
+            height: 220,
             borderRadius: '50%',
-            background: 'rgba(255,255,255,0.1)',
+            background: 'rgba(255,255,255,0.12)',
             zIndex: 1
           }}
         />
       </Paper>
 
-      <Grid container spacing={3}>
-        {/* Balance Card */}
+      {/* Stats and Actions */}
+      <Grid container spacing={4} sx={{ mb: 4 }}>
         <Grid item xs={12} md={4}>
           <Card sx={{
             height: '100%',
             background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
             color: 'white',
-            borderRadius: 3,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+            borderRadius: 4,
+            boxShadow: '0 8px 32px rgba(0,0,0,0.08)'
           }}>
             <CardContent sx={{ p: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <AccountBalanceWalletIcon />
-                <Typography variant="h6" sx={{ ml: 1, fontWeight: 600 }}>
-                  Current Balance
+                <Typography variant="h6" sx={{ ml: 1, fontWeight: 700 }}>
+                  Balance
                 </Typography>
               </Box>
-              <Typography variant="h3" fontWeight={700} sx={{ mb: 1 }}>
+              <Typography variant="h3" fontWeight={800} sx={{ mb: 1 }}>
                 {formatCurrency(user?.balance || 0)}
               </Typography>
               <Typography variant="body2" sx={{ opacity: 0.9 }}>
@@ -266,20 +246,19 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
             </CardContent>
           </Card>
         </Grid>
-
-        {/* Quick Stats */}
         <Grid item xs={12} md={8}>
           <Grid container spacing={2} sx={{ height: '100%' }}>
-            <Grid item xs={6} md={6}>
+            <Grid item xs={6}>
               <Card sx={{
                 height: '100%',
-                borderRadius: 3,
-                transition: 'transform 0.2s',
-                '&:hover': { transform: 'translateY(-2px)' }
+                borderRadius: 4,
+                background: 'linear-gradient(120deg, #43e97b 0%, #38f9d7 100%)',
+                color: '#222',
+                boxShadow: '0 4px 16px rgba(67,233,123,0.08)'
               }}>
                 <CardContent sx={{ textAlign: 'center', p: 3 }}>
                   <TrendingUpIcon />
-                  <Typography variant="h4" color="success.main" fontWeight={700} sx={{ mt: 1, mb: 1 }}>
+                  <Typography variant="h4" color="success.main" fontWeight={800} sx={{ mt: 1, mb: 1 }}>
                     {formatCurrency(metrics.totalIncome)}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
@@ -288,17 +267,17 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
                 </CardContent>
               </Card>
             </Grid>
-            
-            <Grid item xs={6} md={6}>
+            <Grid item xs={6}>
               <Card sx={{
                 height: '100%',
-                borderRadius: 3,
-                transition: 'transform 0.2s',
-                '&:hover': { transform: 'translateY(-2px)' }
+                borderRadius: 4,
+                background: 'linear-gradient(120deg, #fa709a 0%, #fee140 100%)',
+                color: '#222',
+                boxShadow: '0 4px 16px rgba(250,112,154,0.08)'
               }}>
                 <CardContent sx={{ textAlign: 'center', p: 3 }}>
                   <TrendingDownIcon />
-                  <Typography variant="h4" color="error.main" fontWeight={700} sx={{ mt: 1, mb: 1 }}>
+                  <Typography variant="h4" color="error.main" fontWeight={800} sx={{ mt: 1, mb: 1 }}>
                     {formatCurrency(metrics.totalExpenses)}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
@@ -309,15 +288,16 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
             </Grid>
           </Grid>
         </Grid>
+      </Grid>
 
-        {/* Quick Actions */}
+      {/* Quick Actions */}
+      <Grid container spacing={4} sx={{ mb: 4 }}>
         <Grid item xs={12} md={4}>
-          <Card sx={{ borderRadius: 3, height: '100%' }}>
+          <Card sx={{ borderRadius: 4, height: '100%' }}>
             <CardContent sx={{ p: 3 }}>
-              <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
+              <Typography variant="h6" fontWeight={700} sx={{ mb: 3 }}>
                 Quick Actions
               </Typography>
-              
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <Button
                   variant="contained"
@@ -330,17 +310,16 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
                     borderRadius: 2,
                     textTransform: 'none',
                     fontSize: '1rem',
-                    fontWeight: 600,
-                    boxShadow: '0 4px 20px rgba(76, 175, 80, 0.3)',
+                    fontWeight: 700,
+                    boxShadow: '0 4px 20px rgba(76, 175, 80, 0.13)',
                     '&:hover': {
-                      boxShadow: '0 6px 24px rgba(76, 175, 80, 0.4)',
+                      boxShadow: '0 6px 24px rgba(76, 175, 80, 0.18)',
                       transform: 'translateY(-2px)'
                     }
                   }}
                 >
                   Add Income
                 </Button>
-                
                 <Button
                   variant="contained"
                   color="error"
@@ -352,10 +331,10 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
                     borderRadius: 2,
                     textTransform: 'none',
                     fontSize: '1rem',
-                    fontWeight: 600,
-                    boxShadow: '0 4px 20px rgba(244, 67, 54, 0.3)',
+                    fontWeight: 700,
+                    boxShadow: '0 4px 20px rgba(244, 67, 54, 0.13)',
                     '&:hover': {
-                      boxShadow: '0 6px 24px rgba(244, 67, 54, 0.4)',
+                      boxShadow: '0 6px 24px rgba(244, 67, 54, 0.18)',
                       transform: 'translateY(-2px)'
                     }
                   }}
@@ -363,14 +342,12 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
                   Add Expense
                 </Button>
               </Box>
-
               <Divider sx={{ my: 3 }} />
-              
               <Box sx={{ textAlign: 'center' }}>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                   Total Transactions
                 </Typography>
-                <Typography variant="h4" color="primary" fontWeight={700}>
+                <Typography variant="h4" color="primary" fontWeight={800}>
                   {metrics.transactionCount}
                 </Typography>
               </Box>
@@ -380,17 +357,16 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
 
         {/* Recent Transactions */}
         <Grid item xs={12} md={8}>
-          <Card sx={{ borderRadius: 3, height: '100%' }}>
+          <Card sx={{ borderRadius: 4, height: '100%' }}>
             <CardContent sx={{ p: 0 }}>
               <Box sx={{ p: 3, pb: 1 }}>
-                <Typography variant="h6" fontWeight={600} color="primary">
+                <Typography variant="h6" fontWeight={700} color="primary">
                   Recent Transactions
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Your latest financial activity
                 </Typography>
               </Box>
-              
               {metrics.recentTransactions.length === 0 ? (
                 <Box sx={{ textAlign: 'center', py: 6 }}>
                   <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
@@ -408,20 +384,28 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
                         sx={{
                           px: 3,
                           py: 2,
-                          '&:hover': { 
-                            bgcolor: 'rgba(0,0,0,0.02)',
+                          borderRadius: 2,
+                          mb: 1,
+                          bgcolor: 'rgba(0,0,0,0.01)',
+                          boxShadow: '0 1px 4px rgba(0,0,0,0.03)',
+                          '&:hover': {
+                            bgcolor: 'rgba(102,126,234,0.07)',
                             cursor: 'pointer'
                           }
                         }}
                         onClick={() => setEditTx(transaction)}
+                        secondaryAction={
+                          <IconButton size="small" onClick={e => { e.stopPropagation(); handleDeleteTransaction(transaction._id); }}>
+                            <MoreVertIcon />
+                          </IconButton>
+                        }
                       >
                         <ListItemIcon sx={{ minWidth: 40 }}>
                           {getTransactionIcon(transaction)}
                         </ListItemIcon>
-                        
                         <ListItemText
                           primary={
-                            <Typography variant="body1" fontWeight={500}>
+                            <Typography variant="body1" fontWeight={600}>
                               {getTxDescription(transaction)}
                             </Typography>
                           }
@@ -431,11 +415,10 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
                             </Typography>
                           }
                         />
-                        
                         <Box sx={{ textAlign: 'right', mr: 1 }}>
-                          <Typography 
-                            variant="body1" 
-                            fontWeight={600}
+                          <Typography
+                            variant="body1"
+                            fontWeight={700}
                             sx={{ color: getTransactionColor(transaction) }}
                           >
                             {getTxType(transaction) === "income" ? "+" : "-"}
@@ -445,19 +428,15 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
                             label={getTxType(transaction)}
                             size="small"
                             variant="outlined"
-                            sx={{ 
+                            sx={{
                               textTransform: 'capitalize',
                               fontSize: '0.75rem',
-                              height: 20
+                              height: 20,
+                              mt: 0.5
                             }}
                           />
                         </Box>
-                        
-                        <IconButton size="small" onClick={e => e.stopPropagation()}>
-                          <MoreVertIcon />
-                        </IconButton>
                       </ListItem>
-                      
                       {index < metrics.recentTransactions.length - 1 && (
                         <Divider sx={{ mx: 3 }} />
                       )}
@@ -465,13 +444,12 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
                   ))}
                 </List>
               )}
-              
               {metrics.recentTransactions.length > 0 && (
                 <Box sx={{ p: 3, pt: 1 }}>
-                  <Button 
-                    variant="outlined" 
-                    fullWidth 
-                    sx={{ 
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    sx={{
                       textTransform: 'none',
                       borderRadius: 2
                     }}
@@ -495,7 +473,6 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
           }}
         />
       </Modal>
-      
       <Modal open={showAddExpense} onClose={() => setShowAddExpense(false)}>
         <AddExpenseSection
           onSuccess={() => {
@@ -504,7 +481,6 @@ function UserHomePage({ user, transactions: initialTransactions = [], isLoading 
           }}
         />
       </Modal>
-      
       <Modal open={!!editTx} onClose={() => setEditTx(null)}>
         <EditTransactionSection
           transaction={editTx}
