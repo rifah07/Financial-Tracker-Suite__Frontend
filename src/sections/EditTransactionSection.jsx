@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -10,14 +10,31 @@ import MenuItem from "@mui/material/MenuItem";
 const EDIT_TRANSACTION_URL = `${import.meta.env.VITE_API_TRANSACTION_URL}/`;
 
 function EditTransactionSection({ transaction, onSuccess, onClose }) {
-  const [amount, setAmount] = useState(transaction.amount);
-  const [remarks, setRemarks] = useState(transaction.remarks);
+  console.log("EditTransactionSection rendered with transaction:", transaction);
+
+  const [amount, setAmount] = useState(transaction?.amount || "");
+  const [remarks, setRemarks] = useState(transaction?.remarks || "");
   const [transactionType, setTransactionType] = useState(
-    (transaction.transaction_type || "income").toLowerCase()
+    (transaction?.transaction_type || "income").toLowerCase()
   );
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    console.log("useEffect triggered with transaction:", transaction);
+    if (transaction) {
+      console.log(
+        "Setting transaction type to:",
+        (transaction.transaction_type || "income").toLowerCase()
+      );
+      setAmount(transaction.amount || "");
+      setRemarks(transaction.remarks || "");
+      setTransactionType(
+        (transaction.transaction_type || "income").toLowerCase()
+      );
+    }
+  }, [transaction]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +44,16 @@ function EditTransactionSection({ transaction, onSuccess, onClose }) {
 
     try {
       const token = localStorage.getItem("accessToken");
+
+      // Debug: Log the data being sent
+      const requestData = {
+        transaction_id: transaction._id,
+        amount: parseFloat(amount),
+        remarks,
+        transaction_type: transactionType,
+      };
+      console.log("Sending update request:", requestData);
+
       const res = await fetch(EDIT_TRANSACTION_URL, {
         method: "PATCH",
         credentials: "include",
@@ -34,15 +61,11 @@ function EditTransactionSection({ transaction, onSuccess, onClose }) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token || ""}`,
         },
-        body: JSON.stringify({
-          transaction_id: transaction._id, // <-- required by backend
-          amount: parseFloat(amount),
-          remarks,
-          transaction_type: transactionType,
-        }),
+        body: JSON.stringify(requestData),
       });
 
       const data = await res.json();
+      console.log("Server response:", data);
 
       if (res.ok) {
         setSuccessMsg(data.status || "Transaction updated successfully!");
@@ -100,18 +123,35 @@ function EditTransactionSection({ transaction, onSuccess, onClose }) {
           inputProps={{ maxLength: 100 }}
         />
 
-        <TextField
-          select
-          label="Type"
-          value={transactionType}
-          onChange={(e) => setTransactionType(e.target.value.toLowerCase())}
-          required
-          fullWidth
-          sx={{ mb: 2 }}
-        >
-          <MenuItem value="income">Income</MenuItem>
-          <MenuItem value="expense">Expense</MenuItem>
-        </TextField>
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="body2" sx={{ mb: 1, color: "text.secondary" }}>
+            Type *
+          </Typography>
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <Button
+              variant={transactionType === "income" ? "contained" : "outlined"}
+              color="success"
+              onClick={() => {
+                console.log("Income button clicked");
+                setTransactionType("income");
+              }}
+              sx={{ flex: 1 }}
+            >
+              Income
+            </Button>
+            <Button
+              variant={transactionType === "expense" ? "contained" : "outlined"}
+              color="error"
+              onClick={() => {
+                console.log("Expense button clicked");
+                setTransactionType("expense");
+              }}
+              sx={{ flex: 1 }}
+            >
+              Expense
+            </Button>
+          </Box>
+        </Box>
 
         <Button
           type="submit"
