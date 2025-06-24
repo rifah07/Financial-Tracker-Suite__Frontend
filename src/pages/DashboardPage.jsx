@@ -2,10 +2,17 @@ import { useState, useEffect } from "react";
 import TransactionList from "../components/TransactionList";
 import EditTransactionSection from "../sections/EditTransactionSection";
 import Modal from "../components/Modal";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import AddIncomeSection from "../sections/AddIncomeSection";
+import AddExpenseSection from "../sections/AddExpenseSection";
 
 function DashboardPage() {
   const [transactions, setTransactions] = useState([]);
   const [editTx, setEditTx] = useState(null);
+  const [showAddIncome, setShowAddIncome] = useState(false);
+  const [showAddExpense, setShowAddExpense] = useState(false);
 
   const fetchTransactions = async (type = "") => {
     const token = localStorage.getItem("accessToken");
@@ -54,12 +61,44 @@ function DashboardPage() {
         margin: "0 auto",
       }}
     >
+      <Box sx={{ mb: 4, display: 'flex', justifyContent: 'center', gap: 2 }}>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={() => setShowAddIncome(true)}
+          startIcon={<span>+</span>}
+          sx={{ 
+            py: 1.5, 
+            borderRadius: 2,
+            boxShadow: '0 4px 12px rgba(76, 175, 80, 0.2)',
+            '&:hover': { boxShadow: '0 6px 16px rgba(76, 175, 80, 0.3)' }
+          }}
+        >
+          Add Income
+        </Button>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => setShowAddExpense(true)}
+          startIcon={<span>-</span>}
+          sx={{ 
+            py: 1.5, 
+            borderRadius: 2,
+            boxShadow: '0 4px 12px rgba(244, 67, 54, 0.2)',
+            '&:hover': { boxShadow: '0 6px 16px rgba(244, 67, 54, 0.3)' }
+          }}
+        >
+          Add Expense
+        </Button>
+      </Box>
+
       <TransactionList
         transactions={transactions}
         onFilter={fetchTransactions}
         onDelete={handleDeleteTransaction}
         onEdit={setEditTx}
       />
+
       <Modal open={!!editTx} onClose={() => setEditTx(null)}>
         {editTx && (
           <EditTransactionSection
@@ -71,6 +110,24 @@ function DashboardPage() {
             onClose={() => setEditTx(null)}
           />
         )}
+      </Modal>
+
+      <Modal open={showAddIncome} onClose={() => setShowAddIncome(false)}>
+        <AddIncomeSection
+          onSuccess={() => {
+            setShowAddIncome(false);
+            fetchTransactions();
+          }}
+        />
+      </Modal>
+
+      <Modal open={showAddExpense} onClose={() => setShowAddExpense(false)}>
+        <AddExpenseSection
+          onSuccess={() => {
+            setShowAddExpense(false);
+            fetchTransactions();
+          }}
+        />
       </Modal>
     </main>
   );
