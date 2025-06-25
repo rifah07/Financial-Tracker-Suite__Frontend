@@ -14,7 +14,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useNavigationType } from "react-router-dom";
 import {
   LineChart,
   Line,
@@ -86,6 +86,7 @@ function UserHomePage({
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [editTx, setEditTx] = useState(null);
   const navigate = useNavigate();
+  const navigationType = useNavigationType();
 
   const fetchTransactions = async (type = "") => {
     const token = localStorage.getItem("accessToken");
@@ -113,6 +114,12 @@ function UserHomePage({
       fetchTransactions();
     }
   }, [initialTransactions]);
+
+  useEffect(() => {
+    if (navigationType === "PUSH") {
+      window.location.reload();
+    }
+  }, [navigationType]);
 
   const handleDeleteTransaction = async (transactionId) => {
     const token = localStorage.getItem("accessToken");
