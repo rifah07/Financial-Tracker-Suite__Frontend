@@ -378,7 +378,7 @@ function UserHomePage({
           <Grid item xs={12} sm={6} md={3}>
             <Card
               sx={{
-                height: 140,
+                height: {xs: 160, md:140},
                 borderRadius: 3,
                 boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                 border: "1px solid #e2e8f0",
@@ -397,8 +397,9 @@ function UserHomePage({
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      width: 173,
-                      height: 36,
+                      height: { xs: 40, sm: 40, md: 36 },
+                      width: { xs: 246, sm: 400, md: 173 },
+
                       borderRadius: "10px",
                       bgcolor: "rgba(255,255,255,0.2)",
                       fontSize: "18px",
@@ -435,7 +436,7 @@ function UserHomePage({
           <Grid item xs={12} sm={6} md={3}>
             <Card
               sx={{
-                height: 140,
+                height: { sm: 160, md: 140 },
                 borderRadius: 3,
                 boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                 border: "1px solid #e2e8f0",
@@ -457,8 +458,8 @@ function UserHomePage({
                     display: "flex",
                     justifyContent: "center",
                     mb: 1,
-                    width: 162,
-                    height: 36,
+                    height: { xs: 40, sm: 40, md: 36 },
+                    width: { xs: 148, sm: 128, md: 162 },
                   }}
                 >
                   <TrendingUpIcon />
@@ -482,7 +483,7 @@ function UserHomePage({
           <Grid item xs={12} sm={6} md={3}>
             <Card
               sx={{
-                height: 140,
+                height: { sm: 160, md: 140 },
                 borderRadius: 3,
                 boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                 border: "1px solid #e2e8f0",
@@ -504,8 +505,8 @@ function UserHomePage({
                     display: "flex",
                     justifyContent: "center",
                     mb: 1,
-                    width: 162,
-                    height: 36,
+                    height: { xs: 40, sm: 40, md: 36 },
+                    width: { xs: 148, sm: 128, md: 162 },
                   }}
                 >
                   <TrendingDownIcon />
@@ -529,7 +530,7 @@ function UserHomePage({
           <Grid item xs={12} sm={6} md={3}>
             <Card
               sx={{
-                height: 140,
+                height: { xs: 180, sm: 160, md: 140 },
                 borderRadius: 3,
                 boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                 border: "1px solid #e2e8f0",
@@ -552,8 +553,8 @@ function UserHomePage({
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      width: 162,
-                      height: 36,
+                      height: { xs: 60, sm: 40, md: 36 },
+                      width: { xs: 500, sm: 128, md: 162 },
                       borderRadius: "50%",
                       background:
                         "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
@@ -594,14 +595,14 @@ function UserHomePage({
       >
         <Grid container spacing={2}>
           {/* Monthly Income vs Expenses Chart */}
-          <Grid item xs={12} md={7}>
+          <Grid item xs={12} sm={2} md={7}>
             <Card
               sx={{
                 borderRadius: 3,
                 boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                 border: "1px solid #e2e8f0",
                 height: { xs: 320, md: 380 },
-                width: { xs: 400, md: 700 },
+                width: { xs: 420, sm: 574, md: 700 },
                 display: "flex",
                 flexDirection: "column",
               }}
@@ -668,14 +669,14 @@ function UserHomePage({
             </Card>
           </Grid>
           {/* Category Breakdown Chart */}
-          <Grid item xs={12} md={5}>
+          <Grid item xs={12} sm={2} md={5}>
             <Card
               sx={{
                 borderRadius: 3,
                 boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                 border: "1px solid #e2e8f0",
-                height: { xs: 330, md: 380 },
-                width: { xs: 400, md: 356 },
+                height: { xs: 350, sm: 350, md: 380 },
+                width: { xs: 420, sm: 574, md: 356 },
                 display: "flex",
                 flexDirection: "column",
               }}
