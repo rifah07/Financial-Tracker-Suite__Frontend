@@ -378,7 +378,7 @@ function UserHomePage({
           <Grid item xs={12} sm={6} md={3}>
             <Card
               sx={{
-                height: {xs: 160, md:140},
+                height: { xs: 160, md: 140 },
                 borderRadius: 3,
                 boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                 border: "1px solid #e2e8f0",
@@ -602,7 +602,7 @@ function UserHomePage({
                 boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                 border: "1px solid #e2e8f0",
                 height: { xs: 320, md: 380 },
-                width: { xs: 420, sm: 574, md: 650 },
+                width: { xs: 420, sm: 574, md: 640 },
                 display: "flex",
                 flexDirection: "column",
               }}
@@ -676,7 +676,7 @@ function UserHomePage({
                 boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                 border: "1px solid #e2e8f0",
                 height: { xs: 350, sm: 350, md: 380 },
-                width: { xs: 420, sm: 574, md: 400 },
+                width: { xs: 420, sm: 574, md: 410 },
                 display: "flex",
                 flexDirection: "column",
               }}
