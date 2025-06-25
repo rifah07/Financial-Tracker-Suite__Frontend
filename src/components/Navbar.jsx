@@ -50,13 +50,19 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
     setProfileMenuAnchor(null);
   };
 
+  // Refresh homepage after adding income/expense
   const handleAddIncomeSuccess = () => {
     setShowAddIncome(false);
+    if (window.location.pathname === "/") {
+      window.location.reload();
+    }
   };
 
   const handleAddExpenseSuccess = () => {
     setShowAddExpense(false);
-    // Optionally refresh data if needed
+    if (window.location.pathname === "/") {
+      window.location.reload();
+    }
   };
 
   const mainNavLinks = !isLoggedIn
