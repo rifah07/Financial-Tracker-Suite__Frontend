@@ -592,7 +592,7 @@ function UserHomePage({
           mb: { xs: 3, md: 4 },
         }}
       >
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           {/* Monthly Income vs Expenses Chart */}
           <Grid item xs={12} md={7}>
             <Card
@@ -600,7 +600,8 @@ function UserHomePage({
                 borderRadius: 3,
                 boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                 border: "1px solid #e2e8f0",
-                height: 320,
+                height: { xs: 320, md: 380 },
+                width: { xs: 400, md: 700 },
                 display: "flex",
                 flexDirection: "column",
               }}
@@ -673,7 +674,8 @@ function UserHomePage({
                 borderRadius: 3,
                 boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                 border: "1px solid #e2e8f0",
-                height: 320,
+                height: { xs: 330, md: 380 },
+                width: { xs: 400, md: 356 },
                 display: "flex",
                 flexDirection: "column",
               }}
