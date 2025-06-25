@@ -52,7 +52,6 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
 
   const handleAddIncomeSuccess = () => {
     setShowAddIncome(false);
-    // Optionally refresh data if needed
   };
 
   const handleAddExpenseSuccess = () => {
