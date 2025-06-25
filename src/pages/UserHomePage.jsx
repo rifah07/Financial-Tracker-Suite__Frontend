@@ -439,61 +439,63 @@ function UserHomePage({
         </Box>
       </Box>
 
-      {/* Main Content Container - Fixed Width */}
+      {/* Main Content Container - Fixed Responsive Layout */}
       <Box sx={{ maxWidth: 1400, mx: "auto", px: { xs: 3, md: 5 } }}>
-        {/* Stats Cards */}
+        {/* Stats Cards - Consistent Height */}
         <Grid container spacing={3} sx={{ mb: 3 }}>
           {/* Balance Card */}
           <Grid item xs={12} sm={6} md={3}>
             <Card
               sx={{
-                height: "100%",
+                height: 180,
                 borderRadius: 3,
                 boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                 border: "1px solid #e2e8f0",
                 background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                 color: "white",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
-              <CardContent sx={{ p: 4 }}>
-                <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+              <CardContent sx={{ p: 3, flex: 1, display: "flex", flexDirection: "column" }}>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                   <Box
                     sx={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      width: 48,
-                      height: 48,
-                      borderRadius: "12px",
+                      width: 40,
+                      height: 40,
+                      borderRadius: "10px",
                       bgcolor: "rgba(255,255,255,0.2)",
-                      fontSize: "24px",
+                      fontSize: "20px",
                     }}
                   >
                     💳
                   </Box>
                   <Typography
-                    variant="h6"
+                    variant="subtitle1"
                     sx={{ ml: 2, fontWeight: 600, color: "white" }}
                   >
                     Current Balance
                   </Typography>
                 </Box>
-                <Typography
-                  variant="h3"
-                  sx={{
-                    mb: 1,
-                    fontWeight: 700,
-                    color: "white",
-                  }}
-                >
-                  {formatCurrency(user?.balance || 0)}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{ color: "rgba(255,255,255,0.8)" }}
-                >
-                  Available funds
-                </Typography>
+                <Box sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      mb: 1,
+                      fontWeight: 700,
+                      color: "white",
+                      fontSize: { xs: "1.5rem", md: "2rem" },
+                    }}
+                  >
+                    {formatCurrency(user?.balance || 0)}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.8)" }}>
+                    Available funds
+                  </Typography>
+                </Box>
               </CardContent>
             </Card>
           </Grid>
@@ -502,29 +504,34 @@ function UserHomePage({
           <Grid item xs={12} sm={6} md={3}>
             <Card
               sx={{
-                height: "100%",
+                height: 180,
                 borderRadius: 3,
                 boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                 border: "1px solid #e2e8f0",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
-              <CardContent sx={{ textAlign: "center", p: 4 }}>
-                <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+              <CardContent sx={{ p: 3, flex: 1, display: "flex", flexDirection: "column", textAlign: "center" }}>
+                <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
                   <TrendingUpIcon />
                 </Box>
-                <Typography
-                  variant="h4"
-                  sx={{
-                    mb: 1,
-                    fontWeight: 700,
-                    color: "#2e7d32",
-                  }}
-                >
-                  {formatCurrency(metrics.totalIncome)}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Total Income
-                </Typography>
+                <Box sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      mb: 1,
+                      fontWeight: 700,
+                      color: "#2e7d32",
+                      fontSize: { xs: "1.5rem", md: "2rem" },
+                    }}
+                  >
+                    {formatCurrency(metrics.totalIncome)}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Total Income
+                  </Typography>
+                </Box>
               </CardContent>
             </Card>
           </Grid>
@@ -533,29 +540,34 @@ function UserHomePage({
           <Grid item xs={12} sm={6} md={3}>
             <Card
               sx={{
-                height: "100%",
+                height: 180,
                 borderRadius: 3,
                 boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                 border: "1px solid #e2e8f0",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
-              <CardContent sx={{ textAlign: "center", p: 4 }}>
-                <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+              <CardContent sx={{ p: 3, flex: 1, display: "flex", flexDirection: "column", textAlign: "center" }}>
+                <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
                   <TrendingDownIcon />
                 </Box>
-                <Typography
-                  variant="h4"
-                  sx={{
-                    mb: 1,
-                    fontWeight: 700,
-                    color: "#c62828",
-                  }}
-                >
-                  {formatCurrency(metrics.totalExpenses)}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Total Expenses
-                </Typography>
+                <Box sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      mb: 1,
+                      fontWeight: 700,
+                      color: "#c62828",
+                      fontSize: { xs: "1.5rem", md: "2rem" },
+                    }}
+                  >
+                    {formatCurrency(metrics.totalExpenses)}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Total Expenses
+                  </Typography>
+                </Box>
               </CardContent>
             </Card>
           </Grid>
@@ -564,14 +576,16 @@ function UserHomePage({
           <Grid item xs={12} sm={6} md={3}>
             <Card
               sx={{
-                height: "100%",
+                height: 180,
                 borderRadius: 3,
                 boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                 border: "1px solid #e2e8f0",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
-              <CardContent sx={{ textAlign: "center", p: 4 }}>
-                <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+              <CardContent sx={{ p: 3, flex: 1, display: "flex", flexDirection: "column", textAlign: "center" }}>
+                <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
                   <Box
                     sx={{
                       display: "flex",
@@ -580,8 +594,7 @@ function UserHomePage({
                       width: 40,
                       height: 40,
                       borderRadius: "50%",
-                      background:
-                        "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
+                      background: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
                       color: "#1565c0",
                       fontSize: "20px",
                       fontWeight: "bold",
@@ -590,51 +603,52 @@ function UserHomePage({
                     📊
                   </Box>
                 </Box>
-                <Typography
-                  variant="h4"
-                  sx={{
-                    mb: 1,
-                    fontWeight: 700,
-                    color: "#1565c0",
-                  }}
-                >
-                  {metrics.transactionCount}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Total Transactions
-                </Typography>
+                <Box sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      mb: 1,
+                      fontWeight: 700,
+                      color: "#1565c0",
+                      fontSize: { xs: "1.5rem", md: "2rem" },
+                    }}
+                  >
+                    {metrics.transactionCount}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Total Transactions
+                  </Typography>
+                </Box>
               </CardContent>
             </Card>
           </Grid>
         </Grid>
 
-        {/* Charts Section - Fixed Layout */}
+        {/* Charts Section - Responsive Grid Layout */}
         <Grid container spacing={3} sx={{ mb: 3 }}>
           {/* Monthly Income vs Expenses Chart */}
-          <Grid item xs={12} lg={7}>
+          <Grid item xs={12} lg={8}>
             <Card
               sx={{
                 borderRadius: 3,
                 boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                 border: "1px solid #e2e8f0",
-                height: 420,
+                height: { xs: 400, lg: 450 },
               }}
             >
-              <CardContent sx={{ p: 4, height: "100%" }}>
-                <Typography
-                  variant="h6"
-                  sx={{ mb: 1, fontWeight: 600, color: "#1e293b" }}
-                >
-                  Monthly Income vs Expenses
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 3 }}
-                >
-                  Financial overview for the last 6 months
-                </Typography>
-                <Box sx={{ width: "100%", height: 320 }}>
+              <CardContent sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column" }}>
+                <Box sx={{ mb: 3 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ mb: 1, fontWeight: 600, color: "#1e293b" }}
+                  >
+                    Monthly Income vs Expenses
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Financial overview for the last 6 months
+                  </Typography>
+                </Box>
+                <Box sx={{ flex: 1, minHeight: 0 }}>
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={metrics.monthlyData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -681,40 +695,38 @@ function UserHomePage({
           </Grid>
 
           {/* Right Column - Category & Quick Actions */}
-          <Grid item xs={12} lg={5}>
-            <Grid container spacing={3} sx={{ height: 420 }}>
+          <Grid item xs={12} lg={4}>
+            <Grid container spacing={3} sx={{ height: { xs: "auto", lg: 450 } }}>
               {/* Category Breakdown */}
-              <Grid item xs={12}>
+              <Grid item xs={12} md={6} lg={12}>
                 <Card
                   sx={{
                     borderRadius: 3,
                     boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                     border: "1px solid #e2e8f0",
-                    height: 200,
+                    height: { xs: 300, md: 400, lg: 210 },
                   }}
                 >
-                  <CardContent sx={{ p: 3, height: "100%" }}>
-                    <Typography
-                      variant="h6"
-                      sx={{ mb: 1, fontWeight: 600, color: "#1e293b" }}
-                    >
-                      Category Breakdown
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{ mb: 2 }}
-                    >
-                      Distribution by category
-                    </Typography>
-                    <Box sx={{ width: "100%", height: 120 }}>
+                  <CardContent sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column" }}>
+                    <Box sx={{ mb: 2 }}>
+                      <Typography
+                        variant="h6"
+                        sx={{ mb: 1, fontWeight: 600, color: "#1e293b" }}
+                      >
+                        Category Breakdown
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Distribution by category
+                      </Typography>
+                    </Box>
+                    <Box sx={{ flex: 1, minHeight: 0 }}>
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                           <Pie
                             data={metrics.categoryData}
                             cx="50%"
                             cy="50%"
-                            outerRadius={50}
+                            outerRadius={60}
                             fill="#8884d8"
                             dataKey="value"
                             label={({ name, percent }) =>
@@ -729,12 +741,7 @@ function UserHomePage({
                               />
                             ))}
                           </Pie>
-                          <Tooltip
-                            formatter={(value) => [
-                              formatCurrency(value),
-                              "Amount",
-                            ]}
-                          />
+                          <Tooltip formatter={(value) => [formatCurrency(value), "Amount"]} />
                         </PieChart>
                       </ResponsiveContainer>
                     </Box>
@@ -743,29 +750,23 @@ function UserHomePage({
               </Grid>
 
               {/* Quick Actions */}
-              <Grid item xs={12}>
+              <Grid item xs={12} md={6} lg={12}>
                 <Card
                   sx={{
                     borderRadius: 3,
                     boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                     border: "1px solid #e2e8f0",
-                    height: 200,
+                    height: { xs: 200, md: 400, lg: 210 },
                   }}
                 >
-                  <CardContent sx={{ p: 3, height: "100%" }}>
+                  <CardContent sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column" }}>
                     <Typography
                       variant="h6"
-                      sx={{ mb: 2, fontWeight: 600, color: "#1e293b" }}
+                      sx={{ mb: 3, fontWeight: 600, color: "#1e293b" }}
                     >
                       Quick Actions
                     </Typography>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 1.5,
-                      }}
-                    >
+                    <Box sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 2 }}>
                       <Button
                         variant="contained"
                         size="medium"
@@ -828,23 +829,22 @@ function UserHomePage({
                 borderRadius: 3,
                 boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
                 border: "1px solid #e2e8f0",
+                height: { xs: 350, md: 400 },
               }}
             >
-              <CardContent sx={{ p: 4 }}>
-                <Typography
-                  variant="h6"
-                  sx={{ mb: 1, fontWeight: 600, color: "#1e293b" }}
-                >
-                  Weekly Activity Trend
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 3 }}
-                >
-                  Daily balance changes over the last 7 days
-                </Typography>
-                <Box sx={{ width: "100%", height: 300 }}>
+              <CardContent sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column" }}>
+                <Box sx={{ mb: 3 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ mb: 1, fontWeight: 600, color: "#1e293b" }}
+                  >
+                    Weekly Activity Trend
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Daily balance changes over the last 7 days
+                  </Typography>
+                </Box>
+                <Box sx={{ flex: 1, minHeight: 0 }}>
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={metrics.trendData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -857,9 +857,7 @@ function UserHomePage({
                       <Tooltip
                         formatter={(value, name) => [
                           name === "balance" ? formatCurrency(value) : value,
-                          name === "balance"
-                            ? "Balance Change"
-                            : "Transactions",
+                          name === "balance" ? "Balance Change" : "Transactions",
                         ]}
                         labelStyle={{ color: "#1e293b" }}
                         contentStyle={{
