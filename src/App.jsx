@@ -7,13 +7,12 @@ import {
 } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Modal from "./components/Modal";
-import HeroSection from "./sections/HeroSection";
+import LandingPage from "./pages/LandingPage";
 import DashboardPage from "./pages/DashboardPage";
 import RegisterSection from "./sections/RegisterSection";
 import LoginSection from "./sections/LoginSection";
 import ProfilePage from "./pages/ProfilePage";
 import Footer from "./components/Footer";
-import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import ForgotPasswordSection from "./sections/ForgotPasswordSection";
@@ -85,36 +84,6 @@ function App() {
     window.location.href = "/";
   };
 
-/*   const refreshDashboard = () => {
-    if (isLoggedIn) {
-      setIsLoading(true);
-      const token = localStorage.getItem("accessToken");
-      fetch(`${import.meta.env.VITE_API_USER_URL}/dashboard`, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token || ""}`,
-        },
-      })
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error("Failed to fetch user data");
-          }
-          return res.json();
-        })
-        .then((data) => {
-          setUser(data.data);
-          setTransactions(data.transactions || []);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-          setIsLoading(false);
-        });
-    }
-  }; */
-
   return (
     <Router>
       <CssBaseline />
@@ -123,7 +92,7 @@ function App() {
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
-          bgcolor: "#f7fafc",
+          bgcolor: "#f8fafc",
         }}
       >
         <Navbar
@@ -131,30 +100,38 @@ function App() {
           onLoginClick={() => setShowLogin(true)}
           onLogout={handleLogout}
           isLoggedIn={isLoggedIn}
+          user={user}
         />
-        <Container maxWidth="lg" sx={{ flex: 1, py: { xs: 2, md: 4 } }}>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                isLoggedIn ? (
-                  <UserHomePage user={user} transactions={transactions} isLoading={isLoading} />
-                ) : (
-                  <HeroSection />
-                )
-              }
-            />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route
-              path="/forgot-password"
-              element={<ForgotPasswordSection />}
-            />
-            <Route path="/reset-password" element={<ResetPasswordSection />} />
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </Container>
+
+        <Routes>
+          <Route
+            path="/"
+            element={
+              isLoggedIn ? (
+                <Box sx={{ maxWidth: 1400, mx: "auto", px: { xs: 2, md: 5 } }}>
+                  <UserHomePage
+                    user={user}
+                    transactions={transactions}
+                    isLoading={isLoading}
+                  />
+                </Box>
+              ) : (
+                <LandingPage
+                  onGetStarted={() => setShowRegister(true)}
+                  onLogin={() => setShowLogin(true)}
+                />
+              )
+            }
+          />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordSection />} />
+          <Route path="/reset-password" element={<ResetPasswordSection />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+
         <Footer />
+
         <Modal open={showRegister} onClose={() => setShowRegister(false)}>
           <RegisterSection />
         </Modal>
