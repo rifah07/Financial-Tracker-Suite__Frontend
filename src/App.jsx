@@ -16,7 +16,6 @@ import Footer from "./components/Footer";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import ForgotPasswordSection from "./sections/ForgotPasswordSection";
 import ResetPasswordSection from "./sections/ResetPasswordSection";
 import UserHomePage from "./pages/UserHomePage";
@@ -39,7 +38,7 @@ function App() {
     if (isLoggedIn) {
       setIsLoading(true);
       const token = localStorage.getItem("accessToken");
-      fetch(`${import.meta.env.VITE_API_USER_URL}/dashboard`, {
+      fetch(`${import.meta.env.VITE_API_USER_URL}/`, {
         method: "GET",
         credentials: "include",
         headers: {
@@ -78,13 +77,15 @@ function App() {
           Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
         },
       });
-    } catch {}
+    } catch (error) {
+      console.error("Cannot logout. Error:", error);
+    }
     localStorage.removeItem("accessToken");
     setIsLoggedIn(false);
     window.location.href = "/";
   };
 
-  const refreshDashboard = () => {
+/*   const refreshDashboard = () => {
     if (isLoggedIn) {
       setIsLoading(true);
       const token = localStorage.getItem("accessToken");
@@ -112,7 +113,7 @@ function App() {
           setIsLoading(false);
         });
     }
-  };
+  }; */
 
   return (
     <Router>
