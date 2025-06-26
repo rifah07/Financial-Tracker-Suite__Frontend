@@ -48,7 +48,12 @@ function ReportModals({ reportsAPI }) {
   };
 
   const handleReportSubmit = () => {
+    console.log("Submitting report with filters:", reportFilters); // Debug log
+
+    // Call the API function from the hook
     reportsAPI.handleGenerateReport(reportFilters);
+
+    // Close dialog and reset filters
     reportsAPI.setReportDialogOpen(false);
     setReportFilters({ type: "", start_date: "", end_date: "", download: "" });
   };
@@ -223,11 +228,12 @@ function ReportModals({ reportsAPI }) {
           }}
         >
           <Typography variant="h5" fontWeight={700}>
-            Transaction Report ({reportsAPI.reportData.length} transactions)
+            Transaction Report ({reportsAPI.reportData?.length || 0}{" "}
+            transactions)
           </Typography>
         </DialogTitle>
         <DialogContent sx={{ p: 0 }}>
-          {reportsAPI.reportData.length > 0 ? (
+          {reportsAPI.reportData && reportsAPI.reportData.length > 0 ? (
             <TableContainer component={Paper} sx={{ maxHeight: 500 }}>
               <Table stickyHeader>
                 <TableHead>
@@ -311,6 +317,9 @@ function ReportModals({ reportsAPI }) {
               <Typography variant="h6" color="text.secondary">
                 No transactions found for the selected criteria
               </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                Try adjusting your filters or date range
+              </Typography>
             </Box>
           )}
         </DialogContent>
@@ -339,7 +348,9 @@ function ReportModals({ reportsAPI }) {
             textAlign: "center",
           }}
         >
-          Generate Custom Report
+          <Typography variant="h5" fontWeight={700}>
+            Generate Custom Report
+          </Typography>
         </DialogTitle>
         <DialogContent>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3, mt: 2 }}>
@@ -370,6 +381,7 @@ function ReportModals({ reportsAPI }) {
               }
               InputLabelProps={{ shrink: true }}
               fullWidth
+              helperText="Optional: Leave empty to include all dates"
             />
 
             <TextField
@@ -381,13 +393,14 @@ function ReportModals({ reportsAPI }) {
               }
               InputLabelProps={{ shrink: true }}
               fullWidth
+              helperText="Optional: Leave empty to include all dates"
             />
 
             <FormControl fullWidth>
-              <InputLabel>Download Format</InputLabel>
+              <InputLabel>Output Format</InputLabel>
               <Select
                 value={reportFilters.download}
-                label="Download Format"
+                label="Output Format"
                 onChange={(e) =>
                   setReportFilters({
                     ...reportFilters,
@@ -396,14 +409,47 @@ function ReportModals({ reportsAPI }) {
                 }
               >
                 <MenuItem value="">View in Modal</MenuItem>
-                <MenuItem value="csv">Download CSV</MenuItem>
+                <MenuItem value="csv">Download as CSV</MenuItem>
               </Select>
             </FormControl>
+
+            {/* Preview of current filters */}
+            <Box
+              sx={{
+                p: 2,
+                bgcolor: "#f8fafc",
+                borderRadius: 2,
+                border: "1px solid #e2e8f0",
+              }}
+            >
+              <Typography
+                variant="subtitle2"
+                fontWeight={600}
+                color="#374151"
+                sx={{ mb: 1 }}
+              >
+                Current Filters:
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Type: {reportFilters.type || "All"} | Start:{" "}
+                {reportFilters.start_date || "Any"} | End:{" "}
+                {reportFilters.end_date || "Any"} | Format:{" "}
+                {reportFilters.download || "View"}
+              </Typography>
+            </Box>
           </Box>
         </DialogContent>
-        <DialogActions sx={{ p: 3 }}>
+        <DialogActions sx={{ p: 3, gap: 1 }}>
           <Button
-            onClick={() => reportsAPI.setReportDialogOpen(false)}
+            onClick={() => {
+              reportsAPI.setReportDialogOpen(false);
+              setReportFilters({
+                type: "",
+                start_date: "",
+                end_date: "",
+                download: "",
+              });
+            }}
             sx={{ borderRadius: 2 }}
           >
             Cancel

@@ -17,7 +17,7 @@ import AddExpenseModal from "./AddExpenseModal";
 import LoadingDialog from "./LoadingDialog";
 import ErrorDialog from "./ErrorDialog";
 
-import useReportsAPI from "../hooks/useReportsAPI";
+import {useReportsAPI} from "../hooks/useReportsAPI";
 
 function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
   const [drawerOpen, setDrawerOpen] = useState(false);

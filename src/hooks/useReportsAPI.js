@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function useReportsAPI(setLoading, setError) {
+export function useReportsAPI(setLoading, setError) {
   const [summaryDialogOpen, setSummaryDialogOpen] = useState(false);
   const [reportResultsOpen, setReportResultsOpen] = useState(false);
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
@@ -34,6 +34,68 @@ function useReportsAPI(setLoading, setError) {
     } catch (error) {
       console.error("Error fetching summary:", error);
       setError("Failed to fetch summary data. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGenerateReport = async (filters = {}) => {
+    setLoading(true);
+    setError("");
+    try {
+      const token = localStorage.getItem("accessToken");
+
+      // Build query parameters
+      const queryParams = new URLSearchParams();
+      if (filters.type) queryParams.append("type", filters.type);
+      if (filters.start_date)
+        queryParams.append("start_date", filters.start_date);
+      if (filters.end_date) queryParams.append("end_date", filters.end_date);
+      if (filters.download) queryParams.append("download", filters.download);
+
+      const url = `${import.meta.env.VITE_API_TRANSACTION_URL}/report${
+        queryParams.toString() ? `?${queryParams.toString()}` : ""
+      }`;
+
+      console.log("Calling API with URL:", url); // Debug log
+      console.log("Filters:", filters); // Debug log
+
+      const response = await fetch(url, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token || ""}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      if (filters.download === "csv") {
+        // Handle CSV download
+        const blob = await response.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = downloadUrl;
+        a.download = `transaction-report-${
+          new Date().toISOString().split("T")[0]
+        }.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(downloadUrl);
+        document.body.removeChild(a);
+      } else {
+        // Handle JSON response and show in modal
+        const data = await response.json();
+        console.log("Report data received:", data); // Debug log
+        setReportData(data.data || []);
+        setReportResultsOpen(true);
+      }
+    } catch (error) {
+      console.error("Error generating report:", error);
+      setError("Failed to generate report. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -84,6 +146,7 @@ function useReportsAPI(setLoading, setError) {
 
   return {
     handleGetSummary,
+    handleGenerateReport,
     handleDownloadReport,
     handleCustomReport,
     summaryDialogOpen,
@@ -97,5 +160,3 @@ function useReportsAPI(setLoading, setError) {
     setReportData,
   };
 }
-
-export default useReportsAPI;
