@@ -480,8 +480,9 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
                       overflow: "visible",
                       filter: "drop-shadow(0px 4px 16px rgba(0,0,0,0.12))",
                       mt: 1.5,
-                      minWidth: 380,
-                      maxWidth: 420,
+                      minWidth: 420,
+                      maxWidth: 480,
+                      maxHeight: "85vh", // Limit height to 85% of viewport
                       borderRadius: 3,
                       border: "1px solid #e2e8f0",
                       "&:before": {
@@ -504,15 +505,39 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
                   }}
                   transformOrigin={{ horizontal: "left", vertical: "top" }}
                   anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
+                  // Add scroll behavior for better content visibility
+                  MenuListProps={{
+                    sx: {
+                      maxHeight: "75vh",
+                      overflowY: "auto",
+                      "&::-webkit-scrollbar": {
+                        width: "6px",
+                      },
+                      "&::-webkit-scrollbar-track": {
+                        background: "#f1f1f1",
+                        borderRadius: "3px",
+                      },
+                      "&::-webkit-scrollbar-thumb": {
+                        background: "#c1c1c1",
+                        borderRadius: "3px",
+                        "&:hover": {
+                          background: "#a8a8a8",
+                        },
+                      },
+                    },
+                  }}
                 >
                   {/* Header */}
                   <Box
                     sx={{
                       px: 3,
-                      py: 2,
+                      py: 2.5,
                       background:
                         "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
                       borderBottom: "1px solid #e2e8f0",
+                      position: "sticky",
+                      top: 0,
+                      zIndex: 1,
                     }}
                   >
                     <Typography
@@ -533,164 +558,185 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
                     </Typography>
                   </Box>
 
-                  {/* Summaries Section */}
+                  {/* Scrollable Content Container */}
                   <Box sx={{ py: 1 }}>
-                    <Typography
-                      variant="overline"
-                      sx={{
-                        px: 3,
-                        py: 1,
-                        color: "#64748b",
-                        fontWeight: 700,
-                        letterSpacing: "0.5px",
-                        display: "block",
-                      }}
-                    >
-                      📊 Financial Summaries
-                    </Typography>
-                    {groupedReports.summaries.map((item) => (
-                      <MenuItem
-                        key={item.label}
-                        onClick={item.action}
+                    {/* Summaries Section */}
+                    <Box sx={{ mb: 1 }}>
+                      <Typography
+                        variant="overline"
                         sx={{
-                          py: 2,
                           px: 3,
-                          mx: 1,
-                          mb: 0.5,
-                          borderRadius: 2,
-                          "&:hover": {
-                            bgcolor: "#f1f5f9",
-                            transform: "translateX(4px)",
-                          },
-                          transition: "all 0.2s ease",
+                          py: 1.5,
+                          color: "#64748b",
+                          fontWeight: 700,
+                          letterSpacing: "0.5px",
+                          display: "block",
+                          bgcolor: "#f8fafc",
+                          borderBottom: "1px solid #f1f5f9",
                         }}
                       >
-                        <ListItemIcon sx={{ minWidth: 40 }}>
-                          {item.icon}
-                        </ListItemIcon>
-                        <Box sx={{ flex: 1 }}>
-                          <Typography
-                            variant="body2"
-                            fontWeight={600}
-                            color="#374151"
-                          >
-                            {item.label}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            {item.description}
-                          </Typography>
-                        </Box>
-                      </MenuItem>
-                    ))}
-                  </Box>
+                        📊 Financial Summaries
+                      </Typography>
+                      {groupedReports.summaries.map((item) => (
+                        <MenuItem
+                          key={item.label}
+                          onClick={item.action}
+                          sx={{
+                            py: 2,
+                            px: 3,
+                            mx: 1,
+                            mb: 0.5,
+                            borderRadius: 2,
+                            "&:hover": {
+                              bgcolor: "#f1f5f9",
+                              transform: "translateX(4px)",
+                            },
+                            transition: "all 0.2s ease",
+                          }}
+                        >
+                          <ListItemIcon sx={{ minWidth: 40 }}>
+                            {item.icon}
+                          </ListItemIcon>
+                          <Box sx={{ flex: 1 }}>
+                            <Typography
+                              variant="body2"
+                              fontWeight={600}
+                              color="#374151"
+                            >
+                              {item.label}
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                            >
+                              {item.description}
+                            </Typography>
+                          </Box>
+                        </MenuItem>
+                      ))}
+                    </Box>
 
-                  <Divider sx={{ mx: 2 }} />
+                    <Divider sx={{ mx: 2, my: 1 }} />
 
-                  {/* Custom Reports Section */}
-                  <Box sx={{ py: 1 }}>
-                    <Typography
-                      variant="overline"
-                      sx={{
-                        px: 3,
-                        py: 1,
-                        color: "#64748b",
-                        fontWeight: 700,
-                        letterSpacing: "0.5px",
-                        display: "block",
-                      }}
-                    >
-                      📄 Custom Reports
-                    </Typography>
-                    {groupedReports.reports.map((item) => (
-                      <MenuItem
-                        key={item.label}
-                        onClick={item.action}
+                    {/* Custom Reports Section */}
+                    <Box sx={{ mb: 1 }}>
+                      <Typography
+                        variant="overline"
                         sx={{
-                          py: 2,
                           px: 3,
-                          mx: 1,
-                          mb: 0.5,
-                          borderRadius: 2,
-                          "&:hover": {
-                            bgcolor: "#f1f5f9",
-                            transform: "translateX(4px)",
-                          },
-                          transition: "all 0.2s ease",
+                          py: 1.5,
+                          color: "#64748b",
+                          fontWeight: 700,
+                          letterSpacing: "0.5px",
+                          display: "block",
+                          bgcolor: "#f8fafc",
+                          borderBottom: "1px solid #f1f5f9",
                         }}
                       >
-                        <ListItemIcon sx={{ minWidth: 40 }}>
-                          {item.icon}
-                        </ListItemIcon>
-                        <Box sx={{ flex: 1 }}>
-                          <Typography
-                            variant="body2"
-                            fontWeight={600}
-                            color="#374151"
-                          >
-                            {item.label}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            {item.description}
-                          </Typography>
-                        </Box>
-                      </MenuItem>
-                    ))}
-                  </Box>
+                        📄 Custom Reports
+                      </Typography>
+                      {groupedReports.reports.map((item) => (
+                        <MenuItem
+                          key={item.label}
+                          onClick={item.action}
+                          sx={{
+                            py: 2,
+                            px: 3,
+                            mx: 1,
+                            mb: 0.5,
+                            borderRadius: 2,
+                            "&:hover": {
+                              bgcolor: "#f1f5f9",
+                              transform: "translateX(4px)",
+                            },
+                            transition: "all 0.2s ease",
+                          }}
+                        >
+                          <ListItemIcon sx={{ minWidth: 40 }}>
+                            {item.icon}
+                          </ListItemIcon>
+                          <Box sx={{ flex: 1 }}>
+                            <Typography
+                              variant="body2"
+                              fontWeight={600}
+                              color="#374151"
+                            >
+                              {item.label}
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                            >
+                              {item.description}
+                            </Typography>
+                          </Box>
+                        </MenuItem>
+                      ))}
+                    </Box>
 
-                  <Divider sx={{ mx: 2 }} />
+                    <Divider sx={{ mx: 2, my: 1 }} />
 
-                  {/* Downloads Section */}
-                  <Box sx={{ py: 1 }}>
-                    <Typography
-                      variant="overline"
-                      sx={{
-                        px: 3,
-                        py: 1,
-                        color: "#64748b",
-                        fontWeight: 700,
-                        letterSpacing: "0.5px",
-                        display: "block",
-                      }}
-                    >
-                      💾 PDF Downloads
-                    </Typography>
-                    {groupedReports.downloads.map((item) => (
-                      <MenuItem
-                        key={item.label}
-                        onClick={item.action}
+                    {/* Downloads Section - Enhanced for better visibility */}
+                    <Box sx={{ mb: 1 }}>
+                      <Typography
+                        variant="overline"
                         sx={{
-                          py: 2,
                           px: 3,
-                          mx: 1,
-                          mb: 0.5,
-                          borderRadius: 2,
-                          "&:hover": {
-                            bgcolor: "#f1f5f9",
-                            transform: "translateX(4px)",
-                          },
-                          transition: "all 0.2s ease",
+                          py: 1.5,
+                          color: "#64748b",
+                          fontWeight: 700,
+                          letterSpacing: "0.5px",
+                          display: "block",
+                          bgcolor: "#f8fafc",
+                          borderBottom: "1px solid #f1f5f9",
                         }}
                       >
-                        <ListItemIcon sx={{ minWidth: 40 }}>
-                          {item.icon}
-                        </ListItemIcon>
-                        <Box sx={{ flex: 1 }}>
-                          <Typography
-                            variant="body2"
-                            fontWeight={600}
-                            color="#374151"
-                          >
-                            {item.label}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            {item.description}
-                          </Typography>
-                        </Box>
-                      </MenuItem>
-                    ))}
+                        💾 PDF Downloads
+                      </Typography>
+                      {groupedReports.downloads.map((item, index) => (
+                        <MenuItem
+                          key={item.label}
+                          onClick={item.action}
+                          sx={{
+                            py: 2,
+                            px: 3,
+                            mx: 1,
+                            mb:
+                              index === groupedReports.downloads.length - 1
+                                ? 1
+                                : 0.5,
+                            borderRadius: 2,
+                            "&:hover": {
+                              bgcolor: "#f1f5f9",
+                              transform: "translateX(4px)",
+                            },
+                            transition: "all 0.2s ease",
+                          }}
+                        >
+                          <ListItemIcon sx={{ minWidth: 40 }}>
+                            {item.icon}
+                          </ListItemIcon>
+                          <Box sx={{ flex: 1 }}>
+                            <Typography
+                              variant="body2"
+                              fontWeight={600}
+                              color="#374151"
+                            >
+                              {item.label}
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                            >
+                              {item.description}
+                            </Typography>
+                          </Box>
+                        </MenuItem>
+                      ))}
+                    </Box>
                   </Box>
 
-                  {/* Footer */}
+                  {/* Footer - Sticky at bottom */}
                   <Box
                     sx={{
                       px: 3,
@@ -698,6 +744,9 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
                       background: "#f8fafc",
                       borderTop: "1px solid #e2e8f0",
                       borderRadius: "0 0 12px 12px",
+                      position: "sticky",
+                      bottom: 0,
+                      zIndex: 1,
                     }}
                   >
                     <Typography
@@ -815,7 +864,7 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
         </Toolbar>
       </AppBar>
 
-      {/* Mobile Drawer - Keep existing code */}
+      {/* Mobile Drawer */}
       <Drawer
         anchor="right"
         open={drawerOpen}
@@ -1003,7 +1052,6 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
         </List>
       </Drawer>
 
-      {/* Keep all existing modals and dialogs - Loading, Error, Summary, Report Results, Custom Report, Add Income, Add Expense */}
       {/* Loading Overlay */}
       {loading && (
         <Dialog open={loading}>
