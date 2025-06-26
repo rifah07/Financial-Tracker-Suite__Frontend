@@ -27,7 +27,6 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Move reports state to main component
   const reportsAPI = useReportsAPI(setLoading, setError);
 
   const handleAddIncomeSuccess = () => {
