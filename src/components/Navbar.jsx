@@ -15,6 +15,7 @@ import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "../components/Modal";
@@ -24,6 +25,10 @@ import AddExpenseSection from "../sections/AddExpenseSection";
 // Icons
 const HomeIcon = () => <span style={{ fontSize: "20px" }}>🏠</span>;
 const DashboardIcon = () => <span style={{ fontSize: "20px" }}>📊</span>;
+const ReportsIcon = () => <span style={{ fontSize: "20px" }}>📈</span>;
+const SummaryIcon = () => <span style={{ fontSize: "18px" }}>📋</span>;
+const ReportIcon = () => <span style={{ fontSize: "18px" }}>📄</span>;
+const DownloadIcon = () => <span style={{ fontSize: "18px" }}>💾</span>;
 const IncomeIcon = () => (
   <span style={{ fontSize: "20px", color: "#2e7d32" }}>💰</span>
 );
@@ -38,6 +43,7 @@ const RegisterIcon = () => <span style={{ fontSize: "20px" }}>📝</span>;
 function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [profileMenuAnchor, setProfileMenuAnchor] = useState(null);
+  const [reportsMenuAnchor, setReportsMenuAnchor] = useState(null);
   const [showAddIncome, setShowAddIncome] = useState(false);
   const [showAddExpense, setShowAddExpense] = useState(false);
   const navigate = useNavigate();
@@ -48,6 +54,100 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
 
   const handleProfileMenuClose = () => {
     setProfileMenuAnchor(null);
+  };
+
+  const handleReportsMenuOpen = (event) => {
+    setReportsMenuAnchor(event.currentTarget);
+  };
+
+  const handleReportsMenuClose = () => {
+    setReportsMenuAnchor(null);
+  };
+
+  // API call functions
+  const handleGetSummary = async (period = "monthly") => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_API_TRANSACTION_URL}/summary?period=${period}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token || ""}`,
+          },
+        }
+      );
+      const data = await response.json();
+      console.log("Summary data:", data);
+      // You can navigate to a summary page or show a modal with the data
+      // For now, we'll just log it
+      alert(`Summary data fetched! Check console for details.`);
+    } catch (error) {
+      console.error("Error fetching summary:", error);
+      alert("Failed to fetch summary data");
+    }
+  };
+
+  const handleGenerateReport = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_API_TRANSACTION_URL}/report`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token || ""}`,
+          },
+        }
+      );
+      const data = await response.json();
+      console.log("Report data:", data);
+      // You can navigate to a report page or show a modal with the data
+      alert(`Report generated! Check console for details.`);
+    } catch (error) {
+      console.error("Error generating report:", error);
+      alert("Failed to generate report");
+    }
+  };
+
+  const handleDownloadReport = async (period = "monthly") => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_API_TRANSACTION_URL}/download?period=${period}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${token || ""}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `transaction-report-${period}-${
+          new Date().toISOString().split("T")[0]
+        }.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        alert("Report downloaded successfully!");
+      } else {
+        throw new Error("Download failed");
+      }
+    } catch (error) {
+      console.error("Error downloading report:", error);
+      alert("Failed to download report");
+    }
   };
 
   // Refresh homepage after adding income/expense
@@ -96,6 +196,27 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
           color: "error",
         },
       ];
+
+  const reportsMenuItems = [
+    {
+      label: "Transaction Summary",
+      action: () => handleGetSummary("monthly"),
+      icon: <SummaryIcon />,
+      description: "View monthly summary",
+    },
+    {
+      label: "Generate Report",
+      action: handleGenerateReport,
+      icon: <ReportIcon />,
+      description: "Create detailed report",
+    },
+    {
+      label: "Download PDF",
+      action: () => handleDownloadReport("monthly"),
+      icon: <DownloadIcon />,
+      description: "Download as PDF",
+    },
+  ];
 
   const profileMenuItems = [
     {
@@ -179,6 +300,94 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
                 {link.label}
               </Button>
             ))}
+
+            {/* Reports Dropdown for Desktop */}
+            {isLoggedIn && (
+              <Box sx={{ ml: 1 }}>
+                <Button
+                  onClick={handleReportsMenuOpen}
+                  startIcon={<ReportsIcon />}
+                  endIcon={<KeyboardArrowDownIcon />}
+                  sx={{
+                    borderRadius: 2,
+                    fontWeight: 600,
+                    px: 2.5,
+                    py: 1,
+                    textTransform: "none",
+                    fontSize: "0.9rem",
+                    color: "#374151",
+                    "&:hover": {
+                      bgcolor: "rgba(0,0,0,0.04)",
+                      transform: "translateY(-1px)",
+                    },
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  Reports
+                </Button>
+                <Menu
+                  anchorEl={reportsMenuAnchor}
+                  open={Boolean(reportsMenuAnchor)}
+                  onClose={handleReportsMenuClose}
+                  onClick={handleReportsMenuClose}
+                  PaperProps={{
+                    elevation: 8,
+                    sx: {
+                      overflow: "visible",
+                      filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.15))",
+                      mt: 1.5,
+                      minWidth: 240,
+                      borderRadius: 2,
+                      "&:before": {
+                        content: '""',
+                        display: "block",
+                        position: "absolute",
+                        top: 0,
+                        left: "50%",
+                        width: 10,
+                        height: 10,
+                        bgcolor: "background.paper",
+                        transform:
+                          "translateX(-50%) translateY(-50%) rotate(45deg)",
+                        zIndex: 0,
+                      },
+                    },
+                  }}
+                  transformOrigin={{ horizontal: "left", vertical: "top" }}
+                  anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
+                >
+                  {reportsMenuItems.map((item) => (
+                    <MenuItem
+                      key={item.label}
+                      onClick={item.action}
+                      sx={{
+                        py: 1.5,
+                        px: 2,
+                        "&:hover": {
+                          bgcolor: "#f8fafc",
+                        },
+                      }}
+                    >
+                      <ListItemIcon sx={{ minWidth: 36 }}>
+                        {item.icon}
+                      </ListItemIcon>
+                      <Box>
+                        <Typography
+                          variant="body2"
+                          fontWeight={600}
+                          color="#374151"
+                        >
+                          {item.label}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {item.description}
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            )}
 
             {/* Profile Menu for Desktop */}
             {isLoggedIn && (
@@ -372,6 +581,60 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
               />
             </ListItem>
           ))}
+
+          {/* Reports Section for Mobile */}
+          {isLoggedIn && (
+            <>
+              <Divider sx={{ my: 2, mx: 2 }} />
+              <Typography
+                variant="overline"
+                sx={{
+                  px: 3,
+                  color: "#64748b",
+                  fontWeight: 700,
+                  letterSpacing: "0.5px",
+                }}
+              >
+                Reports
+              </Typography>
+              {reportsMenuItems.map((item) => (
+                <ListItem
+                  key={item.label}
+                  onClick={() => {
+                    setDrawerOpen(false);
+                    item.action();
+                  }}
+                  sx={{
+                    py: 1.5,
+                    px: 3,
+                    mx: 2,
+                    mb: 1,
+                    borderRadius: 2,
+                    cursor: "pointer",
+                    "&:hover": {
+                      bgcolor: "rgba(0,0,0,0.04)",
+                    },
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  <ListItemIcon sx={{ minWidth: 40, color: "inherit" }}>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={item.label}
+                    secondary={item.description}
+                    primaryTypographyProps={{
+                      fontWeight: 600,
+                      color: "#374151",
+                    }}
+                    secondaryTypographyProps={{
+                      fontSize: "0.75rem",
+                    }}
+                  />
+                </ListItem>
+              ))}
+            </>
+          )}
 
           {isLoggedIn && (
             <>
