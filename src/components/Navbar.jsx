@@ -75,10 +75,10 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
   const [summaryData, setSummaryData] = useState(null);
   const [reportData, setReportData] = useState([]);
   const [reportFilters, setReportFilters] = useState({
-    type: '',
-    start_date: '',
-    end_date: '',
-    download: ''
+    type: "",
+    start_date: "",
+    end_date: "",
+    download: "",
   });
   const navigate = useNavigate();
 
@@ -131,11 +131,11 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
           },
         }
       );
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
       setSummaryData({ ...data, period });
       setSummaryDialogOpen(true);
@@ -152,16 +152,19 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
     setError("");
     try {
       const token = localStorage.getItem("accessToken");
-      
+
       // Build query parameters
       const queryParams = new URLSearchParams();
-      if (filters.type) queryParams.append('type', filters.type);
-      if (filters.start_date) queryParams.append('start_date', filters.start_date);
-      if (filters.end_date) queryParams.append('end_date', filters.end_date);
-      if (filters.download) queryParams.append('download', filters.download);
-      
-      const url = `${import.meta.env.VITE_API_TRANSACTION_URL}/report${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-      
+      if (filters.type) queryParams.append("type", filters.type);
+      if (filters.start_date)
+        queryParams.append("start_date", filters.start_date);
+      if (filters.end_date) queryParams.append("end_date", filters.end_date);
+      if (filters.download) queryParams.append("download", filters.download);
+
+      const url = `${import.meta.env.VITE_API_TRANSACTION_URL}/report${
+        queryParams.toString() ? `?${queryParams.toString()}` : ""
+      }`;
+
       const response = await fetch(url, {
         method: "GET",
         credentials: "include",
@@ -170,18 +173,20 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
           Authorization: `Bearer ${token || ""}`,
         },
       });
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
-      if (filters.download === 'csv') {
+
+      if (filters.download === "csv") {
         // Handle CSV download
         const blob = await response.blob();
         const downloadUrl = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = downloadUrl;
-        a.download = `transaction-report-${new Date().toISOString().split("T")[0]}.csv`;
+        a.download = `transaction-report-${
+          new Date().toISOString().split("T")[0]
+        }.csv`;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(downloadUrl);
@@ -248,7 +253,7 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
   const handleReportSubmit = () => {
     handleGenerateReport(reportFilters);
     setReportDialogOpen(false);
-    setReportFilters({ type: '', start_date: '', end_date: '', download: '' });
+    setReportFilters({ type: "", start_date: "", end_date: "", download: "" });
   };
 
   // Refresh homepage after adding income/expense
@@ -303,43 +308,50 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
       label: "Daily Summary",
       action: () => handleGetSummary("daily"),
       icon: <SummaryIcon />,
-      description: "View daily summary",
+      description: "View daily financial summary",
+      category: "summaries",
     },
     {
       label: "Monthly Summary",
       action: () => handleGetSummary("monthly"),
       icon: <SummaryIcon />,
-      description: "View monthly summary",
+      description: "View monthly financial summary",
+      category: "summaries",
     },
     {
       label: "Yearly Summary",
       action: () => handleGetSummary("yearly"),
       icon: <SummaryIcon />,
-      description: "View yearly summary",
+      description: "View yearly financial summary",
+      category: "summaries",
     },
     {
       label: "Custom Report",
       action: handleCustomReport,
       icon: <ReportIcon />,
-      description: "Generate custom report",
+      description: "Generate custom filtered report",
+      category: "reports",
     },
     {
-      label: "Download Daily PDF",
+      label: "Daily PDF",
       action: () => handleDownloadReport("daily"),
       icon: <DownloadIcon />,
-      description: "Download daily PDF",
+      description: "Download daily report as PDF",
+      category: "downloads",
     },
     {
-      label: "Download Monthly PDF",
+      label: "Monthly PDF",
       action: () => handleDownloadReport("monthly"),
       icon: <DownloadIcon />,
-      description: "Download monthly PDF",
+      description: "Download monthly report as PDF",
+      category: "downloads",
     },
     {
-      label: "Download Yearly PDF",
+      label: "Yearly PDF",
       action: () => handleDownloadReport("yearly"),
       icon: <DownloadIcon />,
-      description: "Download yearly PDF",
+      description: "Download yearly report as PDF",
+      category: "downloads",
     },
   ];
 
@@ -351,6 +363,13 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
     },
     { label: "Logout", action: onLogout, icon: <LogoutIcon />, color: "error" },
   ];
+
+  // Group reports by category for better organization
+  const groupedReports = {
+    summaries: reportsMenuItems.filter((item) => item.category === "summaries"),
+    reports: reportsMenuItems.filter((item) => item.category === "reports"),
+    downloads: reportsMenuItems.filter((item) => item.category === "downloads"),
+  };
 
   return (
     <>
@@ -426,7 +445,7 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
               </Button>
             ))}
 
-            {/* Reports Dropdown for Desktop */}
+            {/* Enhanced Reports Dropdown for Desktop */}
             {isLoggedIn && (
               <Box sx={{ ml: 1 }}>
                 <Button
@@ -456,61 +475,240 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
                   onClose={handleReportsMenuClose}
                   onClick={handleReportsMenuClose}
                   PaperProps={{
-                    elevation: 8,
+                    elevation: 12,
                     sx: {
                       overflow: "visible",
-                      filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.15))",
+                      filter: "drop-shadow(0px 4px 16px rgba(0,0,0,0.12))",
                       mt: 1.5,
-                      minWidth: 260,
-                      maxHeight: 400,
-                      borderRadius: 2,
+                      minWidth: 380,
+                      maxWidth: 420,
+                      borderRadius: 3,
+                      border: "1px solid #e2e8f0",
                       "&:before": {
                         content: '""',
                         display: "block",
                         position: "absolute",
                         top: 0,
                         left: "50%",
-                        width: 10,
-                        height: 10,
+                        width: 12,
+                        height: 12,
                         bgcolor: "background.paper",
                         transform:
                           "translateX(-50%) translateY(-50%) rotate(45deg)",
                         zIndex: 0,
+                        border: "1px solid #e2e8f0",
+                        borderBottom: "none",
+                        borderRight: "none",
                       },
                     },
                   }}
                   transformOrigin={{ horizontal: "left", vertical: "top" }}
                   anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
                 >
-                  {reportsMenuItems.map((item) => (
-                    <MenuItem
-                      key={item.label}
-                      onClick={item.action}
+                  {/* Header */}
+                  <Box
+                    sx={{
+                      px: 3,
+                      py: 2,
+                      background:
+                        "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
+                      borderBottom: "1px solid #e2e8f0",
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      fontWeight={700}
+                      color="#1e293b"
+                      sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                    >
+                      <ReportsIcon />
+                      Financial Reports
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ mt: 0.5 }}
+                    >
+                      Generate summaries and download reports
+                    </Typography>
+                  </Box>
+
+                  {/* Summaries Section */}
+                  <Box sx={{ py: 1 }}>
+                    <Typography
+                      variant="overline"
                       sx={{
-                        py: 1.5,
-                        px: 2,
-                        "&:hover": {
-                          bgcolor: "#f8fafc",
-                        },
+                        px: 3,
+                        py: 1,
+                        color: "#64748b",
+                        fontWeight: 700,
+                        letterSpacing: "0.5px",
+                        display: "block",
                       }}
                     >
-                      <ListItemIcon sx={{ minWidth: 36 }}>
-                        {item.icon}
-                      </ListItemIcon>
-                      <Box>
-                        <Typography
-                          variant="body2"
-                          fontWeight={600}
-                          color="#374151"
-                        >
-                          {item.label}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {item.description}
-                        </Typography>
-                      </Box>
-                    </MenuItem>
-                  ))}
+                      📊 Financial Summaries
+                    </Typography>
+                    {groupedReports.summaries.map((item) => (
+                      <MenuItem
+                        key={item.label}
+                        onClick={item.action}
+                        sx={{
+                          py: 2,
+                          px: 3,
+                          mx: 1,
+                          mb: 0.5,
+                          borderRadius: 2,
+                          "&:hover": {
+                            bgcolor: "#f1f5f9",
+                            transform: "translateX(4px)",
+                          },
+                          transition: "all 0.2s ease",
+                        }}
+                      >
+                        <ListItemIcon sx={{ minWidth: 40 }}>
+                          {item.icon}
+                        </ListItemIcon>
+                        <Box sx={{ flex: 1 }}>
+                          <Typography
+                            variant="body2"
+                            fontWeight={600}
+                            color="#374151"
+                          >
+                            {item.label}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {item.description}
+                          </Typography>
+                        </Box>
+                      </MenuItem>
+                    ))}
+                  </Box>
+
+                  <Divider sx={{ mx: 2 }} />
+
+                  {/* Custom Reports Section */}
+                  <Box sx={{ py: 1 }}>
+                    <Typography
+                      variant="overline"
+                      sx={{
+                        px: 3,
+                        py: 1,
+                        color: "#64748b",
+                        fontWeight: 700,
+                        letterSpacing: "0.5px",
+                        display: "block",
+                      }}
+                    >
+                      📄 Custom Reports
+                    </Typography>
+                    {groupedReports.reports.map((item) => (
+                      <MenuItem
+                        key={item.label}
+                        onClick={item.action}
+                        sx={{
+                          py: 2,
+                          px: 3,
+                          mx: 1,
+                          mb: 0.5,
+                          borderRadius: 2,
+                          "&:hover": {
+                            bgcolor: "#f1f5f9",
+                            transform: "translateX(4px)",
+                          },
+                          transition: "all 0.2s ease",
+                        }}
+                      >
+                        <ListItemIcon sx={{ minWidth: 40 }}>
+                          {item.icon}
+                        </ListItemIcon>
+                        <Box sx={{ flex: 1 }}>
+                          <Typography
+                            variant="body2"
+                            fontWeight={600}
+                            color="#374151"
+                          >
+                            {item.label}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {item.description}
+                          </Typography>
+                        </Box>
+                      </MenuItem>
+                    ))}
+                  </Box>
+
+                  <Divider sx={{ mx: 2 }} />
+
+                  {/* Downloads Section */}
+                  <Box sx={{ py: 1 }}>
+                    <Typography
+                      variant="overline"
+                      sx={{
+                        px: 3,
+                        py: 1,
+                        color: "#64748b",
+                        fontWeight: 700,
+                        letterSpacing: "0.5px",
+                        display: "block",
+                      }}
+                    >
+                      💾 PDF Downloads
+                    </Typography>
+                    {groupedReports.downloads.map((item) => (
+                      <MenuItem
+                        key={item.label}
+                        onClick={item.action}
+                        sx={{
+                          py: 2,
+                          px: 3,
+                          mx: 1,
+                          mb: 0.5,
+                          borderRadius: 2,
+                          "&:hover": {
+                            bgcolor: "#f1f5f9",
+                            transform: "translateX(4px)",
+                          },
+                          transition: "all 0.2s ease",
+                        }}
+                      >
+                        <ListItemIcon sx={{ minWidth: 40 }}>
+                          {item.icon}
+                        </ListItemIcon>
+                        <Box sx={{ flex: 1 }}>
+                          <Typography
+                            variant="body2"
+                            fontWeight={600}
+                            color="#374151"
+                          >
+                            {item.label}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {item.description}
+                          </Typography>
+                        </Box>
+                      </MenuItem>
+                    ))}
+                  </Box>
+
+                  {/* Footer */}
+                  <Box
+                    sx={{
+                      px: 3,
+                      py: 2,
+                      background: "#f8fafc",
+                      borderTop: "1px solid #e2e8f0",
+                      borderRadius: "0 0 12px 12px",
+                    }}
+                  >
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ fontStyle: "italic" }}
+                    >
+                      💡 Tip: Use custom reports for specific date ranges and
+                      filters
+                    </Typography>
+                  </Box>
                 </Menu>
               </Box>
             )}
@@ -617,7 +815,7 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
         </Toolbar>
       </AppBar>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer - Keep existing code */}
       <Drawer
         anchor="right"
         open={drawerOpen}
@@ -805,10 +1003,13 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
         </List>
       </Drawer>
 
+      {/* Keep all existing modals and dialogs - Loading, Error, Summary, Report Results, Custom Report, Add Income, Add Expense */}
       {/* Loading Overlay */}
       {loading && (
         <Dialog open={loading}>
-          <DialogContent sx={{ display: "flex", alignItems: "center", gap: 2, p: 4 }}>
+          <DialogContent
+            sx={{ display: "flex", alignItems: "center", gap: 2, p: 4 }}
+          >
             <CircularProgress size={24} />
             <Typography>Loading...</Typography>
           </DialogContent>
@@ -827,19 +1028,23 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
       )}
 
       {/* Summary Modal */}
-      <Dialog 
-        open={summaryDialogOpen} 
+      <Dialog
+        open={summaryDialogOpen}
         onClose={() => setSummaryDialogOpen(false)}
         maxWidth="md"
         fullWidth
       >
-        <DialogTitle sx={{ 
-          background: "linear-gradient(135deg, #1565c0 0%, #2e7d32 100%)",
-          color: "white",
-          textAlign: "center"
-        }}>
+        <DialogTitle
+          sx={{
+            background: "linear-gradient(135deg, #1565c0 0%, #2e7d32 100%)",
+            color: "white",
+            textAlign: "center",
+          }}
+        >
           <Typography variant="h5" fontWeight={700}>
-            {summaryData?.period?.charAt(0).toUpperCase() + summaryData?.period?.slice(1)} Summary
+            {summaryData?.period?.charAt(0).toUpperCase() +
+              summaryData?.period?.slice(1)}{" "}
+            Summary
           </Typography>
         </DialogTitle>
         <DialogContent sx={{ p: 0 }}>
@@ -847,11 +1052,14 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
             <Box sx={{ p: 3 }}>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={6} md={4}>
-                  <Card sx={{ 
-                    borderRadius: 3, 
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-                    background: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)"
-                  }}>
+                  <Card
+                    sx={{
+                      borderRadius: 3,
+                      boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                      background:
+                        "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
+                    }}
+                  >
                     <CardContent sx={{ textAlign: "center", p: 3 }}>
                       <Typography variant="h6" color="#1565c0" fontWeight={600}>
                         Initial Balance
@@ -863,11 +1071,14 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
                   </Card>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  <Card sx={{ 
-                    borderRadius: 3, 
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-                    background: "linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%)"
-                  }}>
+                  <Card
+                    sx={{
+                      borderRadius: 3,
+                      boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                      background:
+                        "linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%)",
+                    }}
+                  >
                     <CardContent sx={{ textAlign: "center", p: 3 }}>
                       <Typography variant="h6" color="#2e7d32" fontWeight={600}>
                         Total Income
@@ -879,11 +1090,14 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
                   </Card>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  <Card sx={{ 
-                    borderRadius: 3, 
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-                    background: "linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)"
-                  }}>
+                  <Card
+                    sx={{
+                      borderRadius: 3,
+                      boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                      background:
+                        "linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)",
+                    }}
+                  >
                     <CardContent sx={{ textAlign: "center", p: 3 }}>
                       <Typography variant="h6" color="#c62828" fontWeight={600}>
                         Total Expense
@@ -895,11 +1109,14 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
                   </Card>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  <Card sx={{ 
-                    borderRadius: 3, 
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-                    background: "linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%)"
-                  }}>
+                  <Card
+                    sx={{
+                      borderRadius: 3,
+                      boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                      background:
+                        "linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%)",
+                    }}
+                  >
                     <CardContent sx={{ textAlign: "center", p: 3 }}>
                       <Typography variant="h6" color="#7b1fa2" fontWeight={600}>
                         Net Change
@@ -911,11 +1128,14 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
                   </Card>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  <Card sx={{ 
-                    borderRadius: 3, 
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-                    background: "linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%)"
-                  }}>
+                  <Card
+                    sx={{
+                      borderRadius: 3,
+                      boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                      background:
+                        "linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%)",
+                    }}
+                  >
                     <CardContent sx={{ textAlign: "center", p: 3 }}>
                       <Typography variant="h6" color="#00695c" fontWeight={600}>
                         Final Balance
@@ -927,11 +1147,14 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
                   </Card>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  <Card sx={{ 
-                    borderRadius: 3, 
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-                    background: "linear-gradient(135deg, #fff3e0 0%, #ffcc02 100%)"
-                  }}>
+                  <Card
+                    sx={{
+                      borderRadius: 3,
+                      boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                      background:
+                        "linear-gradient(135deg, #fff3e0 0%, #ffcc02 100%)",
+                    }}
+                  >
                     <CardContent sx={{ textAlign: "center", p: 3 }}>
                       <Typography variant="h6" color="#e65100" fontWeight={600}>
                         Transactions
@@ -947,8 +1170,8 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
           )}
         </DialogContent>
         <DialogActions sx={{ p: 3 }}>
-          <Button 
-            onClick={() => setSummaryDialogOpen(false)} 
+          <Button
+            onClick={() => setSummaryDialogOpen(false)}
             variant="contained"
             sx={{ borderRadius: 2, px: 4 }}
           >
@@ -958,17 +1181,19 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
       </Dialog>
 
       {/* Report Results Modal */}
-      <Dialog 
-        open={reportResultsOpen} 
+      <Dialog
+        open={reportResultsOpen}
         onClose={() => setReportResultsOpen(false)}
         maxWidth="lg"
         fullWidth
       >
-        <DialogTitle sx={{ 
-          background: "linear-gradient(135deg, #1565c0 0%, #2e7d32 100%)",
-          color: "white",
-          textAlign: "center"
-        }}>
+        <DialogTitle
+          sx={{
+            background: "linear-gradient(135deg, #1565c0 0%, #2e7d32 100%)",
+            color: "white",
+            textAlign: "center",
+          }}
+        >
           <Typography variant="h5" fontWeight={700}>
             Transaction Report ({reportData.length} transactions)
           </Typography>
@@ -979,42 +1204,72 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
               <Table stickyHeader>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: 700, bgcolor: "#f8fafc" }}>Date</TableCell>
-                    <TableCell sx={{ fontWeight: 700, bgcolor: "#f8fafc" }}>Description</TableCell>
-                    <TableCell sx={{ fontWeight: 700, bgcolor: "#f8fafc" }}>Type</TableCell>
-                    <TableCell sx={{ fontWeight: 700, bgcolor: "#f8fafc", textAlign: "right" }}>Amount</TableCell>
+                    <TableCell sx={{ fontWeight: 700, bgcolor: "#f8fafc" }}>
+                      Date
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: 700, bgcolor: "#f8fafc" }}>
+                      Description
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: 700, bgcolor: "#f8fafc" }}>
+                      Type
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        fontWeight: 700,
+                        bgcolor: "#f8fafc",
+                        textAlign: "right",
+                      }}
+                    >
+                      Amount
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {reportData.map((transaction, index) => (
-                    <TableRow 
+                    <TableRow
                       key={transaction._id || index}
-                      sx={{ 
+                      sx={{
                         "&:hover": { bgcolor: "#f8fafc" },
-                        "&:nth-of-type(even)": { bgcolor: "rgba(0,0,0,0.02)" }
+                        "&:nth-of-type(even)": { bgcolor: "rgba(0,0,0,0.02)" },
                       }}
                     >
                       <TableCell>{formatDate(transaction.createdAt)}</TableCell>
-                      <TableCell>{transaction.remarks || transaction.description || "Transaction"}</TableCell>
                       <TableCell>
-                        <Chip 
+                        {transaction.remarks ||
+                          transaction.description ||
+                          "Transaction"}
+                      </TableCell>
+                      <TableCell>
+                        <Chip
                           label={transaction.transaction_type || "income"}
                           size="small"
                           sx={{
                             textTransform: "capitalize",
-                            bgcolor: transaction.transaction_type === "expense" ? "#ffebee" : "#e8f5e8",
-                            color: transaction.transaction_type === "expense" ? "#c62828" : "#2e7d32",
-                            fontWeight: 600
+                            bgcolor:
+                              transaction.transaction_type === "expense"
+                                ? "#ffebee"
+                                : "#e8f5e8",
+                            color:
+                              transaction.transaction_type === "expense"
+                                ? "#c62828"
+                                : "#2e7d32",
+                            fontWeight: 600,
                           }}
                         />
                       </TableCell>
                       <TableCell sx={{ textAlign: "right", fontWeight: 600 }}>
-                        <Typography 
-                          variant="body2" 
-                          color={transaction.transaction_type === "expense" ? "#c62828" : "#2e7d32"}
+                        <Typography
+                          variant="body2"
+                          color={
+                            transaction.transaction_type === "expense"
+                              ? "#c62828"
+                              : "#2e7d32"
+                          }
                           fontWeight={700}
                         >
-                          {transaction.transaction_type === "expense" ? "-" : "+"}
+                          {transaction.transaction_type === "expense"
+                            ? "-"
+                            : "+"}
                           {formatCurrency(Math.abs(transaction.amount))}
                         </Typography>
                       </TableCell>
@@ -1032,8 +1287,8 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
           )}
         </DialogContent>
         <DialogActions sx={{ p: 3 }}>
-          <Button 
-            onClick={() => setReportResultsOpen(false)} 
+          <Button
+            onClick={() => setReportResultsOpen(false)}
             variant="contained"
             sx={{ borderRadius: 2, px: 4 }}
           >
@@ -1043,58 +1298,74 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
       </Dialog>
 
       {/* Custom Report Dialog */}
-      <Dialog 
-        open={reportDialogOpen} 
+      <Dialog
+        open={reportDialogOpen}
         onClose={() => setReportDialogOpen(false)}
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle sx={{ 
-          background: "linear-gradient(135deg, #1565c0 0%, #2e7d32 100%)",
-          color: "white",
-          textAlign: "center"
-        }}>
+        <DialogTitle
+          sx={{
+            background: "linear-gradient(135deg, #1565c0 0%, #2e7d32 100%)",
+            color: "white",
+            textAlign: "center",
+          }}
+        >
           Generate Custom Report
         </DialogTitle>
         <DialogContent>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 2 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 3, mt: 2 }}>
             <FormControl fullWidth>
               <InputLabel>Transaction Type</InputLabel>
               <Select
                 value={reportFilters.type}
                 label="Transaction Type"
-                onChange={(e) => setReportFilters({...reportFilters, type: e.target.value})}
+                onChange={(e) =>
+                  setReportFilters({ ...reportFilters, type: e.target.value })
+                }
               >
                 <MenuItem value="">All Types</MenuItem>
                 <MenuItem value="income">Income</MenuItem>
                 <MenuItem value="expense">Expense</MenuItem>
               </Select>
             </FormControl>
-            
+
             <TextField
               label="Start Date"
               type="date"
               value={reportFilters.start_date}
-              onChange={(e) => setReportFilters({...reportFilters, start_date: e.target.value})}
+              onChange={(e) =>
+                setReportFilters({
+                  ...reportFilters,
+                  start_date: e.target.value,
+                })
+              }
               InputLabelProps={{ shrink: true }}
               fullWidth
             />
-            
+
             <TextField
               label="End Date"
               type="date"
               value={reportFilters.end_date}
-              onChange={(e) => setReportFilters({...reportFilters, end_date: e.target.value})}
+              onChange={(e) =>
+                setReportFilters({ ...reportFilters, end_date: e.target.value })
+              }
               InputLabelProps={{ shrink: true }}
               fullWidth
             />
-            
+
             <FormControl fullWidth>
               <InputLabel>Download Format</InputLabel>
               <Select
                 value={reportFilters.download}
                 label="Download Format"
-                onChange={(e) => setReportFilters({...reportFilters, download: e.target.value})}
+                onChange={(e) =>
+                  setReportFilters({
+                    ...reportFilters,
+                    download: e.target.value,
+                  })
+                }
               >
                 <MenuItem value="">View in Modal</MenuItem>
                 <MenuItem value="csv">Download CSV</MenuItem>
@@ -1103,14 +1374,14 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
           </Box>
         </DialogContent>
         <DialogActions sx={{ p: 3 }}>
-          <Button 
+          <Button
             onClick={() => setReportDialogOpen(false)}
             sx={{ borderRadius: 2 }}
           >
             Cancel
           </Button>
-          <Button 
-            onClick={handleReportSubmit} 
+          <Button
+            onClick={handleReportSubmit}
             variant="contained"
             sx={{ borderRadius: 2, px: 4 }}
           >
