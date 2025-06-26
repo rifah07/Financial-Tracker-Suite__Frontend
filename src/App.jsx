@@ -37,7 +37,7 @@ function App() {
     if (isLoggedIn) {
       setIsLoading(true);
       const token = localStorage.getItem("accessToken");
-      fetch(`${import.meta.env.VITE_API_USER_URL}/`, {
+      fetch(`${import.meta.env.VITE_API_USER_URL}/dashboard`, {
         method: "GET",
         credentials: "include",
         headers: {
