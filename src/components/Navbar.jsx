@@ -24,6 +24,19 @@ import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Grid from "@mui/material/Grid";
+import Chip from "@mui/material/Chip";
+import CircularProgress from "@mui/material/CircularProgress";
+import Alert from "@mui/material/Alert";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "../components/Modal";
@@ -55,6 +68,12 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
   const [showAddIncome, setShowAddIncome] = useState(false);
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const [summaryDialogOpen, setSummaryDialogOpen] = useState(false);
+  const [reportResultsOpen, setReportResultsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [summaryData, setSummaryData] = useState(null);
+  const [reportData, setReportData] = useState([]);
   const [reportFilters, setReportFilters] = useState({
     type: '',
     start_date: '',
@@ -79,8 +98,26 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
     setReportsMenuAnchor(null);
   };
 
-  // API call functions with proper implementation
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(amount);
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
+  // Enhanced API call functions with UI display
   const handleGetSummary = async (period = "monthly") => {
+    setLoading(true);
+    setError("");
     try {
       const token = localStorage.getItem("accessToken");
       const response = await fetch(
@@ -100,27 +137,19 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
       }
       
       const data = await response.json();
-      console.log("Summary data:", data);
-      
-      // Create a better display of summary data
-      const summaryInfo = `
-Summary Type: ${data.summaryType}
-Initial Balance: $${data.initialBalance}
-Total Income: $${data.totalIncome}
-Total Expense: $${data.totalExpense}
-Net Change: $${data.netChange}
-Final Balance: $${data.finalBalance}
-Total Transactions: ${data.totalTransactions}
-      `;
-      
-      alert(`${period.charAt(0).toUpperCase() + period.slice(1)} Summary:\n${summaryInfo}`);
+      setSummaryData({ ...data, period });
+      setSummaryDialogOpen(true);
     } catch (error) {
       console.error("Error fetching summary:", error);
-      alert("Failed to fetch summary data. Please try again.");
+      setError("Failed to fetch summary data. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGenerateReport = async (filters = {}) => {
+    setLoading(true);
+    setError("");
     try {
       const token = localStorage.getItem("accessToken");
       
@@ -157,20 +186,23 @@ Total Transactions: ${data.totalTransactions}
         a.click();
         window.URL.revokeObjectURL(downloadUrl);
         document.body.removeChild(a);
-        alert("CSV report downloaded successfully!");
       } else {
-        // Handle JSON response
+        // Handle JSON response and show in modal
         const data = await response.json();
-        console.log("Report data:", data);
-        alert(`Report generated successfully! Found ${data.data?.length || 0} transactions.`);
+        setReportData(data.data || []);
+        setReportResultsOpen(true);
       }
     } catch (error) {
       console.error("Error generating report:", error);
-      alert("Failed to generate report. Please try again.");
+      setError("Failed to generate report. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDownloadReport = async (period = "monthly") => {
+    setLoading(true);
+    setError("");
     try {
       const token = localStorage.getItem("accessToken");
       const response = await fetch(
@@ -199,10 +231,11 @@ Total Transactions: ${data.totalTransactions}
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
-      alert("PDF report downloaded successfully!");
     } catch (error) {
       console.error("Error downloading report:", error);
-      alert("Failed to download report. Please try again.");
+      setError("Failed to download report. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -772,6 +805,243 @@ Total Transactions: ${data.totalTransactions}
         </List>
       </Drawer>
 
+      {/* Loading Overlay */}
+      {loading && (
+        <Dialog open={loading}>
+          <DialogContent sx={{ display: "flex", alignItems: "center", gap: 2, p: 4 }}>
+            <CircularProgress size={24} />
+            <Typography>Loading...</Typography>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Error Alert */}
+      {error && (
+        <Dialog open={!!error} onClose={() => setError("")}>
+          <DialogContent>
+            <Alert severity="error" onClose={() => setError("")}>
+              {error}
+            </Alert>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Summary Modal */}
+      <Dialog 
+        open={summaryDialogOpen} 
+        onClose={() => setSummaryDialogOpen(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle sx={{ 
+          background: "linear-gradient(135deg, #1565c0 0%, #2e7d32 100%)",
+          color: "white",
+          textAlign: "center"
+        }}>
+          <Typography variant="h5" fontWeight={700}>
+            {summaryData?.period?.charAt(0).toUpperCase() + summaryData?.period?.slice(1)} Summary
+          </Typography>
+        </DialogTitle>
+        <DialogContent sx={{ p: 0 }}>
+          {summaryData && (
+            <Box sx={{ p: 3 }}>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Card sx={{ 
+                    borderRadius: 3, 
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                    background: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)"
+                  }}>
+                    <CardContent sx={{ textAlign: "center", p: 3 }}>
+                      <Typography variant="h6" color="#1565c0" fontWeight={600}>
+                        Initial Balance
+                      </Typography>
+                      <Typography variant="h4" fontWeight={700} color="#1565c0">
+                        {formatCurrency(summaryData.initialBalance)}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Card sx={{ 
+                    borderRadius: 3, 
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                    background: "linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%)"
+                  }}>
+                    <CardContent sx={{ textAlign: "center", p: 3 }}>
+                      <Typography variant="h6" color="#2e7d32" fontWeight={600}>
+                        Total Income
+                      </Typography>
+                      <Typography variant="h4" fontWeight={700} color="#2e7d32">
+                        {formatCurrency(summaryData.totalIncome)}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Card sx={{ 
+                    borderRadius: 3, 
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                    background: "linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)"
+                  }}>
+                    <CardContent sx={{ textAlign: "center", p: 3 }}>
+                      <Typography variant="h6" color="#c62828" fontWeight={600}>
+                        Total Expense
+                      </Typography>
+                      <Typography variant="h4" fontWeight={700} color="#c62828">
+                        {formatCurrency(summaryData.totalExpense)}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Card sx={{ 
+                    borderRadius: 3, 
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                    background: "linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%)"
+                  }}>
+                    <CardContent sx={{ textAlign: "center", p: 3 }}>
+                      <Typography variant="h6" color="#7b1fa2" fontWeight={600}>
+                        Net Change
+                      </Typography>
+                      <Typography variant="h4" fontWeight={700} color="#7b1fa2">
+                        {formatCurrency(summaryData.netChange)}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Card sx={{ 
+                    borderRadius: 3, 
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                    background: "linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%)"
+                  }}>
+                    <CardContent sx={{ textAlign: "center", p: 3 }}>
+                      <Typography variant="h6" color="#00695c" fontWeight={600}>
+                        Final Balance
+                      </Typography>
+                      <Typography variant="h4" fontWeight={700} color="#00695c">
+                        {formatCurrency(summaryData.finalBalance)}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Card sx={{ 
+                    borderRadius: 3, 
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                    background: "linear-gradient(135deg, #fff3e0 0%, #ffcc02 100%)"
+                  }}>
+                    <CardContent sx={{ textAlign: "center", p: 3 }}>
+                      <Typography variant="h6" color="#e65100" fontWeight={600}>
+                        Transactions
+                      </Typography>
+                      <Typography variant="h4" fontWeight={700} color="#e65100">
+                        {summaryData.totalTransactions}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ p: 3 }}>
+          <Button 
+            onClick={() => setSummaryDialogOpen(false)} 
+            variant="contained"
+            sx={{ borderRadius: 2, px: 4 }}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Report Results Modal */}
+      <Dialog 
+        open={reportResultsOpen} 
+        onClose={() => setReportResultsOpen(false)}
+        maxWidth="lg"
+        fullWidth
+      >
+        <DialogTitle sx={{ 
+          background: "linear-gradient(135deg, #1565c0 0%, #2e7d32 100%)",
+          color: "white",
+          textAlign: "center"
+        }}>
+          <Typography variant="h5" fontWeight={700}>
+            Transaction Report ({reportData.length} transactions)
+          </Typography>
+        </DialogTitle>
+        <DialogContent sx={{ p: 0 }}>
+          {reportData.length > 0 ? (
+            <TableContainer component={Paper} sx={{ maxHeight: 500 }}>
+              <Table stickyHeader>
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 700, bgcolor: "#f8fafc" }}>Date</TableCell>
+                    <TableCell sx={{ fontWeight: 700, bgcolor: "#f8fafc" }}>Description</TableCell>
+                    <TableCell sx={{ fontWeight: 700, bgcolor: "#f8fafc" }}>Type</TableCell>
+                    <TableCell sx={{ fontWeight: 700, bgcolor: "#f8fafc", textAlign: "right" }}>Amount</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {reportData.map((transaction, index) => (
+                    <TableRow 
+                      key={transaction._id || index}
+                      sx={{ 
+                        "&:hover": { bgcolor: "#f8fafc" },
+                        "&:nth-of-type(even)": { bgcolor: "rgba(0,0,0,0.02)" }
+                      }}
+                    >
+                      <TableCell>{formatDate(transaction.createdAt)}</TableCell>
+                      <TableCell>{transaction.remarks || transaction.description || "Transaction"}</TableCell>
+                      <TableCell>
+                        <Chip 
+                          label={transaction.transaction_type || "income"}
+                          size="small"
+                          sx={{
+                            textTransform: "capitalize",
+                            bgcolor: transaction.transaction_type === "expense" ? "#ffebee" : "#e8f5e8",
+                            color: transaction.transaction_type === "expense" ? "#c62828" : "#2e7d32",
+                            fontWeight: 600
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell sx={{ textAlign: "right", fontWeight: 600 }}>
+                        <Typography 
+                          variant="body2" 
+                          color={transaction.transaction_type === "expense" ? "#c62828" : "#2e7d32"}
+                          fontWeight={700}
+                        >
+                          {transaction.transaction_type === "expense" ? "-" : "+"}
+                          {formatCurrency(Math.abs(transaction.amount))}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ) : (
+            <Box sx={{ textAlign: "center", py: 8 }}>
+              <Typography variant="h6" color="text.secondary">
+                No transactions found for the selected criteria
+              </Typography>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ p: 3 }}>
+          <Button 
+            onClick={() => setReportResultsOpen(false)} 
+            variant="contained"
+            sx={{ borderRadius: 2, px: 4 }}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {/* Custom Report Dialog */}
       <Dialog 
         open={reportDialogOpen} 
@@ -779,9 +1049,15 @@ Total Transactions: ${data.totalTransactions}
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>Generate Custom Report</DialogTitle>
+        <DialogTitle sx={{ 
+          background: "linear-gradient(135deg, #1565c0 0%, #2e7d32 100%)",
+          color: "white",
+          textAlign: "center"
+        }}>
+          Generate Custom Report
+        </DialogTitle>
         <DialogContent>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 2 }}>
             <FormControl fullWidth>
               <InputLabel>Transaction Type</InputLabel>
               <Select
@@ -820,15 +1096,24 @@ Total Transactions: ${data.totalTransactions}
                 label="Download Format"
                 onChange={(e) => setReportFilters({...reportFilters, download: e.target.value})}
               >
-                <MenuItem value="">View Only</MenuItem>
+                <MenuItem value="">View in Modal</MenuItem>
                 <MenuItem value="csv">Download CSV</MenuItem>
               </Select>
             </FormControl>
           </Box>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setReportDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleReportSubmit} variant="contained">
+        <DialogActions sx={{ p: 3 }}>
+          <Button 
+            onClick={() => setReportDialogOpen(false)}
+            sx={{ borderRadius: 2 }}
+          >
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleReportSubmit} 
+            variant="contained"
+            sx={{ borderRadius: 2, px: 4 }}
+          >
             Generate Report
           </Button>
         </DialogActions>
