@@ -16,6 +16,14 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "../components/Modal";
@@ -46,6 +54,13 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
   const [reportsMenuAnchor, setReportsMenuAnchor] = useState(null);
   const [showAddIncome, setShowAddIncome] = useState(false);
   const [showAddExpense, setShowAddExpense] = useState(false);
+  const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const [reportFilters, setReportFilters] = useState({
+    type: '',
+    start_date: '',
+    end_date: '',
+    download: ''
+  });
   const navigate = useNavigate();
 
   const handleProfileMenuOpen = (event) => {
@@ -64,12 +79,12 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
     setReportsMenuAnchor(null);
   };
 
-  // API call functions
+  // API call functions with proper implementation
   const handleGetSummary = async (period = "monthly") => {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await fetch(
-        `${import.meta.env.VITE_API_TRANSACTION_URL}/summary?period=${period}`,
+        `${import.meta.env.VITE_API_TRANSACTION_URL}/summary?type=${period}`,
         {
           method: "GET",
           credentials: "include",
@@ -79,38 +94,79 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
           },
         }
       );
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
       console.log("Summary data:", data);
-      // You can navigate to a summary page or show a modal with the data
-      // For now, we'll just log it
-      alert(`Summary data fetched! Check console for details.`);
+      
+      // Create a better display of summary data
+      const summaryInfo = `
+Summary Type: ${data.summaryType}
+Initial Balance: $${data.initialBalance}
+Total Income: $${data.totalIncome}
+Total Expense: $${data.totalExpense}
+Net Change: $${data.netChange}
+Final Balance: $${data.finalBalance}
+Total Transactions: ${data.totalTransactions}
+      `;
+      
+      alert(`${period.charAt(0).toUpperCase() + period.slice(1)} Summary:\n${summaryInfo}`);
     } catch (error) {
       console.error("Error fetching summary:", error);
-      alert("Failed to fetch summary data");
+      alert("Failed to fetch summary data. Please try again.");
     }
   };
 
-  const handleGenerateReport = async () => {
+  const handleGenerateReport = async (filters = {}) => {
     try {
       const token = localStorage.getItem("accessToken");
-      const response = await fetch(
-        `${import.meta.env.VITE_API_TRANSACTION_URL}/report`,
-        {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token || ""}`,
-          },
-        }
-      );
-      const data = await response.json();
-      console.log("Report data:", data);
-      // You can navigate to a report page or show a modal with the data
-      alert(`Report generated! Check console for details.`);
+      
+      // Build query parameters
+      const queryParams = new URLSearchParams();
+      if (filters.type) queryParams.append('type', filters.type);
+      if (filters.start_date) queryParams.append('start_date', filters.start_date);
+      if (filters.end_date) queryParams.append('end_date', filters.end_date);
+      if (filters.download) queryParams.append('download', filters.download);
+      
+      const url = `${import.meta.env.VITE_API_TRANSACTION_URL}/report${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+      
+      const response = await fetch(url, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token || ""}`,
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      if (filters.download === 'csv') {
+        // Handle CSV download
+        const blob = await response.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = downloadUrl;
+        a.download = `transaction-report-${new Date().toISOString().split("T")[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(downloadUrl);
+        document.body.removeChild(a);
+        alert("CSV report downloaded successfully!");
+      } else {
+        // Handle JSON response
+        const data = await response.json();
+        console.log("Report data:", data);
+        alert(`Report generated successfully! Found ${data.data?.length || 0} transactions.`);
+      }
     } catch (error) {
       console.error("Error generating report:", error);
-      alert("Failed to generate report");
+      alert("Failed to generate report. Please try again.");
     }
   };
 
@@ -118,7 +174,7 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await fetch(
-        `${import.meta.env.VITE_API_TRANSACTION_URL}/download?period=${period}`,
+        `${import.meta.env.VITE_API_TRANSACTION_URL}/download?type=${period}`,
         {
           method: "GET",
           credentials: "include",
@@ -128,26 +184,38 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
         }
       );
 
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `transaction-report-${period}-${
-          new Date().toISOString().split("T")[0]
-        }.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-        alert("Report downloaded successfully!");
-      } else {
-        throw new Error("Download failed");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `transaction-report-${period}-${
+        new Date().toISOString().split("T")[0]
+      }.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      alert("PDF report downloaded successfully!");
     } catch (error) {
       console.error("Error downloading report:", error);
-      alert("Failed to download report");
+      alert("Failed to download report. Please try again.");
     }
+  };
+
+  // Handle custom report generation
+  const handleCustomReport = () => {
+    setReportDialogOpen(true);
+    handleReportsMenuClose();
+  };
+
+  const handleReportSubmit = () => {
+    handleGenerateReport(reportFilters);
+    setReportDialogOpen(false);
+    setReportFilters({ type: '', start_date: '', end_date: '', download: '' });
   };
 
   // Refresh homepage after adding income/expense
@@ -199,22 +267,46 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
 
   const reportsMenuItems = [
     {
-      label: "Transaction Summary",
+      label: "Daily Summary",
+      action: () => handleGetSummary("daily"),
+      icon: <SummaryIcon />,
+      description: "View daily summary",
+    },
+    {
+      label: "Monthly Summary",
       action: () => handleGetSummary("monthly"),
       icon: <SummaryIcon />,
       description: "View monthly summary",
     },
     {
-      label: "Generate Report",
-      action: handleGenerateReport,
-      icon: <ReportIcon />,
-      description: "Create detailed report",
+      label: "Yearly Summary",
+      action: () => handleGetSummary("yearly"),
+      icon: <SummaryIcon />,
+      description: "View yearly summary",
     },
     {
-      label: "Download PDF",
+      label: "Custom Report",
+      action: handleCustomReport,
+      icon: <ReportIcon />,
+      description: "Generate custom report",
+    },
+    {
+      label: "Download Daily PDF",
+      action: () => handleDownloadReport("daily"),
+      icon: <DownloadIcon />,
+      description: "Download daily PDF",
+    },
+    {
+      label: "Download Monthly PDF",
       action: () => handleDownloadReport("monthly"),
       icon: <DownloadIcon />,
-      description: "Download as PDF",
+      description: "Download monthly PDF",
+    },
+    {
+      label: "Download Yearly PDF",
+      action: () => handleDownloadReport("yearly"),
+      icon: <DownloadIcon />,
+      description: "Download yearly PDF",
     },
   ];
 
@@ -336,7 +428,8 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
                       overflow: "visible",
                       filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.15))",
                       mt: 1.5,
-                      minWidth: 240,
+                      minWidth: 260,
+                      maxHeight: 400,
                       borderRadius: 2,
                       "&:before": {
                         content: '""',
@@ -678,6 +771,68 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
           )}
         </List>
       </Drawer>
+
+      {/* Custom Report Dialog */}
+      <Dialog 
+        open={reportDialogOpen} 
+        onClose={() => setReportDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Generate Custom Report</DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
+            <FormControl fullWidth>
+              <InputLabel>Transaction Type</InputLabel>
+              <Select
+                value={reportFilters.type}
+                label="Transaction Type"
+                onChange={(e) => setReportFilters({...reportFilters, type: e.target.value})}
+              >
+                <MenuItem value="">All Types</MenuItem>
+                <MenuItem value="income">Income</MenuItem>
+                <MenuItem value="expense">Expense</MenuItem>
+              </Select>
+            </FormControl>
+            
+            <TextField
+              label="Start Date"
+              type="date"
+              value={reportFilters.start_date}
+              onChange={(e) => setReportFilters({...reportFilters, start_date: e.target.value})}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+            />
+            
+            <TextField
+              label="End Date"
+              type="date"
+              value={reportFilters.end_date}
+              onChange={(e) => setReportFilters({...reportFilters, end_date: e.target.value})}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+            />
+            
+            <FormControl fullWidth>
+              <InputLabel>Download Format</InputLabel>
+              <Select
+                value={reportFilters.download}
+                label="Download Format"
+                onChange={(e) => setReportFilters({...reportFilters, download: e.target.value})}
+              >
+                <MenuItem value="">View Only</MenuItem>
+                <MenuItem value="csv">Download CSV</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setReportDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleReportSubmit} variant="contained">
+            Generate Report
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Add Income Modal */}
       <Modal open={showAddIncome} onClose={() => setShowAddIncome(false)}>
