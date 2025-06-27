@@ -34,6 +34,7 @@ import Modal from "../components/Modal";
 import EditTransactionSection from "../sections/EditTransactionSection";
 import AddIncomeSection from "../sections/AddIncomeSection";
 import AddExpenseSection from "../sections/AddExpenseSection";
+import TransactionViewSection from "../components/TransactionViewSection";
 
 const TrendingUpIcon = () => (
   <Box
@@ -85,6 +86,7 @@ function UserHomePage({
   const [showAddIncome, setShowAddIncome] = useState(false);
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [editTx, setEditTx] = useState(null);
+  const [viewTx, setViewTx] = useState(null);
   const navigate = useNavigate();
   const navigationType = useNavigationType();
 
@@ -121,7 +123,7 @@ function UserHomePage({
     }
   }, [navigationType]);
 
-  const handleDeleteTransaction = async (transactionId) => {
+  /*  const handleDeleteTransaction = async (transactionId) => {
     const token = localStorage.getItem("accessToken");
     const url = `${import.meta.env.VITE_API_TRANSACTION_URL}/${transactionId}`;
     try {
@@ -142,7 +144,7 @@ function UserHomePage({
       console.error("Error deleting transaction:", error);
       alert("Failed to delete transaction.");
     }
-  };
+  }; */
 
   const handleViewAllTransactions = () => {
     navigate("/dashboard");
@@ -801,7 +803,7 @@ function UserHomePage({
                           size="small"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleDeleteTransaction(transaction._id);
+                            setViewTx(transaction);
                           }}
                           sx={{
                             color: "#94a3b8",
@@ -921,6 +923,12 @@ function UserHomePage({
           onClose={() => setEditTx(null)}
         />
       </Modal>
+      {viewTx && (
+        <TransactionViewSection
+          transaction={viewTx}
+          onClose={() => setViewTx(null)}
+        />
+      )}
     </Box>
   );
 }
