@@ -17,7 +17,7 @@ import AddExpenseModal from "./AddExpenseModal";
 import LoadingDialog from "./LoadingDialog";
 import ErrorDialog from "./ErrorDialog";
 
-import {useReportsAPI} from "../hooks/useReportsAPI";
+import { useReportsAPI } from "../hooks/useReportsAPI";
 
 function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -90,15 +90,19 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
               isLoggedIn={isLoggedIn}
               onRegisterClick={onRegisterClick}
               onLoginClick={onLoginClick}
-              onShowAddIncome={() => setShowAddIncome(true)}
-              onShowAddExpense={() => setShowAddExpense(true)}
               navigate={navigate}
             />
 
             {isLoggedIn && (
               <>
                 <ReportsMenu reportsAPI={reportsAPI} />
-                <ProfileMenu user={user} onLogout={onLogout} navigate={navigate} />
+                <ProfileMenu
+                  user={user}
+                  onLogout={onLogout}
+                  navigate={navigate}
+                  onShowAddIncome={() => setShowAddIncome(true)}
+                  onShowAddExpense={() => setShowAddExpense(true)}
+                />
               </>
             )}
           </Box>
