@@ -53,7 +53,16 @@ function ValuesSection({ values }) {
           />
         </Box>
 
-        <Grid container spacing={5} sx={{ alignItems: "stretch" }}>
+        <Grid
+          container
+          spacing={4}
+          sx={{
+            alignItems: "stretch",
+            justifyContent: "center",
+            maxWidth: "100%",
+            mx: "auto",
+          }}
+        >
           {values.map((value, index) => (
             <Grid
               item
@@ -61,12 +70,17 @@ function ValuesSection({ values }) {
               sm={6}
               md={6}
               key={index}
-              sx={{ display: "flex" }}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}
             >
               <Card
                 sx={{
                   width: "100%",
-                  minHeight: 380,
+                  maxWidth: 480,
+                  minHeight: 340,
+                  height: 340,
                   borderRadius: 5,
                   border: "1px solid #e2e8f0",
                   background:
@@ -75,32 +89,33 @@ function ValuesSection({ values }) {
                   position: "relative",
                   overflow: "hidden",
                   "&:hover": {
-                    transform: "translateY(-12px)",
-                    boxShadow: "0 25px 50px rgba(0,0,0,0.15)",
+                    transform: "translateY(-15px)",
+                    boxShadow: "0 30px 60px rgba(0,0,0,0.18)",
                     "& .value-icon": {
-                      transform: "scale(1.1) rotate(5deg)",
+                      transform: "scale(1.15) rotate(8deg)",
                     },
                     "& .value-bg": {
-                      transform: "scale(1.3)",
-                      opacity: 0.8,
+                      transform: "scale(1.4)",
+                      opacity: 0.9,
                     },
                   },
                   display: "flex",
                   flexDirection: "column",
                 }}
               >
-                {/* Background decoration */}
                 <Box
                   className="value-bg"
                   sx={{
                     position: "absolute",
-                    top: -60,
-                    right: -60,
-                    width: 180,
-                    height: 180,
+                    top: -70,
+                    right: -70,
+                    width: 200,
+                    height: 200,
                     borderRadius: "50%",
                     background:
-                      "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
+                      index % 2 === 0
+                        ? "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)"
+                        : "linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%)",
                     opacity: 0.6,
                     transition: "all 0.4s ease",
                   }}
@@ -113,47 +128,58 @@ function ValuesSection({ values }) {
                     flex: 1,
                     position: "relative",
                     zIndex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
                   }}
                 >
-                  <Box
-                    className="value-icon"
-                    sx={{
-                      width: 90,
-                      height: 90,
-                      borderRadius: 4,
-                      background:
-                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "2.5rem",
-                      mb: 4,
-                      mx: "auto",
-                      boxShadow: "0 12px 40px rgba(102, 126, 234, 0.4)",
-                      transition: "all 0.4s ease",
-                      border: "2px solid rgba(255,255,255,0.2)",
-                    }}
-                  >
-                    {value.icon}
+                  <Box>
+                    <Box
+                      className="value-icon"
+                      sx={{
+                        width: 100,
+                        height: 100,
+                        borderRadius: 5,
+                        background:
+                          index % 2 === 0
+                            ? "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+                            : "linear-gradient(135deg, #4ade80 0%, #22c55e 100%)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "2.8rem",
+                        mb: 4,
+                        mx: "auto",
+                        boxShadow:
+                          index % 2 === 0
+                            ? "0 15px 50px rgba(102, 126, 234, 0.4)"
+                            : "0 15px 50px rgba(74, 222, 128, 0.4)",
+                        transition: "all 0.4s ease",
+                        border: "3px solid rgba(255,255,255,0.3)",
+                      }}
+                    >
+                      {value.icon}
+                    </Box>
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        fontWeight: 800,
+                        mb: 3,
+                        color: "#1e293b",
+                        fontSize: "1.5rem",
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      {value.title}
+                    </Typography>
                   </Box>
-                  <Typography
-                    variant="h5"
-                    sx={{
-                      fontWeight: 800,
-                      mb: 3,
-                      color: "#1e293b",
-                      fontSize: "1.4rem",
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    {value.title}
-                  </Typography>
                   <Typography
                     variant="body1"
                     sx={{
                       color: "#64748b",
-                      lineHeight: 1.7,
-                      fontSize: "1.05rem",
+                      lineHeight: 1.8,
+                      fontSize: "1.1rem",
+                      textAlign: "center",
                     }}
                   >
                     {value.description}
