@@ -132,7 +132,7 @@ function HeroSection({ onGetStarted, onLogin }) {
                   mb: 6,
                   opacity: 0.95,
                   lineHeight: 1.7,
-                  fontSize: { xs: "1.2rem", md: "1.4rem" },
+                  fontSize: { xs: "1.1rem", md: "1.3rem" },
                   maxWidth: 520,
                   fontWeight: 400,
                   textShadow: "0 2px 4px rgba(0,0,0,0.1)",

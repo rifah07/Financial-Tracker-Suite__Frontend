@@ -12,7 +12,7 @@ function FeaturesSection() {
       icon: "📊",
       title: "Smart Analytics",
       description:
-        "Get detailed insights into your spending patterns with beautiful interactive charts, trend analysis, and comprehensive financial reports that help you make informed decisions.",
+        "Get detailed insights into your spending patterns with beautiful interactive charts and comprehensive financial reports.",
       gradient: "linear-gradient(135deg, #1565c0 0%, #42a5f5 100%)",
       bgGradient: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
       shadowColor: "rgba(21, 101, 192, 0.3)",
@@ -21,7 +21,7 @@ function FeaturesSection() {
       icon: "🔐",
       title: "Secure & Private",
       description:
-        "We prioritize the protection of your financial data through robust security measures, including state-of-the-art encryption and strict access controls for your peace of mind.",
+        "We prioritize the protection of your financial data through robust security measures and state-of-the-art encryption.",
       gradient: "linear-gradient(135deg, #0d47a1 0%, #1976d2 100%)",
       bgGradient: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
       shadowColor: "rgba(13, 71, 161, 0.3)",
@@ -30,7 +30,7 @@ function FeaturesSection() {
       icon: "📱",
       title: "Mobile Responsive",
       description:
-        "Access your finances anywhere, anytime with our fully responsive design that works perfectly on desktop, tablet, and mobile devices with seamless user experience.",
+        "Access your finances anywhere, anytime with our fully responsive design that works perfectly on all devices.",
       gradient: "linear-gradient(135deg, #ff9800 0%, #ffb74d 100%)",
       bgGradient: "linear-gradient(135deg, #fff3e0 0%, #ffcc02 100%)",
       shadowColor: "rgba(255, 152, 0, 0.3)",
@@ -38,7 +38,7 @@ function FeaturesSection() {
   ];
 
   return (
-    <Box sx={{ py: { xs: 12, md: 18 } }}>
+    <Box sx={{ py: { xs: 6, md: 12 } }}>
       <Container maxWidth="lg">
         <Box sx={{ textAlign: "center", mb: 12 }}>
           <Chip
@@ -63,7 +63,7 @@ function FeaturesSection() {
               backgroundClip: "text",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
-              fontSize: { xs: "2.8rem", md: "4rem" },
+              fontSize: { xs: "2.4rem", md: "3.6rem" },
               letterSpacing: "-0.03em",
               lineHeight: 1.1,
             }}
@@ -89,7 +89,7 @@ function FeaturesSection() {
               mx: "auto",
               lineHeight: 1.8,
               fontWeight: 400,
-              fontSize: { xs: "1.2rem", md: "1.4rem" },
+              fontSize: { xs: "1rem", md: "1.2rem" },
             }}
           >
             Powerful features designed to transform how you manage, track, and
@@ -97,100 +97,123 @@ function FeaturesSection() {
             design.
           </Typography>
         </Box>
-
-        <Grid container spacing={6} sx={{ alignItems: "stretch" }}>
+        <Grid
+          container
+          spacing={4}
+          sx={{
+            alignItems: "stretch",
+            justifyContent: "center",
+            mb: 12,
+          }}
+        >
           {features.map((feature, index) => (
-            <Grid item xs={12} md={4} key={index} sx={{ display: "flex" }}>
+            <Grid
+              item
+              xs={12} // 1 card per row on mobile
+              sm={12} // 1 card per row on small tablets
+              md={4} // 3 cards per row on desktop (12/4 = 3)
+              lg={4} // 3 cards per row on large screens
+              xl={4} // 3 cards per row on extra large screens
+              key={index}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
               <Card
                 sx={{
                   width: "100%",
-                  minHeight: 450,
-                  borderRadius: 6,
+                  height: 350,
+                  maxWidth: 360,
+                  borderRadius: 5,
                   border: "1px solid #e2e8f0",
                   background:
                     "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
-                  transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                  transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                   position: "relative",
                   overflow: "hidden",
                   display: "flex",
                   flexDirection: "column",
                   "&:hover": {
-                    transform: "translateY(-20px) scale(1.03)",
-                    boxShadow: `0 40px 80px ${feature.shadowColor}`,
+                    transform: "translateY(-12px)",
+                    boxShadow: `0 25px 50px ${feature.shadowColor}`,
                     "& .feature-icon": {
-                      transform: "scale(1.2) rotate(15deg)",
+                      transform: "scale(1.1) rotate(8deg)",
                     },
                     "& .feature-bg": {
-                      transform: "scale(1.4)",
-                      opacity: 1,
+                      transform: "scale(1.3)",
+                      opacity: 0.9,
                     },
                   },
                 }}
               >
-                {/* Enhanced Background decoration */}
                 <Box
                   className="feature-bg"
                   sx={{
                     position: "absolute",
-                    top: -100,
-                    right: -100,
-                    width: 250,
-                    height: 250,
+                    top: -80,
+                    right: -80,
+                    width: 200,
+                    height: 200,
                     borderRadius: "50%",
                     background: feature.bgGradient,
                     opacity: 0.7,
-                    transition: "all 0.5s ease",
+                    transition: "all 0.4s ease",
                   }}
                 />
 
                 <CardContent
                   sx={{
-                    p: 6,
+                    p: 5,
                     position: "relative",
                     zIndex: 1,
                     flex: 1,
                     display: "flex",
                     flexDirection: "column",
+                    justifyContent: "space-between",
+                    textAlign: "center",
                   }}
                 >
-                  <Box
-                    className="feature-icon"
-                    sx={{
-                      width: 100,
-                      height: 100,
-                      borderRadius: 5,
-                      background: feature.gradient,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "40px",
-                      mb: 5,
-                      boxShadow: `0 15px 50px ${feature.shadowColor}`,
-                      transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-                      border: "2px solid rgba(255,255,255,0.2)",
-                    }}
-                  >
-                    {feature.icon}
+                  <Box>
+                    <Box
+                      className="feature-icon"
+                      sx={{
+                        width: 80,
+                        height: 80,
+                        borderRadius: 4,
+                        background: feature.gradient,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "2.5rem",
+                        mb: 4,
+                        mx: "auto",
+                        boxShadow: `0 12px 40px ${feature.shadowColor}`,
+                        transition: "all 0.4s ease",
+                        border: "2px solid rgba(255,255,255,0.2)",
+                      }}
+                    >
+                      {feature.icon}
+                    </Box>
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        fontWeight: 800,
+                        mb: 3,
+                        color: "#1e293b",
+                        fontSize: "1.4rem",
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      {feature.title}
+                    </Typography>
                   </Box>
-                  <Typography
-                    variant="h4"
-                    sx={{
-                      fontWeight: 800,
-                      mb: 3,
-                      color: "#1e293b",
-                      fontSize: "1.7rem",
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    {feature.title}
-                  </Typography>
                   <Typography
                     variant="body1"
                     sx={{
                       color: "#64748b",
-                      lineHeight: 1.8,
-                      fontSize: "1.1rem",
-                      flex: 1,
+                      lineHeight: 1.7,
+                      fontSize: "1rem",
                     }}
                   >
                     {feature.description}
@@ -201,7 +224,6 @@ function FeaturesSection() {
           ))}
         </Grid>
 
-        {/* Enhanced Stats Section */}
         <Box
           sx={{
             background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
@@ -210,11 +232,9 @@ function FeaturesSection() {
             color: "white",
             position: "relative",
             overflow: "hidden",
-            mt: 12,
             boxShadow: "0 20px 60px rgba(30, 41, 59, 0.3)",
           }}
         >
-          {/* Background decoration */}
           <Box
             sx={{
               position: "absolute",

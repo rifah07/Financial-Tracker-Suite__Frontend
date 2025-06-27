@@ -83,7 +83,7 @@ function HeroSection() {
               mb: 6,
               opacity: 0.95,
               lineHeight: 1.7,
-              fontSize: { xs: "1.3rem", md: "1.5rem" },
+              fontSize: { xs: "1.2rem", md: "1.4rem" },
               maxWidth: 850,
               mx: "auto",
               fontWeight: 400,

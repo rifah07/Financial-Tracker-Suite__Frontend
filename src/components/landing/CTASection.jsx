@@ -20,7 +20,6 @@ function CTASection({ onGetStarted, onLearnMore }) {
         overflow: "hidden",
       }}
     >
-      {/* Enhanced Background decorations */}
       <Box
         sx={{
           position: "absolute",
@@ -142,7 +141,6 @@ function CTASection({ onGetStarted, onLearnMore }) {
             </Button>
           </Box>
 
-          {/* Enhanced trust elements */}
           <Box
             sx={{
               display: "flex",

@@ -239,7 +239,7 @@ function TeamSection() {
                   sx={{
                     color: "#64748b",
                     lineHeight: 1.8,
-                    fontSize: { xs: "1.1rem", md: "1.15rem" },
+                    fontSize: { xs: "1rem", md: "1.1rem" },
                   }}
                 >
                   {creator.description}
@@ -268,7 +268,7 @@ function TeamSection() {
               color: "#64748b",
               fontStyle: "italic",
               lineHeight: 1.7,
-              fontSize: { xs: "1.1rem", md: "1.2rem" },
+              fontSize: { xs: "1rem", md: "1.1rem" },
               fontWeight: 500,
             }}
           >
