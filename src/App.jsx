@@ -18,6 +18,7 @@ import Box from "@mui/material/Box";
 import ForgotPasswordSection from "./sections/ForgotPasswordSection";
 import ResetPasswordSection from "./sections/ResetPasswordSection";
 import UserHomePage from "./pages/UserHomePage";
+import AboutUsPage from "./pages/AboutUsPage";
 
 function App() {
   const [showRegister, setShowRegister] = useState(false);
@@ -128,6 +129,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordSection />} />
           <Route path="/reset-password" element={<ResetPasswordSection />} />
           <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/about" element={<AboutUsPage />} />
         </Routes>
 
         <Footer />

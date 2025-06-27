@@ -7,11 +7,11 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 
-import NavButtons from "./Navbar_Components/NavButtons";
-import ProfileMenu from "./Navbar_Components/ProfileMenu";
-import ReportsMenu from "./Navbar_Components/ReportsMenu";
-import MobileDrawer from "./Navbar_Components/MobileDrawer";
-import ReportModals from "./Navbar_Components/ReportModals";
+import NavButtons from "./navbar/NavButtons";
+import ProfileMenu from "./navbar/ProfileMenu";
+import ReportsMenu from "./navbar/ReportsMenu";
+import MobileDrawer from "./navbar/MobileDrawer";
+import ReportModals from "./navbar/ReportModals";
 import AddIncomeModal from "./AddIncomeModal";
 import AddExpenseModal from "./AddExpenseModal";
 import LoadingDialog from "./LoadingDialog";

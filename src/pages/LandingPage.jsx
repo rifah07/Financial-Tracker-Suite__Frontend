@@ -4,6 +4,7 @@ import HeroSection from "../components/landing/HeroSection";
 import FeaturesSection from "../components/landing/FeaturesSection";
 import CTASection from "../components/landing/CTASection";
 
+
 function LandingPage({ onGetStarted, onLogin }) {
   const navigate = useNavigate();
 
