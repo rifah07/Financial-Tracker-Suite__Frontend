@@ -39,7 +39,7 @@ function LoginSection({ onLoginSuccess, onForgotPassword }) {
         }
         if (onLoginSuccess) onLoginSuccess();
         setTimeout(() => {
-          navigate("/dashboard");
+          navigate("/");
         }, 800);
       } else {
         setErrorMsg(data.error || "Login failed.");

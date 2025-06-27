@@ -28,7 +28,7 @@ function NavButtons({ isLoggedIn, onRegisterClick, onLoginClick, navigate }) {
   const links = isLoggedIn
     ? [
         { label: "Home", icon: "home", action: () => navigate("/") },
-        { label: "About", icon: "about", action: () => navigate("/about") },
+        { label: "About Us", icon: "about", action: () => navigate("/about") },
         {
           label: "Transactions",
           icon: "dashboard",
@@ -37,7 +37,7 @@ function NavButtons({ isLoggedIn, onRegisterClick, onLoginClick, navigate }) {
       ]
     : [
         { label: "Home", icon: "home", action: () => navigate("/") },
-        { label: "About", icon: "about", action: () => navigate("/about") },
+        { label: "About Us", icon: "about", action: () => navigate("/about") },
         {
           label: "Register",
           icon: "register",
