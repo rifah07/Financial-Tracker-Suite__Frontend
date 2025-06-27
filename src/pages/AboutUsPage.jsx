@@ -1,15 +1,15 @@
 import Box from "@mui/material/Box";
-import { keyframes } from "@mui/system";
-import HeroSection from "../components/about/HeroSection";
+/* import { keyframes } from "@mui/system";
+ */import HeroSection from "../components/about/HeroSection";
 import MissionSection from "../components/about/MissionSection";
 import ValuesSection from "../components/about/ValuesSection";
 import TeamSection from "../components/about/TeamSection";
 import ContactSection from "../components/about/ContactSection";
 
-const float = keyframes`
+/* const float = keyframes`
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-15px); }
-`;
+`; */
 
 /* const pulse = keyframes`
   0%, 100% { opacity: 0.8; }
@@ -77,7 +77,7 @@ function AboutUsPage() {
   return (
     <Box sx={{ bgcolor: "#f8fafc", minHeight: "100vh" }}>
       <HeroSection />
-      <MissionSection float={float} />
+      <MissionSection />
       <ValuesSection values={values} />
       <TeamSection teamMembers={teamMembers} />
       <ContactSection />
