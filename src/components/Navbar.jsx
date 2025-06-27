@@ -75,7 +75,7 @@ function Navbar({ onRegisterClick, onLoginClick, onLogout, isLoggedIn, user }) {
             }}
             onClick={() => navigate("/")}
           >
-            💼 FinanceTracker
+            💼 Financial Tracker Suite
           </Typography>
 
           {/* Desktop Navigation */}

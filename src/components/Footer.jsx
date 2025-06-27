@@ -32,7 +32,7 @@ function Footer() {
                 mb: 2
               }}
             >
-              💼 FinanceTracker
+              💼 Financial Tracker Suite
             </Typography>
             <Typography 
               variant="body2" 
