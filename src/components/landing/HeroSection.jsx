@@ -100,28 +100,32 @@ function HeroSection({ onGetStarted, onLogin }) {
                   mb: 4,
                   fontSize: { xs: "2.8rem", sm: "3.8rem", md: "4.5rem" },
                   lineHeight: 1.05,
-                  background:
-                    "linear-gradient(135deg, #ffffff 0%, #e0f2fe 100%)",
-                  backgroundClip: "text",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
                   letterSpacing: "-0.03em",
                   textShadow: "0 0 40px rgba(255,255,255,0.3)",
+                  color: "white",
                 }}
               >
                 Master Your{" "}
                 <Box
                   component="span"
                   sx={{
+                    background:
+                      "linear-gradient(135deg, #ffd54f 0%, #ffeb3b 50%, #ffc107 100%)",
+                    backgroundClip: "text",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    // Fallback for browsers that don't support background-clip
                     color: "#ffd54f",
                     textShadow: "0 0 40px rgba(255, 213, 79, 0.6)",
                     filter: "drop-shadow(0 4px 8px rgba(255, 213, 79, 0.3))",
+                    fontWeight: 900,
                   }}
                 >
                   Financial
                 </Box>{" "}
                 Future
               </Typography>
+
               <Typography
                 variant="h5"
                 sx={{
