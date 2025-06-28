@@ -109,7 +109,7 @@ function formatDate(dateString) {
   });
 }
 
-function DashboardPage() {
+function TransactionsPage() {
   const [transactions, setTransactions] = useState([]);
   const [editTx, setEditTx] = useState(null);
   const [showAddIncome, setShowAddIncome] = useState(false);
@@ -522,4 +522,4 @@ function DashboardPage() {
   );
 }
 
-export default DashboardPage;
+export default TransactionsPage;

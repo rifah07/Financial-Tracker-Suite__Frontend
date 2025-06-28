@@ -8,7 +8,7 @@ import {
 import Navbar from "./components/Navbar";
 import Modal from "./components/Modal";
 import LandingPage from "./pages/LandingPage";
-import DashboardPage from "./pages/DashboardPage";
+import DashboardPage from "./pages/TransactionsPage";
 import RegisterSection from "./sections/RegisterSection";
 import LoginSection from "./sections/LoginSection";
 import ProfilePage from "./pages/ProfilePage";
