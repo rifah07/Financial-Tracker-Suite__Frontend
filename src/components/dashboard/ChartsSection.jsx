@@ -107,6 +107,20 @@ function ChartsSection({ transactions = [] }) {
   const monthlyData = generateMonthlyData(transactions);
   const categoryData = generateCategoryData(transactions);
 
+  const totalIncome = categoryData.reduce((sum, item) => sum + item.income, 0);
+  const totalExpenses = categoryData.reduce(
+    (sum, item) => sum + item.expenses,
+    0
+  );
+  const grandTotal = totalIncome + totalExpenses;
+
+  const incomePercent = grandTotal
+    ? ((totalIncome / grandTotal) * 100).toFixed(1)
+    : 0;
+  const expensePercent = grandTotal
+    ? ((totalExpenses / grandTotal) * 100).toFixed(1)
+    : 0;
+
   return (
     <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-8">
       {/* Monthly Income vs Expenses Chart */}
@@ -239,7 +253,7 @@ function ChartsSection({ transactions = [] }) {
 
       {/* Category Breakdown Chart */}
       <div>
-        <div className="relative overflow-hidden bg-gradient-to-br from-white via-purple-50/30 to-indigo-50/20 rounded-3xl shadow-xl border border-slate-200/50 backdrop-blur-sm h-96 lg:h-[450px]">
+        <div className="relative overflow-hidden bg-gradient-to-br from-white via-purple-50/30 to-indigo-50/20 rounded-3xl shadow-xl border border-slate-200/50 backdrop-blur-sm h-[460px] lg:h-[520px] pb-4">
           {/* Decorative elements */}
           <div className="absolute top-0 right-0 w-28 h-28 bg-gradient-to-br from-purple-100/40 to-indigo-100/40 rounded-full blur-3xl transform translate-x-14 -translate-y-14"></div>
           <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-to-tr from-blue-100/40 to-purple-100/40 rounded-full blur-3xl transform -translate-x-10 translate-y-10"></div>
@@ -318,6 +332,19 @@ function ChartsSection({ transactions = [] }) {
                   />
                 </BarChart>
               </ResponsiveContainer>
+
+              <div className="mt-2 text-center text-sm sm:text-base text-slate-600">
+                <p>
+                  <span className="text-green-600 font-medium">
+                    Income: {incomePercent}%
+                  </span>{" "}
+                  |{" "}
+                  <span className="text-red-600 font-medium">
+                    Expenses: {expensePercent}%
+                  </span>{" "}
+                  of all transactions
+                </p>
+              </div>
             </div>
           </div>
         </div>
