@@ -1,6 +1,4 @@
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Avatar from "@mui/material/Avatar";
+import React from "react";
 
 const PersonIcon = () => <span style={{ fontSize: "2.5rem" }}>👤</span>;
 
@@ -15,68 +13,38 @@ function WelcomeSection({ user }) {
   };
 
   return (
-    <Box
-      sx={{
-        maxWidth: 1200,
-        mx: "auto",
-        px: { xs: 2, sm: 3, md: 4, lg: 5 },
-        pt: { xs: 3, sm: 4, md: 6 },
-        pb: { xs: 2, md: 3 },
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          alignItems: { xs: "center", sm: "flex-start" },
-          gap: { xs: 2, sm: 3 },
-          bgcolor: "white",
-          borderRadius: 3,
-          boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
-          px: { xs: 3, sm: 4, md: 5 },
-          py: { xs: 3, sm: 3, md: 3 },
-          mb: { xs: 3, md: 4 },
-          textAlign: { xs: "center", sm: "left" },
-        }}
-      >
-        <Avatar
-          sx={{
-            width: { xs: 60, sm: 72 },
-            height: { xs: 60, sm: 72 },
-            bgcolor: "#f1f5f9",
-            fontSize: { xs: "2rem", sm: "2.5rem" },
-            border: "3px solid #e2e8f0",
-            color: "#475569",
-          }}
-        >
-          <PersonIcon />
-        </Avatar>
-        <Box>
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: 700,
-              color: "#1e293b",
-              letterSpacing: "-0.025em",
-              mb: 0.5,
-              fontSize: { xs: "1.5rem", sm: "2rem", md: "2.125rem" },
-            }}
-          >
-            Welcome Back, {user?.name?.split(" ")[0] || "User"}
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              color: "#64748b",
-              fontWeight: 400,
-              fontSize: { xs: "0.9rem", sm: "1rem" },
-            }}
-          >
-            Member since {formatDate(user?.createdAt)}
-          </Typography>
-        </Box>
-      </Box>
-    </Box>
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 lg:pt-12 pb-4 sm:pb-6">
+      <div className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30 rounded-3xl shadow-xl border border-slate-200/50 backdrop-blur-sm">
+        <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-100/40 to-indigo-100/40 rounded-full blur-3xl transform translate-x-20 -translate-y-20"></div>
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-slate-100/40 to-blue-100/40 rounded-full blur-3xl transform -translate-x-16 translate-y-16"></div>
+
+        <div className="relative z-10 p-6 sm:p-8 lg:p-10">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 lg:gap-8">
+            {/* Avatar Section */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-200 to-blue-200 rounded-full blur opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
+              <div className="relative w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-gradient-to-br from-slate-100 to-blue-100 rounded-full flex items-center justify-center border-3 border-white shadow-lg transform transition-transform duration-300 group-hover:scale-105">
+                <PersonIcon />
+              </div>
+            </div>
+
+            {/* Content Section */}
+            <div className="flex-1 text-center sm:text-left">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-slate-800 mb-2 leading-tight tracking-tight">
+                Welcome Back,{" "}
+                <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  {user?.name?.split(" ")[0] || "User"}
+                </span>
+              </h1>
+
+              <p className="text-base sm:text-lg text-slate-600 font-medium">
+                Member since {formatDate(user?.createdAt)}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
