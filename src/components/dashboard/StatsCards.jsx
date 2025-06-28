@@ -1,48 +1,31 @@
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
+import React from "react";
 
+// Custom icon components
 const TrendingUpIcon = () => (
-  <Box
-    sx={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      width: { xs: 36, sm: 40 },
-      height: { xs: 36, sm: 40 },
-      borderRadius: "50%",
-      background: "linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%)",
-      color: "#2e7d32",
-      fontSize: { xs: "16px", sm: "20px" },
-      fontWeight: "bold",
-    }}
-  >
+  <div className="w-6 h-6 flex items-center justify-center text-emerald-600 font-bold text-lg">
     ↗
-  </Box>
+  </div>
 );
 
 const TrendingDownIcon = () => (
-  <Box
-    sx={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      width: { xs: 36, sm: 40 },
-      height: { xs: 36, sm: 40 },
-      borderRadius: "50%",
-      background: "linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)",
-      color: "#c62828",
-      fontSize: { xs: "16px", sm: "20px" },
-      fontWeight: "bold",
-    }}
-  >
+  <div className="w-6 h-6 flex items-center justify-center text-red-600 font-bold text-lg">
     ↘
-  </Box>
+  </div>
 );
 
-function StatsCards({ transactions, user }) {
+const CreditCardIcon = () => (
+  <div className="w-5 h-5 flex items-center justify-center text-white text-lg">
+    💳
+  </div>
+);
+
+const BarChartIcon = () => (
+  <div className="w-6 h-6 flex items-center justify-center text-blue-600 text-lg">
+    📊
+  </div>
+);
+
+function StatsCards({ transactions = [], user = { balance: 5420.5 } }) {
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -73,147 +56,127 @@ function StatsCards({ transactions, user }) {
       title: "Current Balance",
       value: formatCurrency(user?.balance || 0),
       subtitle: "Available funds",
-      icon: "💳",
-      gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      icon: CreditCardIcon,
+      gradient: "from-blue-600 via-purple-600 to-indigo-700",
       isGradient: true,
+      bgPattern: "from-blue-500/10 to-purple-500/10",
     },
     {
       title: "Total Income",
       value: formatCurrency(totalIncome),
       subtitle: "Total Income",
-      icon: <TrendingUpIcon />,
-      color: "#2e7d32",
+      icon: TrendingUpIcon,
+      color: "text-emerald-600",
+      bgColor: "from-emerald-50 to-green-50",
+      iconBg: "bg-emerald-100",
+      borderColor: "border-emerald-200/50",
     },
     {
       title: "Total Expenses",
       value: formatCurrency(totalExpenses),
       subtitle: "Total Expenses",
-      icon: <TrendingDownIcon />,
-      color: "#c62828",
+      icon: TrendingDownIcon,
+      color: "text-red-600",
+      bgColor: "from-red-50 to-rose-50",
+      iconBg: "bg-red-100",
+      borderColor: "border-red-200/50",
     },
     {
       title: "Total Transactions",
       value: transactions.length,
       subtitle: "Total Transactions",
-      icon: "📊",
-      color: "#1565c0",
+      icon: BarChartIcon,
+      color: "text-blue-600",
+      bgColor: "from-blue-50 to-indigo-50",
+      iconBg: "bg-blue-100",
+      borderColor: "border-blue-200/50",
     },
   ];
 
   return (
-    <Box
-      sx={{
-        maxWidth: 1200,
-        mx: "auto",
-        px: { xs: 2, sm: 3, md: 4, lg: 5 },
-        mb: { xs: 3, md: 4 },
-      }}
-    >
-      <Grid container spacing={{ xs: 2, sm: 3 }}>
-        {statsData.map((stat, index) => (
-          <Grid item xs={12} sm={6} lg={3} key={index}>
-            <Card
-              sx={{
-                height: { xs: 140, sm: 160, md: 140 },
-                borderRadius: 3,
-                boxShadow: "0 4px 25px rgba(0,0,0,0.08)",
-                border: "1px solid #e2e8f0",
-                background: stat.isGradient ? stat.gradient : "white",
-                color: stat.isGradient ? "white" : "inherit",
-                display: "flex",
-                flexDirection: "column",
-              }}
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        {statsData.map((stat, index) => {
+          const IconComponent = stat.icon;
+
+          return (
+            <div
+              key={index}
+              className={`group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border ${
+                stat.isGradient
+                  ? "bg-gradient-to-br " +
+                    stat.gradient +
+                    " text-white border-white/20"
+                  : "bg-gradient-to-br " +
+                    stat.bgColor +
+                    " border-slate-200/50 " +
+                    stat.borderColor
+              }`}
             >
-              <CardContent
-                sx={{
-                  p: { xs: 2.5, sm: 3 },
-                  flex: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  textAlign: stat.isGradient ? "left" : "center",
-                }}
-              >
+              {/* Background decorative elements */}
+              <div
+                className={`absolute top-0 right-0 w-20 h-20 ${
+                  stat.isGradient
+                    ? "bg-white/10"
+                    : "bg-gradient-to-br " + stat.bgPattern
+                } rounded-full blur-2xl transform translate-x-10 -translate-y-10`}
+              ></div>
+              <div
+                className={`absolute bottom-0 left-0 w-16 h-16 ${
+                  stat.isGradient
+                    ? "bg-white/5"
+                    : "bg-gradient-to-tr " + stat.bgPattern
+                } rounded-full blur-2xl transform -translate-x-8 translate-y-8`}
+              ></div>
+
+              <div className="relative z-10 p-6">
                 {stat.isGradient ? (
-                  <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        height: { xs: 32, sm: 36 },
-                        width: { xs: 32, sm: 36 },
-                        borderRadius: "10px",
-                        bgcolor: "rgba(255,255,255,0.2)",
-                        fontSize: { xs: "16px", sm: "18px" },
-                      }}
-                    >
-                      {stat.icon}
-                    </Box>
-                    <Typography
-                      variant="subtitle1"
-                      sx={{
-                        ml: 2,
-                        fontWeight: 600,
-                        color: "white",
-                        fontSize: { xs: "0.9rem", sm: "1rem" },
-                      }}
-                    >
-                      {stat.title}
-                    </Typography>
-                  </Box>
+                  // Gradient card layout (Current Balance)
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                        <IconComponent />
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-semibold text-white/90 mb-1">
+                          {stat.title}
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
                 ) : (
-                  <Box
-                    sx={{ display: "flex", justifyContent: "center", mb: 1 }}
-                  >
-                    {typeof stat.icon === "string" ? (
-                      <Box
-                        sx={{
-                          width: { xs: 32, sm: 36 },
-                          height: { xs: 32, sm: 36 },
-                          borderRadius: "50%",
-                          background:
-                            "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: { xs: "16px", sm: "18px" },
-                          color: stat.color,
-                        }}
-                      >
-                        {stat.icon}
-                      </Box>
-                    ) : (
-                      stat.icon
-                    )}
-                  </Box>
+                  // Regular card layout
+                  <div className="flex items-center justify-center mb-4">
+                    <div
+                      className={`w-12 h-12 ${stat.iconBg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
+                    >
+                      <IconComponent />
+                    </div>
+                  </div>
                 )}
-                <Typography
-                  variant="h5"
-                  sx={{
-                    fontWeight: 700,
-                    color: stat.isGradient ? "white" : stat.color,
-                    fontSize: { xs: "1.3rem", sm: "1.5rem" },
-                  }}
-                >
-                  {stat.value}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: stat.isGradient
-                      ? "rgba(255,255,255,0.8)"
-                      : "text.secondary",
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                  }}
-                >
-                  {stat.subtitle}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </Box>
+
+                <div className={stat.isGradient ? "text-left" : "text-center"}>
+                  <div
+                    className={`text-2xl sm:text-3xl font-bold mb-1 ${
+                      stat.isGradient ? "text-white" : stat.color
+                    }`}
+                  >
+                    {stat.value}
+                  </div>
+                  <p
+                    className={`text-sm ${
+                      stat.isGradient ? "text-white/80" : "text-slate-600"
+                    }`}
+                  >
+                    {stat.subtitle}
+                  </p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
