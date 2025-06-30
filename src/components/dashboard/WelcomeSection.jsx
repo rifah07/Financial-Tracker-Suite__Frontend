@@ -1,15 +1,6 @@
-import {
-  Box,
-  Typography,
-  Avatar,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+const PersonIcon = () => <span style={{ fontSize: "2.5rem" }}>👤</span>;
 
 function WelcomeSection({ user }) {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
   const formatDate = (dateString) => {
     if (!dateString) return "";
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -20,130 +11,38 @@ function WelcomeSection({ user }) {
   };
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        maxWidth: 1200,
-        mx: "auto",
-        px: { xs: 1, sm: 1, md: 4 },
-        pt: { xs: 2, sm: 3 },
-        pb: { xs: 1, sm: 2 },
-      }}
-    >
-      <Box
-        sx={{
-          position: "relative",
-          borderRadius: 3,
-          background: "linear-gradient(to bottom right, #f8fafc, #e0f2fe)",
-          boxShadow: 2,
-          p: { xs: 2, sm: 1 },
-          overflow: "hidden",
-        }}
-      >
-        {/* Blur Circles */}
-        <Box
-          sx={{
-            position: "absolute",
-            top: -20,
-            right: -20,
-            width: 60,
-            height: 60,
-            borderRadius: "50%",
-            background:
-              "linear-gradient(to bottom right, rgba(191,219,254,0.4), rgba(199,210,254,0.4))",
-            filter: "blur(30px)",
-            zIndex: 0,
-          }}
-        />
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: -20,
-            left: -20,
-            width: 50,
-            height: 50,
-            borderRadius: "50%",
-            background:
-              "linear-gradient(to top right, rgba(241,245,249,0.4), rgba(191,219,254,0.4))",
-            filter: "blur(30px)",
-            zIndex: 0,
-          }}
-        />
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 lg:pt-12 pb-4 sm:pb-6">
+      <div className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30 rounded-3xl shadow-xl border border-slate-200/50 backdrop-blur-sm">
+        <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-100/40 to-indigo-100/40 rounded-full blur-3xl transform translate-x-20 -translate-y-20"></div>
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-slate-100/40 to-blue-100/40 rounded-full blur-3xl transform -translate-x-16 translate-y-16"></div>
 
-        {/* Content */}
-        <Box
-          sx={{
-            position: "relative",
-            zIndex: 1,
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            alignItems: "center",
-            gap: 2,
-            minWidth: 0,
-            textAlign: { xs: "center", sm: "left" },
-          }}
-        >
-          <Avatar
-            sx={{
-              width: { xs: 56, sm: 64 },
-              height: { xs: 56, sm: 64 },
-              fontSize: { xs: 28, sm: 32 },
-              mb: { xs: 1, sm: 0 },
-              background: "linear-gradient(to bottom right, #f1f5f9, #dbeafe)",
-              flexShrink: 0,
-            }}
-          >
-            👤
-          </Avatar>
+        <div className="relative z-10 p-6 sm:p-8 lg:p-10">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 lg:gap-8">
+            {/* Avatar Section */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-200 to-blue-200 rounded-full blur opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
+              <div className="relative w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-gradient-to-br from-slate-100 to-blue-100 rounded-full flex items-center justify-center border-3 border-white shadow-lg transform transition-transform duration-300 group-hover:scale-105">
+                <PersonIcon />
+              </div>
+            </div>
 
-          <Box
-            sx={{
-              minWidth: 0,
-              flex: 1,
-              overflow: "hidden",
-            }}
-          >
-            <Typography
-              variant={isMobile ? "h6" : "h5"}
-              fontWeight="bold"
-              sx={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                fontSize: { xs: "1.1rem", sm: "1.2rem", md: "1.5rem" },
-              }}
-            >
-              Welcome Back,&nbsp;
-              <Box
-                component="span"
-                sx={{
-                  background: "linear-gradient(to right, #2563eb, #4f46e5)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  fontWeight: "inherit",
-                }}
-              >
-                {user?.name?.split(" ")[0] || "User"}
-              </Box>
-            </Typography>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{
-                fontSize: { xs: "0.85rem", sm: "1rem" },
-                display: "block",
-                mt: 0.5,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              Member since {formatDate(user?.createdAt)}
-            </Typography>
-          </Box>
-        </Box>
-      </Box>
-    </Box>
+            {/* Content Section */}
+            <div className="flex-1 text-center sm:text-left">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-slate-800 mb-2 leading-tight tracking-tight">
+                Welcome Back,{" "}
+                <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  {user?.name?.split(" ")[0] || "User"}
+                </span>
+              </h1>
+
+              <p className="text-base sm:text-lg text-slate-600 font-medium">
+                Member since {formatDate(user?.createdAt)}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
