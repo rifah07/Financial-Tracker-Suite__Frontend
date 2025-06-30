@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Typography,
-  Avatar,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Typography, Avatar, useTheme, useMediaQuery } from "@mui/material";
 
 function WelcomeSection({ user }) {
   const theme = useTheme();
@@ -24,49 +18,45 @@ function WelcomeSection({ user }) {
     <Box
       sx={{
         width: "100%",
-        px: { xs: 2, sm: 3, md: 5 },
-        pt: { xs: 2, sm: 4, md: 6 },
-        pb: { xs: 2, sm: 3 },
-        position: "relative",
-        overflow: "hidden",
+        px: 2,
+        pt: 2,
+        pb: 1,
+        overflowX: "hidden",
       }}
     >
       <Box
         sx={{
-          borderRadius: 4,
-          bgcolor: "background.paper",
-          background: "linear-gradient(to bottom right, #f8fafc, #e0f2fe)",
-          boxShadow: 3,
           position: "relative",
-          p: { xs: 2, sm: 4 },
+          borderRadius: 3,
+          background: "linear-gradient(to bottom right, #f8fafc, #e0f2fe)",
+          boxShadow: 2,
+          p: 2,
         }}
       >
-        {/* Blur circles */}
+        {/* Blur Circles */}
         <Box
           sx={{
             position: "absolute",
-            top: -30,
-            right: -30,
-            width: { xs: 80, sm: 120 },
-            height: { xs: 80, sm: 120 },
+            top: -20,
+            right: -20,
+            width: 60,
+            height: 60,
             borderRadius: "50%",
-            background:
-              "linear-gradient(to bottom right, rgba(191,219,254,0.4), rgba(199,210,254,0.4))",
-            filter: "blur(40px)",
+            background: "linear-gradient(to bottom right, rgba(191,219,254,0.4), rgba(199,210,254,0.4))",
+            filter: "blur(30px)",
             zIndex: 0,
           }}
         />
         <Box
           sx={{
             position: "absolute",
-            bottom: -30,
-            left: -30,
-            width: { xs: 60, sm: 100 },
-            height: { xs: 60, sm: 100 },
+            bottom: -20,
+            left: -20,
+            width: 50,
+            height: 50,
             borderRadius: "50%",
-            background:
-              "linear-gradient(to top right, rgba(241,245,249,0.4), rgba(191,219,254,0.4))",
-            filter: "blur(40px)",
+            background: "linear-gradient(to top right, rgba(241,245,249,0.4), rgba(191,219,254,0.4))",
+            filter: "blur(30px)",
             zIndex: 0,
           }}
         />
@@ -77,56 +67,49 @@ function WelcomeSection({ user }) {
             position: "relative",
             zIndex: 1,
             display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            alignItems: { xs: "center", sm: "flex-start" },
-            gap: 3,
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 2,
+            flexWrap: "wrap",
           }}
         >
-          {/* Avatar */}
           <Avatar
             sx={{
-              width: { xs: 56, sm: 64, md: 72 },
-              height: { xs: 56, sm: 64, md: 72 },
+              width: 48,
+              height: 48,
               background: "linear-gradient(to bottom right, #f1f5f9, #dbeafe)",
-              fontSize: { xs: 28, sm: 32, md: 40 },
-              boxShadow: 2,
+              fontSize: 24,
             }}
           >
             👤
           </Avatar>
 
-          {/* Text */}
-          <Box sx={{ textAlign: { xs: "center", sm: "left" }, width: "100%" }}>
+          <Box sx={{ minWidth: 0 }}>
             <Typography
-              variant={isMobile ? "h6" : "h5"}
+              variant="subtitle1"
               fontWeight="bold"
-              color="text.primary"
-              sx={{ lineHeight: 1.2 }}
+              noWrap
+              sx={{
+                display: "block",
+                maxWidth: "100%",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
             >
-              Welcome Back,{" "}
+              Welcome Back,&nbsp;
               <Box
                 component="span"
                 sx={{
                   background: "linear-gradient(to right, #2563eb, #4f46e5)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                  display: "inline",
-                  fontWeight: "inherit",
+                  fontWeight: "bold",
                 }}
               >
                 {user?.name?.split(" ")[0] || "User"}
               </Box>
             </Typography>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{
-                mt: 0.5,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
+            <Typography variant="caption" color="text.secondary" noWrap>
               Member since {formatDate(user?.createdAt)}
             </Typography>
           </Box>
