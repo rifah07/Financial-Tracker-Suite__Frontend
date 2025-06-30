@@ -79,8 +79,8 @@ function ValuesSection({ values }) {
                 sx={{
                   width: "100%",
                   maxWidth: 480,
-                  minHeight: 360,
-                  height: 360,
+                  minHeight: { sm: 364, md: 330 },
+                  height:  { sm: 364, md: 330 },
                   borderRadius: 5,
                   border: "1px solid #e2e8f0",
                   background:
@@ -180,6 +180,7 @@ function ValuesSection({ values }) {
                       lineHeight: 1.8,
                       fontSize: "1rem",
                       textAlign: "center",
+                      mb: 2
                     }}
                   >
                     {value.description}
