@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   Typography,
@@ -26,7 +25,7 @@ function WelcomeSection({ user }) {
         width: "100%",
         maxWidth: 1200,
         mx: "auto",
-        px: { xs: 1, sm: 2, md: 4 },
+        px: { xs: 1, sm: 1, md: 4 },
         pt: { xs: 2, sm: 3 },
         pb: { xs: 1, sm: 2 },
       }}
@@ -37,7 +36,7 @@ function WelcomeSection({ user }) {
           borderRadius: 3,
           background: "linear-gradient(to bottom right, #f8fafc, #e0f2fe)",
           boxShadow: 2,
-          p: { xs: 2, sm: 3 },
+          p: { xs: 2, sm: 1 },
           overflow: "hidden",
         }}
       >
@@ -111,7 +110,7 @@ function WelcomeSection({ user }) {
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
-                fontSize: { xs: "1.1rem", sm: "1.25rem", md: "1.5rem" },
+                fontSize: { xs: "1.1rem", sm: "1.2rem", md: "1.5rem" },
               }}
             >
               Welcome Back,&nbsp;
