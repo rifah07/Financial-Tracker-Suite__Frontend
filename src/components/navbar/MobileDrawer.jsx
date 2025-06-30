@@ -38,37 +38,40 @@ function MobileDrawer({
   navigate,
   reportsAPI,
 }) {
+  const AboutIcon = () => <span style={{ fontSize: "20px" }}>ℹ️</span>; 
   const mainNavLinks = !isLoggedIn
-    ? [
-        { label: "Home", action: () => navigate("/"), icon: <HomeIcon /> },
-        { label: "Register", action: onRegisterClick, icon: <RegisterIcon /> },
-        {
-          label: "Login",
-          action: onLoginClick,
-          icon: <LoginIcon />,
-          color: "primary",
-        },
-      ]
-    : [
-        { label: "Home", action: () => navigate("/"), icon: <HomeIcon /> },
-        {
-          label: "Dashboard",
-          action: () => navigate("/dashboard"),
-          icon: <DashboardIcon />,
-        },
-        {
-          label: "Add Income",
-          action: onShowAddIncome,
-          icon: <IncomeIcon />,
-          color: "success",
-        },
-        {
-          label: "Add Expense",
-          action: onShowAddExpense,
-          icon: <ExpenseIcon />,
-          color: "error",
-        },
-      ];
+  ? [
+      { label: "Home", action: () => navigate("/"), icon: <HomeIcon /> },
+      { label: "About Us", action: () => navigate("/about"), icon: <AboutIcon />  },
+      { label: "Register", action: onRegisterClick, icon: <RegisterIcon /> },
+      {
+        label: "Login",
+        action: onLoginClick,
+        icon: <LoginIcon />,
+        color: "primary",
+      },
+    ]
+  : [
+      { label: "Home", action: () => navigate("/"), icon: <HomeIcon /> },
+      { label: "About Us", action: () => navigate("/about"), icon: <AboutIcon /> },
+      {
+        label: "Dashboard",
+        action: () => navigate("/dashboard"),
+        icon: <DashboardIcon />,
+      },
+      {
+        label: "Add Income",
+        action: onShowAddIncome,
+        icon: <IncomeIcon />,
+        color: "success",
+      },
+      {
+        label: "Add Expense",
+        action: onShowAddExpense,
+        icon: <ExpenseIcon />,
+        color: "error",
+      },
+    ];
 
   const reportsMenuItems = [
     {
