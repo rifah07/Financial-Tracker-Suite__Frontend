@@ -15,10 +15,11 @@ const WelcomeSection = ({ user }) => {
   return (
     <Box
       sx={{
-        width: { xs: "64%", sm: "100%", md: "100%" },
+        width: { xs: "60%", sm: "100%", md: "100%" },
         maxWidth: "100%",
         px: { xs: 1, sm: 3, md: 4 },
         py: { xs: 2, sm: 4, md: 6 },
+        justifyContent: "center",
       }}
     >
       <Box
