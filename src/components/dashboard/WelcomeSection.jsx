@@ -1,5 +1,11 @@
 import React from "react";
-import { Box, Typography, Avatar, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Avatar,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 
 function WelcomeSection({ user }) {
   const theme = useTheme();
@@ -18,10 +24,11 @@ function WelcomeSection({ user }) {
     <Box
       sx={{
         width: "100%",
-        px: 2,
-        pt: 3,
-        pb: 2,
-        overflowX: "hidden", // ⛔ force no horizontal scroll
+        maxWidth: 1200,
+        mx: "auto",
+        px: { xs: 1, sm: 2, md: 4 },
+        pt: { xs: 2, sm: 3 },
+        pb: { xs: 1, sm: 2 },
       }}
     >
       <Box
@@ -30,8 +37,8 @@ function WelcomeSection({ user }) {
           borderRadius: 3,
           background: "linear-gradient(to bottom right, #f8fafc, #e0f2fe)",
           boxShadow: 2,
-          p: 2,
-          overflow: "hidden", // ✅ contain background blur
+          p: { xs: 2, sm: 3 },
+          overflow: "hidden",
         }}
       >
         {/* Blur Circles */}
@@ -70,20 +77,21 @@ function WelcomeSection({ user }) {
             position: "relative",
             zIndex: 1,
             display: "flex",
-            flexDirection: "row",
+            flexDirection: { xs: "column", sm: "row" },
             alignItems: "center",
-            flexWrap: "wrap", // ✅ allows wrapping on small screens
             gap: 2,
             minWidth: 0,
+            textAlign: { xs: "center", sm: "left" },
           }}
         >
           <Avatar
             sx={{
-              width: 48,
-              height: 48,
-              fontSize: 24,
-              flexShrink: 0,
+              width: { xs: 56, sm: 64 },
+              height: { xs: 56, sm: 64 },
+              fontSize: { xs: 28, sm: 32 },
+              mb: { xs: 1, sm: 0 },
               background: "linear-gradient(to bottom right, #f1f5f9, #dbeafe)",
+              flexShrink: 0,
             }}
           >
             👤
@@ -93,17 +101,17 @@ function WelcomeSection({ user }) {
             sx={{
               minWidth: 0,
               flex: 1,
-              textAlign: { xs: "center", sm: "left" },
               overflow: "hidden",
             }}
           >
             <Typography
-              variant="subtitle1"
+              variant={isMobile ? "h6" : "h5"}
               fontWeight="bold"
               sx={{
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
+                fontSize: { xs: "1.1rem", sm: "1.25rem", md: "1.5rem" },
               }}
             >
               Welcome Back,&nbsp;
@@ -122,7 +130,14 @@ function WelcomeSection({ user }) {
             <Typography
               variant="caption"
               color="text.secondary"
-              noWrap
+              sx={{
+                fontSize: { xs: "0.85rem", sm: "1rem" },
+                display: "block",
+                mt: 0.5,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
             >
               Member since {formatDate(user?.createdAt)}
             </Typography>
