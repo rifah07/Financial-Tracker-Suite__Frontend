@@ -15,10 +15,10 @@ const WelcomeSection = ({ user }) => {
   return (
     <Box
       sx={{
-        width: "100%",
+        width: { xs: "50%", sm: "100%", md: "100%" },
         maxWidth: "100%",
-        px: { xs: 2, sm: 3, md: 6 },
-        py: { xs: 2, sm: 4, md: 6 },
+        px: { xs: 1, sm: 3, md: 4 },
+        py: { xs: 1, sm: 4, md: 6 },
       }}
     >
       <Box
@@ -69,7 +69,7 @@ const WelcomeSection = ({ user }) => {
             flexDirection: { xs: "column", sm: "row" },
             alignItems: "center",
             gap: 2,
-            px: { xs: 2, sm: 3, md: 4 },
+            px: { xs: 1, sm: 3, md: 4 },
             py: { xs: 3, sm: 4 },
           }}
         >
