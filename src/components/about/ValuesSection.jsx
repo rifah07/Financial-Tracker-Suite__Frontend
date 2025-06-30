@@ -178,7 +178,7 @@ function ValuesSection({ values }) {
                     sx={{
                       color: "#64748b",
                       lineHeight: 1.8,
-                      fontSize: "1.1rem",
+                      fontSize: "1rem",
                       textAlign: "center",
                     }}
                   >
