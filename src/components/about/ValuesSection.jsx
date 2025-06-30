@@ -79,8 +79,8 @@ function ValuesSection({ values }) {
                 sx={{
                   width: "100%",
                   maxWidth: 480,
-                  minHeight: 350,
-                  height: 350,
+                  minHeight: 360,
+                  height: 360,
                   borderRadius: 5,
                   border: "1px solid #e2e8f0",
                   background:
