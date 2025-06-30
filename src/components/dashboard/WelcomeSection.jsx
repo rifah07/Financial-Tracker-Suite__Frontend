@@ -1,6 +1,8 @@
-const PersonIcon = () => <span className="text-4xl sm:text-5xl">👤</span>;
+import { Box, Typography, useTheme } from "@mui/material";
 
-function WelcomeSection({ user }) {
+const WelcomeSection = ({ user }) => {
+  const theme = useTheme();
+
   const formatDate = (dateString) => {
     if (!dateString) return "";
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -11,39 +13,128 @@ function WelcomeSection({ user }) {
   };
 
   return (
-    <div className="w-full max-w-full sm:max-w-3xl md:max-w-4xl lg:max-w-6xl mx-auto px-3 sm:px-5 lg:px-8 pt-4 sm:pt-6 lg:pt-10 pb-4">
-      <div className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30 rounded-2xl sm:rounded-3xl shadow-md border border-slate-200/40 backdrop-blur-sm">
-        {/* Decorative Blurs */}
-        <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-blue-100/40 to-indigo-100/40 rounded-full blur-2xl transform translate-x-8 -translate-y-8"></div>
-        <div className="absolute bottom-0 left-0 w-20 h-20 sm:w-28 sm:h-28 bg-gradient-to-tr from-slate-100/40 to-blue-100/40 rounded-full blur-2xl transform -translate-x-8 translate-y-8"></div>
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: "100%",
+        px: { xs: 2, sm: 3, md: 6 },
+        py: { xs: 2, sm: 4, md: 6 },
+      }}
+    >
+      <Box
+        sx={{
+          position: "relative",
+          overflow: "hidden",
+          borderRadius: 4,
+          boxShadow: 2,
+          border: "1px solid #e2e8f0",
+          backdropFilter: "blur(6px)",
+          background: "linear-gradient(to bottom right, #f8fafc, #e0f2fe)",
+        }}
+      >
+        {/* Blurry background shapes */}
+        <Box
+          sx={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            width: 80,
+            height: 80,
+            background:
+              "linear-gradient(to bottom right, #dbeafe88, #c7d2fe88)",
+            filter: "blur(40px)",
+            borderRadius: "50%",
+            transform: "translate(30%, -30%)",
+          }}
+        />
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: 64,
+            height: 64,
+            background: "linear-gradient(to top right, #f1f5f988, #dbeafe88)",
+            filter: "blur(40px)",
+            borderRadius: "50%",
+            transform: "translate(-30%, 30%)",
+          }}
+        />
 
-        <div className="relative z-10 p-4 sm:p-6 md:p-8">
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-5">
-            {/* Avatar */}
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-200 to-blue-200 rounded-full blur opacity-40 group-hover:opacity-70 transition-opacity duration-300"></div>
-              <div className="relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 bg-gradient-to-br from-slate-100 to-blue-100 rounded-full flex items-center justify-center border-2 border-white shadow-md group-hover:scale-105 transition-transform duration-300">
-                <PersonIcon />
-              </div>
-            </div>
+        <Box
+          sx={{
+            position: "relative",
+            zIndex: 2,
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            alignItems: "center",
+            gap: 2,
+            px: { xs: 2, sm: 3, md: 4 },
+            py: { xs: 3, sm: 4 },
+          }}
+        >
+          {/* Avatar */}
+          <Box
+            sx={{
+              width: 56,
+              height: 56,
+              fontSize: "2rem",
+              background: "linear-gradient(to bottom right, #f1f5f9, #dbeafe)",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              border: "2px solid white",
+              boxShadow: 1,
+            }}
+          >
+            👤
+          </Box>
 
-            {/* Text */}
-            <div className="flex-1 text-center sm:text-left w-full">
-              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-slate-800 leading-tight tracking-tight break-words">
-                Welcome Back,{" "}
-                <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  {user?.name?.split(" ")[0] || "User"}
-                </span>
-              </h1>
-              <p className="text-sm sm:text-base text-slate-600 font-medium mt-1">
-                Member since {formatDate(user?.createdAt)}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          {/* Greeting */}
+          <Box
+            sx={{
+              textAlign: { xs: "center", sm: "left" },
+              flex: 1,
+              width: "100%",
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                fontSize: { xs: "1.25rem", sm: "1.5rem", md: "2rem" },
+                fontWeight: 700,
+                color: "#1e293b",
+                mb: 0.5,
+              }}
+            >
+              Welcome Back,{" "}
+              <Box
+                component="span"
+                sx={{
+                  background: "linear-gradient(to right, #2563eb, #4f46e5)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                {user?.name?.split(" ")[0] || "User"}
+              </Box>
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                fontWeight: 500,
+                color: "#64748b",
+              }}
+            >
+              Member since {formatDate(user?.createdAt)}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
-}
+};
 
 export default WelcomeSection;
