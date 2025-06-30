@@ -24,6 +24,7 @@ const RegisterIcon = () => <span style={{ fontSize: "20px" }}>📝</span>;
 const SummaryIcon = () => <span style={{ fontSize: "18px" }}>📋</span>;
 const ReportIcon = () => <span style={{ fontSize: "18px" }}>📄</span>;
 const DownloadIcon = () => <span style={{ fontSize: "18px" }}>💾</span>;
+const AboutIcon = () => <span style={{ fontSize: "20px" }}>ℹ️</span>;
 
 function MobileDrawer({
   open,
@@ -38,40 +39,39 @@ function MobileDrawer({
   navigate,
   reportsAPI,
 }) {
-  const AboutIcon = () => <span style={{ fontSize: "20px" }}>ℹ️</span>; 
   const mainNavLinks = !isLoggedIn
-  ? [
-      { label: "Home", action: () => navigate("/"), icon: <HomeIcon /> },
-      { label: "About Us", action: () => navigate("/about"), icon: <AboutIcon />  },
-      { label: "Register", action: onRegisterClick, icon: <RegisterIcon /> },
-      {
-        label: "Login",
-        action: onLoginClick,
-        icon: <LoginIcon />,
-        color: "primary",
-      },
-    ]
-  : [
-      { label: "Home", action: () => navigate("/"), icon: <HomeIcon /> },
-      { label: "About Us", action: () => navigate("/about"), icon: <AboutIcon /> },
-      {
-        label: "Dashboard",
-        action: () => navigate("/dashboard"),
-        icon: <DashboardIcon />,
-      },
-      {
-        label: "Add Income",
-        action: onShowAddIncome,
-        icon: <IncomeIcon />,
-        color: "success",
-      },
-      {
-        label: "Add Expense",
-        action: onShowAddExpense,
-        icon: <ExpenseIcon />,
-        color: "error",
-      },
-    ];
+    ? [
+        { label: "Home", action: () => navigate("/"), icon: <HomeIcon /> },
+        { label: "About Us", action: () => navigate("/about"), icon: <AboutIcon /> },
+        { label: "Register", action: onRegisterClick, icon: <RegisterIcon /> },
+        {
+          label: "Login",
+          action: onLoginClick,
+          icon: <LoginIcon />,
+          color: "primary",
+        },
+      ]
+    : [
+        { label: "Home", action: () => navigate("/"), icon: <HomeIcon /> },
+        { label: "About Us", action: () => navigate("/about"), icon: <AboutIcon /> },
+        {
+          label: "Dashboard",
+          action: () => navigate("/dashboard"),
+          icon: <DashboardIcon />,
+        },
+        {
+          label: "Add Income",
+          action: onShowAddIncome,
+          icon: <IncomeIcon />,
+          color: "success",
+        },
+        {
+          label: "Add Expense",
+          action: onShowAddExpense,
+          icon: <ExpenseIcon />,
+          color: "error",
+        },
+      ];
 
   const reportsMenuItems = [
     {
@@ -132,10 +132,19 @@ function MobileDrawer({
       anchor="right"
       open={open}
       onClose={onClose}
+      variant="temporary"
+      ModalProps={{ keepMounted: true }}
       PaperProps={{
         sx: {
           width: { xs: 280, sm: 320 },
           bgcolor: "#fafafa",
+          zIndex: (theme) => theme.zIndex.drawer + 5,
+        },
+      }}
+      sx={{
+        zIndex: (theme) => theme.zIndex.drawer + 5,
+        "& .MuiDrawer-paper": {
+          boxShadow: 6,
         },
       }}
     >
@@ -171,7 +180,7 @@ function MobileDrawer({
       </Box>
 
       <List sx={{ pt: 2 }}>
-        {mainNavLinks.map((link, index) => (
+        {mainNavLinks.map((link) => (
           <ListItem
             key={link.label}
             onClick={() => {
@@ -198,9 +207,7 @@ function MobileDrawer({
               transition: "all 0.2s ease",
             }}
           >
-            <ListItemIcon sx={{ minWidth: 40, color: "inherit" }}>
-              {link.icon}
-            </ListItemIcon>
+            <ListItemIcon sx={{ minWidth: 40 }}>{link.icon}</ListItemIcon>
             <ListItemText
               primary={link.label}
               primaryTypographyProps={{
@@ -218,7 +225,7 @@ function MobileDrawer({
           </ListItem>
         ))}
 
-        {/* Reports Section for Mobile */}
+        {/* Reports Section */}
         {isLoggedIn && (
           <>
             <Divider sx={{ my: 2, mx: 2 }} />
@@ -250,12 +257,9 @@ function MobileDrawer({
                   "&:hover": {
                     bgcolor: "rgba(0,0,0,0.04)",
                   },
-                  transition: "all 0.2s ease",
                 }}
               >
-                <ListItemIcon sx={{ minWidth: 40, color: "inherit" }}>
-                  {item.icon}
-                </ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
                 <ListItemText
                   primary={item.label}
                   secondary={item.description}
@@ -272,6 +276,7 @@ function MobileDrawer({
           </>
         )}
 
+        {/* Profile */}
         {isLoggedIn && (
           <>
             <Divider sx={{ my: 2, mx: 2 }} />
@@ -295,12 +300,9 @@ function MobileDrawer({
                         ? "rgba(198, 40, 40, 0.08)"
                         : "rgba(0,0,0,0.04)",
                   },
-                  transition: "all 0.2s ease",
                 }}
               >
-                <ListItemIcon sx={{ minWidth: 40, color: "inherit" }}>
-                  {item.icon}
-                </ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
                 <ListItemText
                   primary={item.label}
                   primaryTypographyProps={{
