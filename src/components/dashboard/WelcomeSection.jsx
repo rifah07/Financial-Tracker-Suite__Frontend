@@ -1,6 +1,16 @@
 import React from "react";
+import {
+  Box,
+  Typography,
+  Avatar,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 
 function WelcomeSection({ user }) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const formatDate = (dateString) => {
     if (!dateString) return "";
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -11,39 +21,118 @@ function WelcomeSection({ user }) {
   };
 
   return (
-    <div className="w-full px-4 pt-6 pb-4 sm:px-6 md:px-8 overflow-x-hidden">
-      <div className="relative bg-gradient-to-br from-slate-50 via-white to-blue-50/30 rounded-2xl shadow-lg border border-slate-200/50 backdrop-blur-sm overflow-hidden w-full">
-        {/* Background Blur Circles */}
-        <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-blue-100/40 to-indigo-100/40 rounded-full blur-2xl translate-x-6 -translate-y-6 pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 w-20 h-20 sm:w-28 sm:h-28 bg-gradient-to-tr from-slate-100/40 to-blue-100/40 rounded-full blur-2xl -translate-x-4 translate-y-4 pointer-events-none"></div>
+    <Box
+      sx={{
+        width: "100%",
+        px: { xs: 2, sm: 3, md: 5 },
+        pt: { xs: 2, sm: 4, md: 6 },
+        pb: { xs: 2, sm: 3 },
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <Box
+        sx={{
+          borderRadius: 4,
+          bgcolor: "background.paper",
+          background: "linear-gradient(to bottom right, #f8fafc, #e0f2fe)",
+          boxShadow: 3,
+          position: "relative",
+          p: { xs: 2, sm: 4 },
+        }}
+      >
+        {/* Blur circles */}
+        <Box
+          sx={{
+            position: "absolute",
+            top: -30,
+            right: -30,
+            width: { xs: 80, sm: 120 },
+            height: { xs: 80, sm: 120 },
+            borderRadius: "50%",
+            background:
+              "linear-gradient(to bottom right, rgba(191,219,254,0.4), rgba(199,210,254,0.4))",
+            filter: "blur(40px)",
+            zIndex: 0,
+          }}
+        />
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: -30,
+            left: -30,
+            width: { xs: 60, sm: 100 },
+            height: { xs: 60, sm: 100 },
+            borderRadius: "50%",
+            background:
+              "linear-gradient(to top right, rgba(241,245,249,0.4), rgba(191,219,254,0.4))",
+            filter: "blur(40px)",
+            zIndex: 0,
+          }}
+        />
 
         {/* Foreground Content */}
-        <div className="relative z-10 p-4 sm:p-6 md:p-8">
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 w-full">
-            {/* Avatar */}
-            <div className="relative group shrink-0">
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-200 to-blue-200 rounded-full blur opacity-50 group-hover:opacity-75 transition duration-300"></div>
-              <div className="relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 flex items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-blue-100 border-2 border-white shadow-md group-hover:scale-105 transition duration-300">
-                <span className="text-2xl sm:text-3xl md:text-4xl">👤</span>
-              </div>
-            </div>
+        <Box
+          sx={{
+            position: "relative",
+            zIndex: 1,
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            alignItems: { xs: "center", sm: "flex-start" },
+            gap: 3,
+          }}
+        >
+          {/* Avatar */}
+          <Avatar
+            sx={{
+              width: { xs: 56, sm: 64, md: 72 },
+              height: { xs: 56, sm: 64, md: 72 },
+              background: "linear-gradient(to bottom right, #f1f5f9, #dbeafe)",
+              fontSize: { xs: 28, sm: 32, md: 40 },
+              boxShadow: 2,
+            }}
+          >
+            👤
+          </Avatar>
 
-            {/* Text */}
-            <div className="flex-1 text-center sm:text-left w-full min-w-0">
-              <h1 className="text-lg sm:text-2xl md:text-3xl font-bold text-slate-800 mb-1 leading-tight tracking-tight">
-                <span className="block sm:inline">Welcome Back,</span>{" "}
-                <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent block sm:inline truncate">
-                  {user?.name?.split(" ")[0] || "User"}
-                </span>
-              </h1>
-              <p className="text-sm sm:text-base text-slate-600 font-medium truncate">
-                Member since {formatDate(user?.createdAt)}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          {/* Text */}
+          <Box sx={{ textAlign: { xs: "center", sm: "left" }, width: "100%" }}>
+            <Typography
+              variant={isMobile ? "h6" : "h5"}
+              fontWeight="bold"
+              color="text.primary"
+              sx={{ lineHeight: 1.2 }}
+            >
+              Welcome Back,{" "}
+              <Box
+                component="span"
+                sx={{
+                  background: "linear-gradient(to right, #2563eb, #4f46e5)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  display: "inline",
+                  fontWeight: "inherit",
+                }}
+              >
+                {user?.name?.split(" ")[0] || "User"}
+              </Box>
+            </Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{
+                mt: 0.5,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              Member since {formatDate(user?.createdAt)}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 
