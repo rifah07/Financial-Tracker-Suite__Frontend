@@ -6,19 +6,16 @@ const TrendingUpIcon = () => (
     ↗
   </div>
 );
-
 const TrendingDownIcon = () => (
   <div className="w-6 h-6 flex items-center justify-center text-red-600 font-bold text-lg">
     ↘
   </div>
 );
-
 const CreditCardIcon = () => (
   <div className="w-5 h-5 flex items-center justify-center text-white text-lg">
     💳
   </div>
 );
-
 const BarChartIcon = () => (
   <div className="w-6 h-6 flex items-center justify-center text-blue-600 text-lg">
     📊
@@ -94,7 +91,7 @@ function StatsCards({ transactions = [], user = { balance: 5420.5 } }) {
   ];
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-8">
+    <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 mb-6 sm:mb-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {statsData.map((stat, index) => {
           const IconComponent = stat.icon;
@@ -102,7 +99,7 @@ function StatsCards({ transactions = [], user = { balance: 5420.5 } }) {
           return (
             <div
               key={index}
-              className={`group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border ${
+              className={`group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border min-w-0 ${
                 stat.isGradient
                   ? "bg-gradient-to-br " +
                     stat.gradient +
@@ -113,7 +110,7 @@ function StatsCards({ transactions = [], user = { balance: 5420.5 } }) {
                     stat.borderColor
               }`}
             >
-              {/* Background decorative elements */}
+              {/* Background elements */}
               <div
                 className={`absolute top-0 right-0 w-20 h-20 ${
                   stat.isGradient
@@ -129,9 +126,8 @@ function StatsCards({ transactions = [], user = { balance: 5420.5 } }) {
                 } rounded-full blur-2xl transform -translate-x-8 translate-y-8`}
               ></div>
 
-              <div className="relative z-10 p-6">
+              <div className="relative z-10 p-5 sm:p-6">
                 {stat.isGradient ? (
-                  // Gradient card layout (Current Balance)
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
@@ -145,7 +141,6 @@ function StatsCards({ transactions = [], user = { balance: 5420.5 } }) {
                     </div>
                   </div>
                 ) : (
-                  // Regular card layout
                   <div className="flex items-center justify-center mb-4">
                     <div
                       className={`w-12 h-12 ${stat.iconBg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
@@ -157,7 +152,7 @@ function StatsCards({ transactions = [], user = { balance: 5420.5 } }) {
 
                 <div className={stat.isGradient ? "text-left" : "text-center"}>
                   <div
-                    className={`text-2xl sm:text-3xl font-bold mb-1 ${
+                    className={`text-xl sm:text-2xl md:text-3xl font-bold mb-1 ${
                       stat.isGradient ? "text-white" : stat.color
                     }`}
                   >

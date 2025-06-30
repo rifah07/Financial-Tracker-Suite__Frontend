@@ -174,7 +174,7 @@ function MobileDrawer({
           </Box>
         ) : (
           <Typography variant="h6" fontWeight={600} color="#1e293b">
-            💼 FinanceTracker
+            💼 Financial Tracker Suite
           </Typography>
         )}
       </Box>
