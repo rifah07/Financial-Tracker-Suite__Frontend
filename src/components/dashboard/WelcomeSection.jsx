@@ -18,6 +18,8 @@ const WelcomeSection = ({ user }) => {
           maxWidth: "100%",
           px: { xs: 1, sm: 3, md: 4 },
           py: { xs: 2, sm: 4, md: 6 },
+          mx: { xs: -3, sm: -3, md: -4 },
+
         }}
       >
         <Box
