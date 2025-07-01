@@ -11,15 +11,13 @@ const WelcomeSection = ({ user }) => {
   };
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center xs:mx:-10 sm:mx:-3 md:mx:-4">
       <Box
         sx={{
-          width: { xs: "74%", sm: "100%", md: "100%" },
+          width: { xs: "76%", sm: "100%", md: "100%" },
           maxWidth: "100%",
           px: { xs: 1, sm: 3, md: 4 },
           py: { xs: 2, sm: 4, md: 6 },
-          mx: { xs: -20, sm: -3, md: -4 },
-
         }}
       >
         <Box
