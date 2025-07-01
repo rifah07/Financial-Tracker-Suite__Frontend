@@ -91,14 +91,14 @@ const StatsCards = ({ transactions = [], user = { balance: 5420.5 } }) => {
       sx={{
         width: "100%",
         maxWidth: { xs: "80%", sm: "90%", md: "1280px" },
-        mx: "auto",
+        mx: { xs:"1%", sm:"auto", md:"auto" },
         px: { xs: 1, sm: 2, md: 3 },
         py: { xs: 1, sm: 2, md: 3 },
       }}
     >
-      <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
+      <Grid container spacing={{ xs: 2, sm: 4, md: 4 }}>
         {stats.map((stat, i) => (
-          <Grid item xs={12} sm={6} md={3} key={i}>
+          <Grid item xs={12} sm={3} md={3} key={i}>
             <Box
               className={`rounded-2xl overflow-hidden relative border ${
                 stat.isGradient
@@ -106,7 +106,7 @@ const StatsCards = ({ transactions = [], user = { balance: 5420.5 } }) => {
                   : `bg-gradient-to-br ${stat.bgColor} border-slate-200/50`
               }`}
               sx={{
-                p: { xs: 2, sm: 3, md: 4 },
+                p: { xs: 2, sm: 4, md: 4 },
                 minHeight: { xs: 130, sm: 150, md: 180 },
                 display: "flex",
                 flexDirection: "column",
