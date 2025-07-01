@@ -92,14 +92,76 @@ function StatsCards({ transactions = [], user = { balance: 5420.5 } }) {
 
   return (
     <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 mb-6 sm:mb-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <style jsx>{`
+        @media (max-width: 375px) {
+          .mobile-375-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+          }
+          .mobile-375-card {
+            padding: 8px;
+            border-radius: 12px;
+            min-height: 100px;
+          }
+          .mobile-375-icon {
+            width: 24px;
+            height: 24px;
+          }
+          .mobile-375-title {
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 4px;
+          }
+          .mobile-375-value {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 2px;
+            line-height: 1.2;
+          }
+          .mobile-375-subtitle {
+            font-size: 9px;
+            line-height: 1.2;
+          }
+          .mobile-375-container {
+            padding: 8px;
+            margin-bottom: 16px;
+          }
+          .mobile-375-icon-container {
+            width: 24px;
+            height: 24px;
+            border-radius: 8px;
+          }
+          .mobile-375-bg-circle-1 {
+            width: 32px;
+            height: 32px;
+            transform: translate(50%, -50%);
+          }
+          .mobile-375-bg-circle-2 {
+            width: 24px;
+            height: 24px;
+            transform: translate(-50%, 50%);
+          }
+        }
+      `}</style>
+
+      <div
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mobile-375-grid"
+        style={{
+          "@media (max-width: 375px)": {
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "8px",
+          },
+        }}
+      >
         {statsData.map((stat, index) => {
           const IconComponent = stat.icon;
 
           return (
             <div
               key={index}
-              className={`group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border min-w-0 ${
+              className={`group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border min-w-0 mobile-375-card ${
                 stat.isGradient
                   ? "bg-gradient-to-br " +
                     stat.gradient +
@@ -112,29 +174,31 @@ function StatsCards({ transactions = [], user = { balance: 5420.5 } }) {
             >
               {/* Background elements */}
               <div
-                className={`absolute top-0 right-0 w-20 h-20 ${
+                className={`absolute top-0 right-0 w-20 h-20 mobile-375-bg-circle-1 ${
                   stat.isGradient
                     ? "bg-white/10"
                     : "bg-gradient-to-br " + stat.bgPattern
                 } rounded-full blur-2xl transform translate-x-10 -translate-y-10`}
               ></div>
               <div
-                className={`absolute bottom-0 left-0 w-16 h-16 ${
+                className={`absolute bottom-0 left-0 w-16 h-16 mobile-375-bg-circle-2 ${
                   stat.isGradient
                     ? "bg-white/5"
                     : "bg-gradient-to-tr " + stat.bgPattern
                 } rounded-full blur-2xl transform -translate-x-8 translate-y-8`}
               ></div>
 
-              <div className="relative z-10 p-5 sm:p-6">
+              <div className="relative z-10 p-5 sm:p-6 mobile-375-container">
                 {stat.isGradient ? (
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                        <IconComponent />
+                      <div className="w-10 h-10 mobile-375-icon-container bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                        <div className="mobile-375-icon">
+                          <IconComponent />
+                        </div>
                       </div>
                       <div>
-                        <h3 className="text-sm font-semibold text-white/90 mb-1">
+                        <h3 className="text-sm mobile-375-title font-semibold text-white/90 mb-1">
                           {stat.title}
                         </h3>
                       </div>
@@ -143,23 +207,25 @@ function StatsCards({ transactions = [], user = { balance: 5420.5 } }) {
                 ) : (
                   <div className="flex items-center justify-center mb-4">
                     <div
-                      className={`w-12 h-12 ${stat.iconBg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
+                      className={`w-12 h-12 mobile-375-icon-container ${stat.iconBg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
                     >
-                      <IconComponent />
+                      <div className="mobile-375-icon">
+                        <IconComponent />
+                      </div>
                     </div>
                   </div>
                 )}
 
                 <div className={stat.isGradient ? "text-left" : "text-center"}>
                   <div
-                    className={`text-xl sm:text-2xl md:text-3xl font-bold mb-1 ${
+                    className={`text-xl sm:text-2xl md:text-3xl mobile-375-value font-bold mb-1 ${
                       stat.isGradient ? "text-white" : stat.color
                     }`}
                   >
                     {stat.value}
                   </div>
                   <p
-                    className={`text-sm ${
+                    className={`text-sm mobile-375-subtitle ${
                       stat.isGradient ? "text-white/80" : "text-slate-600"
                     }`}
                   >
