@@ -18,7 +18,7 @@ const WelcomeSection = ({ user }) => {
           maxWidth: "100%",
           px: { xs: 1, sm: 3, md: 4 },
           py: { xs: 2, sm: 4, md: 6 },
-          mx: { xs: -8, sm: -3, md: -4 },
+          mx: { xs: -20, sm: -3, md: -4 },
 
         }}
       >
