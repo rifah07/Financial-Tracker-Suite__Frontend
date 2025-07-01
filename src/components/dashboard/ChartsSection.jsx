@@ -122,7 +122,7 @@ function ChartsSection({ transactions = [] }) {
     : 0;
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-8">
+    <div className="w-full max-w-xs xs:max-w-sm sm:max-w-2xl md:max-w-4xl lg:max-w-6xl -mx-2 sm:mx-1 md:mx-2 my-4 px-4 sm:px-5 lg:px-4 mb-6 sm:mb-8">
       {/* Monthly Income vs Expenses Chart */}
       <div className="mb-8">
         <div className="relative overflow-hidden bg-gradient-to-br from-white via-slate-50/50 to-blue-50/20 rounded-3xl shadow-xl border border-slate-200/50 backdrop-blur-sm h-96 lg:h-[420px]">
@@ -252,15 +252,15 @@ function ChartsSection({ transactions = [] }) {
       </div>
 
       {/* Category Breakdown Chart */}
-      <div>
-        <div className="relative overflow-hidden bg-gradient-to-br from-white via-purple-50/30 to-indigo-50/20 rounded-3xl shadow-xl border border-slate-200/50 backdrop-blur-sm h-[460px] lg:h-[520px] pb-4">
+      <div className="mb-6">
+        <div className="relative overflow-hidden bg-gradient-to-br from-white via-purple-50/30 to-indigo-50/20 rounded-3xl shadow-xl border border-slate-200/50 backdrop-blur-sm h-[460px] lg:h-[540px] pb-4">
           {/* Decorative elements */}
           <div className="absolute top-0 right-0 w-28 h-28 bg-gradient-to-br from-purple-100/40 to-indigo-100/40 rounded-full blur-3xl transform translate-x-14 -translate-y-14"></div>
           <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-to-tr from-blue-100/40 to-purple-100/40 rounded-full blur-3xl transform -translate-x-10 translate-y-10"></div>
 
           <div className="relative z-10 p-6 lg:p-8 h-full flex flex-col">
             {/* Header */}
-            <div className="mb-6">
+            <div className="mb-4">
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center">
                   <div className="text-white text-lg font-bold">🎯</div>
@@ -333,7 +333,7 @@ function ChartsSection({ transactions = [] }) {
                 </BarChart>
               </ResponsiveContainer>
 
-              <div className="mt-2 text-center text-sm sm:text-base text-slate-600">
+              <div className="w-full xs:w-[90%] sm:w-[80%] mt-1 xs:mt-1 mb-2 xs:mb-4 xs:pb-10 text-center text-xs xs:text-sm sm:text-base text-slate-600 overflow-hidden mx-auto">
                 <p>
                   <span className="text-green-600 font-medium">
                     Income: {incomePercent}%
