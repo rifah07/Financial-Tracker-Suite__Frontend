@@ -11,7 +11,6 @@ const WelcomeSection = ({ user }) => {
   };
 
   return (
-    <div className="flex items-center justify-center xs:px:-10 sm:px:-3 md:px:-4">
       <Box
         sx={{
           width: { xs: "76%", sm: "100%", md: "100%" },
@@ -134,7 +133,6 @@ const WelcomeSection = ({ user }) => {
           </Box>
         </Box>
       </Box>
-    </div>
   );
 };
 
