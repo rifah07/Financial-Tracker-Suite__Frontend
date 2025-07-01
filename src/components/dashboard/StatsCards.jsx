@@ -90,8 +90,8 @@ const StatsCards = ({ transactions = [], user = { balance: 5420.5 } }) => {
     <Box
       sx={{
         width: "100%",
-        maxWidth: { xs: "80%", sm: "90%", md: "1280px" },
-        mx: { xs:"1%", sm:"auto", md:"auto" },
+        maxWidth: { xs: "70%", sm: "90%", md: "100%" },
+        mx: { xs: "1%", sm: "auto", md: "auto" },
         px: { xs: 1, sm: 2, md: 3 },
         py: { xs: 1, sm: 2, md: 3 },
       }}
