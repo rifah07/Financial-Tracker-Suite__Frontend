@@ -13,7 +13,7 @@ const WelcomeSection = ({ user }) => {
   return (
       <Box
         sx={{
-          width: { xs: "70%", sm: "100%", md: "100%" },
+          width: { xs: "80%", sm: "100%", md: "100%" },
           maxWidth: "100%",
           px: { xs: 1, sm: 3, md: 4 },
           py: { xs: 1, sm: 2, md: 2 },
