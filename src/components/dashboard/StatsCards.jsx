@@ -56,7 +56,7 @@ const getStatsData = ({ balance, income, expenses, transactions }) => [
     bgColor: "from-red-50 to-rose-50",
   },
   {
-    title: "Transactions",
+    title: "Total Transactions",
     value: `${transactions}`,
     subtitle: "Total count",
     icon: <EmojiIcon icon="📊" color="#2563eb" />,
@@ -91,7 +91,7 @@ const StatsCards = ({ transactions = [], user = { balance: 5420.5 } }) => {
       sx={{
         width: "100%",
         maxWidth: { xs: "100%", sm: "100%", md: "100%" },
-        mx: { xs: "0%", sm: 1, md: 1 },
+        mx: { xs: "0.1%", sm: 1, md: 1 },
         px: { xs: 1, sm: 2, md: 3 },
         py: { xs: 1, sm: 2, md: 3 },
       }}
