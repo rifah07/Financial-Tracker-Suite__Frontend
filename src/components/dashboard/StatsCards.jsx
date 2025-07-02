@@ -92,7 +92,7 @@ const StatsCards = ({ transactions = [], user = { balance: 5420.5 } }) => {
         width: "100%",
         maxWidth: { xs: "100%", sm: "100%", md: "100%" },
         mx: { xs: "0.1%", sm: 1, md: 1 },
-        px: { xs: 1, sm: 2, md: 3 },
+        px: { xs: 2, sm: 2, md: 3 },
         py: { xs: 1, sm: 2, md: 3 },
       }}
     >
