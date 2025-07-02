@@ -55,7 +55,7 @@ function MobileDrawer({
         { label: "Home", action: () => navigate("/"), icon: <HomeIcon /> },
         { label: "About Us", action: () => navigate("/about"), icon: <AboutIcon /> },
         {
-          label: "Dashboard",
+          label: "Transactions",
           action: () => navigate("/dashboard"),
           icon: <DashboardIcon />,
         },
