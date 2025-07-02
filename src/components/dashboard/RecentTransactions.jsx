@@ -60,7 +60,7 @@ function RecentTransactions({
     .slice(0, 5);
 
   return (
-    <div className="w-full max-w-sm xs:max-w-sm sm:max-w-2xl md:max-w-4xl lg:max-w-6xl xs:-mx-6 px-3 xs:px-4 sm:px-6 lg:px-8 mb-4 xs:mb-6 sm:mb-8">
+    <div className="w-full max-w-xs xs:max-w-sm sm:max-w-2xl md:max-w-4xl lg:max-w-6xl xs:-mx-6 px-3 xs:px-4 sm:px-6 lg:px-8 mb-4 xs:mb-6 sm:mb-8">
       <div className="relative overflow-hidden bg-gradient-to-br from-white via-slate-50/50 to-indigo-50/20 rounded-2xl xs:rounded-3xl shadow-xl border border-slate-200/50 backdrop-blur-sm">
         {/* Decorative elements - hidden on very small screens */}
         <div className="absolute top-0 right-0 w-24 xs:w-32 h-24 xs:h-32 bg-gradient-to-br from-indigo-100/40 to-purple-100/40 rounded-full blur-3xl transform translate-x-12 xs:translate-x-16 -translate-y-12 xs:-translate-y-16"></div>
