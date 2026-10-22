@@ -260,7 +260,7 @@ function FeaturesSection() {
                   letterSpacing: "-0.02em",
                 }}
               >
-                Join the Financial Revolution
+                Take Control of Your Money
               </Typography>
               <Typography
                 variant="h6"
@@ -272,9 +272,8 @@ function FeaturesSection() {
                   fontWeight: 400,
                 }}
               >
-                Thousands of users have already transformed their financial
-                lives. Experience the power of intelligent money management
-                today.
+                Track income and expenses, see where your money goes, and
+                export reports whenever you need them.
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -296,13 +295,13 @@ function FeaturesSection() {
                           "drop-shadow(0 4px 8px rgba(74, 222, 128, 0.3))",
                       }}
                     >
-                      10K+
+                      JWT
                     </Typography>
                     <Typography
                       variant="body1"
                       sx={{ opacity: 0.9, fontWeight: 600 }}
                     >
-                      Active Users
+                      Secure Auth
                     </Typography>
                   </Box>
                 </Grid>
@@ -323,13 +322,13 @@ function FeaturesSection() {
                           "drop-shadow(0 4px 8px rgba(251, 191, 36, 0.3))",
                       }}
                     >
-                      $2M+
+                      CSV
                     </Typography>
                     <Typography
                       variant="body1"
                       sx={{ opacity: 0.9, fontWeight: 600 }}
                     >
-                      Tracked
+                      Report Export
                     </Typography>
                   </Box>
                 </Grid>
@@ -349,13 +348,13 @@ function FeaturesSection() {
                         filter: "drop-shadow(0 4px 8px rgba(6, 182, 212, 0.3))",
                       }}
                     >
-                      99.9%
+                      Free
                     </Typography>
                     <Typography
                       variant="body1"
                       sx={{ opacity: 0.9, fontWeight: 600 }}
                     >
-                      Uptime
+                      To Use
                     </Typography>
                   </Box>
                 </Grid>

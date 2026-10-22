@@ -204,47 +204,6 @@ function HeroSection({ onGetStarted, onLogin }) {
                   Sign In
                 </Button>
               </Box>
-
-              {/* Enhanced Trust indicators */}
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 3,
-                  flexWrap: "wrap",
-                  justifyContent: { xs: "center", sm: "flex-start" },
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Typography
-                    variant="body2"
-                    sx={{ opacity: 0.9, fontSize: "1rem", fontWeight: 500 }}
-                  >
-                    Trusted by 10,000+ users
-                  </Typography>
-                </Box>
-                <Box sx={{ display: "flex", gap: 0.5 }}>
-                  {[...Array(5)].map((_, i) => (
-                    <Box
-                      key={i}
-                      sx={{
-                        color: "#ffd54f",
-                        fontSize: "1.3rem",
-                        filter:
-                          "drop-shadow(0 2px 4px rgba(255, 213, 79, 0.3))",
-                      }}
-                    >
-                      ⭐
-                    </Box>
-                  ))}
-                </Box>
-                <Typography
-                  variant="body2"
-                  sx={{ opacity: 0.9, fontSize: "1rem", fontWeight: 500 }}
-                >
-                  4.9/5 rating
-                </Typography>
-              </Box>
             </Box>
           </Grid>
           <Grid item xs={12} md={6}>

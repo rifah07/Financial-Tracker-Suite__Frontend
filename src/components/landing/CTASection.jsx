@@ -75,8 +75,8 @@ function CTASection({ onGetStarted, onLearnMore }) {
               textShadow: "0 2px 10px rgba(0,0,0,0.1)",
             }}
           >
-            Join thousands of users who have already taken control of their
-            financial future. Start your journey today with our free plan.
+            Take control of your financial future. Create a free account and
+            start tracking today.
           </Typography>
           <Box
             sx={{
